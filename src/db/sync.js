@@ -31,14 +31,95 @@ export async function getSession(settings) {
   return data.session || null
 }
 
+
+let joinInFlight = null
+let createInFlight = null
+let authWatch = null
+
+export function isAuthCallbackUrl(url = (typeof location !== 'undefined' ? location.href : '')) {
+  try {
+    const u = new URL(url, 'https://example.invalid')
+    const blob = `${u.hash || ''}?${u.search || ''}`
+    return /access_token=|refresh_token=|type=magiclink|type=signup|error_description=/.test(blob) || u.searchParams.has('code')
+  } catch {
+    return false
+  }
+}
+
+export function formatSyncError(err) {
+  const msg = String(err?.message || err?.error_description || err || '')
+  const lower = msg.toLowerCase()
+  if (err?.code === 'not_signed_in' || /not_signed_in|auth session missing|not signed in|jwt expired|invalid jwt|invalid token/.test(lower)) {
+    return 'needSignIn'
+  }
+  if (/anonymous sign-ins? (are )?disabled|signups? not allowed|unable to sign in anonymously|anonymous provider/i.test(lower)) return 'anonSignInOff'
+  if (/permission denied|42501|not authorized|unauthorized|401|403/.test(lower)) return 'needSignIn'
+  if (/unknown join code/.test(lower)) return 'unknownJoinCode'
+  if (/unknown editor code/.test(lower)) return 'unknownEditorCode'
+  if (/only a team admin|cannot remove|cannot be removed|join a team first/.test(lower)) return 'adminOnly'
+  if (/failed to fetch|network|load failed|offline|timeout/.test(lower)) return 'syncNetwork'
+  return 'joinFailed'
+}
+
+export async function ensureSession(settings, { timeoutMs } = {}) {
+  const sb = await getClient(settings)
+  if (!sb) return null
+  const existing = (await sb.auth.getSession()).data.session || null
+  if (existing) return existing
+  const wait = timeoutMs ?? (isAuthCallbackUrl() ? 8000 : 1500)
+  return await new Promise((resolve) => {
+    let done = false
+    const finish = (session) => {
+      if (done) return
+      done = true
+      clearTimeout(timer)
+      try { sub?.unsubscribe?.() } catch { /* ignore */ }
+      resolve(session || null)
+    }
+    const { data } = sb.auth.onAuthStateChange((event, session) => {
+      if (session && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED')) finish(session)
+    })
+    const sub = data?.subscription
+    const timer = setTimeout(async () => {
+      const late = (await sb.auth.getSession()).data.session || null
+      finish(late)
+    }, wait)
+  })
+}
+
+export function watchAuth(settings, handler) {
+  const start = async () => {
+    const sb = await getClient(settings)
+    if (!sb) return () => {}
+    if (authWatch) {
+      try { authWatch.unsubscribe() } catch { /* ignore */ }
+      authWatch = null
+    }
+    const { data } = sb.auth.onAuthStateChange((event, session) => { handler(event, session) })
+    authWatch = data?.subscription || null
+    return () => { try { authWatch?.unsubscribe() } catch { /* ignore */ } }
+  }
+  return start()
+}
+
 export async function sendMagicLink(settings, email, redirectTo) {
   const sb = await getClient(settings)
   if (!sb) throw new Error('Supabase is not configured')
+  const addr = String(email || '').trim()
+  if (!addr) throw new Error('needSignIn')
+  const session = (await sb.auth.getSession()).data.session
+  // Already signed in (including anonymously): attach email so this login can be used on another device.
+  if (session) {
+    const { error } = await sb.auth.updateUser({ email: addr }, { emailRedirectTo: redirectTo })
+    if (error) throw error
+    return { linked: true }
+  }
   const { error } = await sb.auth.signInWithOtp({
-    email,
+    email: addr,
     options: { emailRedirectTo: redirectTo }
   })
   if (error) throw error
+  return { linked: false }
 }
 
 export async function signOut(settings) {
@@ -46,28 +127,129 @@ export async function signOut(settings) {
   if (sb) await sb.auth.signOut()
 }
 
-export async function joinTeam(settings, joinCode, displayName) {
+async function readOwnProfile(sb, session) {
+  if (!sb || !session?.user?.id) return null
+  const { data, error } = await sb.from('profiles').select('*').eq('id', session.user.id).maybeSingle()
+  if (error) return null
+  return data || null
+}
+
+function alreadyMemberPayload(profile, session) {
+  return {
+    alreadyMember: true,
+    team_id: profile.team_id,
+    role: profile.role || 'member',
+    can_edit: !!(profile.can_edit || profile.role === 'admin'),
+    team_name: 'CUPC Mississauga Worship',
+    session
+  }
+}
+
+export async function joinTeam(settings, joinCode, displayName, editorCode) {
+  if (joinInFlight) return joinInFlight
+  joinInFlight = (async () => {
+    const sb = await getClient(settings)
+    if (!sb) throw new Error('Supabase is not configured')
+    let session = (await sb.auth.getSession()).data.session || null
+    if (!session && isAuthCallbackUrl()) {
+      session = await ensureSession(settings, { timeoutMs: 8000 })
+    }
+    if (!session) {
+      const { data, error } = await sb.auth.signInAnonymously({
+        options: { data: { display_name: displayName || '' } }
+      })
+      if (error) throw error
+      session = data.session || (await sb.auth.getSession()).data.session || null
+    }
+    if (!session) {
+      const err = new Error('not_signed_in')
+      err.code = 'not_signed_in'
+      throw err
+    }
+    const profile = await readOwnProfile(sb, session)
+    const editor = String(editorCode || '').trim()
+    if (profile?.team_id && !editor) return alreadyMemberPayload(profile, session)
+    if (profile?.team_id && editor) {
+      const { data, error } = await sb.rpc('claim_editor_code', { p_editor_code: editor })
+      if (error) throw error
+      return { ...data, session }
+    }
+    const { data, error } = await sb.rpc('join_team_with_code', {
+      p_code: String(joinCode || '').trim(),
+      p_display_name: displayName || null,
+      p_editor_code: editor || null
+    })
+    if (error) throw error
+    return { ...data, session }
+  })()
+  try {
+    return await joinInFlight
+  } finally {
+    joinInFlight = null
+  }
+}
+
+export async function createTeam(settings, name, joinCode) {
+  if (createInFlight) return createInFlight
+  createInFlight = (async () => {
+    const sb = await getClient(settings)
+    if (!sb) throw new Error('Supabase is not configured')
+    const session = await ensureSession(settings)
+    if (!session) {
+      const err = new Error('not_signed_in')
+      err.code = 'not_signed_in'
+      throw err
+    }
+    const profile = await readOwnProfile(sb, session)
+    if (profile?.team_id) return alreadyMemberPayload(profile, session)
+    const { data, error } = await sb.rpc('create_team', {
+      p_name: name || 'CUPC Mississauga Worship',
+      p_code: joinCode
+    })
+    if (error) throw error
+    return data
+  })()
+  try {
+    return await createInFlight
+  } finally {
+    createInFlight = null
+  }
+}
+
+
+async function rpcOrThrow(settings, name, args = {}) {
   const sb = await getClient(settings)
   if (!sb) throw new Error('Supabase is not configured')
-  const code = String(joinCode || '').trim()
-  const { data, error } = await sb.rpc('join_team_with_code', {
-    p_code: code,
-    p_display_name: displayName || null
-  })
+  const session = await ensureSession(settings, { timeoutMs: 400 })
+  if (!session) {
+    const err = new Error('not_signed_in')
+    err.code = 'not_signed_in'
+    throw err
+  }
+  const { data, error } = await sb.rpc(name, args)
   if (error) throw error
   return data
 }
 
+export async function loadAdminState(settings) {
+  return rpcOrThrow(settings, 'team_admin_state')
+}
 
-export async function createTeam(settings, name, joinCode) {
-  const sb = await getClient(settings)
-  if (!sb) throw new Error('Supabase is not configured')
-  const { data, error } = await sb.rpc('create_team', {
-    p_name: name || 'CUPC Mississauga Worship',
-    p_code: joinCode
-  })
-  if (error) throw error
-  return data
+export async function listTeamMembers(settings) {
+  const data = await rpcOrThrow(settings, 'list_team_members')
+  return Array.isArray(data) ? data : (data || [])
+}
+
+export async function rotateEditorCode(settings) {
+  return rpcOrThrow(settings, 'rotate_editor_code')
+}
+
+export async function rotateJoinCode(settings) {
+  return rpcOrThrow(settings, 'rotate_join_code')
+}
+
+export async function removeTeamMember(settings, userId) {
+  return rpcOrThrow(settings, 'remove_team_member', { p_user_id: userId })
 }
 
 export async function pullAll(settings) {

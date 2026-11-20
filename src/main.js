@@ -23,6 +23,10 @@ const state = {
   songs: [],
   services: [],
   toast: '',
+  syncBusy: false,
+  adminState: null,
+  adminMembers: [],
+  revealedEditorCode: '',
   online: navigator.onLine,
   importPreview: null,
   stageSize: 28,
@@ -44,6 +48,28 @@ function toast(msg) {
   clearTimeout(toastTimer)
   toastTimer = setTimeout(() => { state.toast = ''; render() }, 2400)
 }
+
+function syncToast(err) {
+  const key = sync.formatSyncError(err)
+  toast(t(key))
+}
+
+function applyMembership(data, session) {
+  const s = state.settings
+  if (data?.team_id) s.teamId = data.team_id
+  if (data?.role) s.role = data.role
+  if (data?.can_edit != null) s.canEdit = !!data.can_edit || data.role === 'admin'
+  else if (data?.role === 'admin') s.canEdit = true
+  if (session?.user?.id) s.userId = session.user.id
+  if (session?.user?.email) s.userEmail = session.user.email
+}
+
+function membershipLabel(settings = state.settings) {
+  if (!settings.teamId) return ''
+  const role = settings.role === 'admin' ? 'admin' : 'member'
+  return t('alreadyOnTeam', { name: 'CUPC Mississauga Worship', role })
+}
+
 
 async function persistSettings() {
   await db.setMeta('settings', state.settings)
@@ -1122,6 +1148,107 @@ async function shareScheduleImage(node) {
   }
 }
 
+
+async function submitJoin(editorValue) {
+  if (state.syncBusy) return
+  const s = state.settings
+  const nameEl = document.querySelector('input[placeholder="' + t('displayName') + '"]')
+  const joinEl = document.querySelector('input[placeholder="CUPC-XXXX"]')
+  const editorEl = document.querySelector('input.editor-code')
+  s.displayName = (nameEl?.value || s.displayName || '').trim()
+  s.joinCode = (joinEl?.value || s.joinCode || '').trim()
+  const editorCode = editorValue != null ? editorValue : (editorEl?.value || '').trim()
+  await persistSettings()
+  state.syncBusy = true
+  render()
+  try {
+    const data = await sync.joinTeam(s, s.joinCode, s.displayName, editorCode)
+    applyMembership(data, data?.session)
+    await persistSettings()
+    toast(data?.alreadyMember ? membershipLabel(s) : t('join'))
+    await tryPull()
+    if (s.role === 'admin') await refreshAdminPanel()
+  } catch (e) { syncToast(e) }
+  finally { state.syncBusy = false; render() }
+}
+
+async function refreshAdminPanel() {
+  if (state.settings.role !== 'admin' || !state.settings.teamId) return
+  try {
+    state.adminState = await sync.loadAdminState(state.settings)
+    state.adminMembers = await sync.listTeamMembers(state.settings)
+  } catch (e) {
+    console.warn('admin panel', e)
+  }
+}
+
+function adminPanel() {
+  const info = state.adminState || {}
+  const members = state.adminMembers || []
+  if (!info.join_code && !state.adminLoading && !state.adminTried) {
+    state.adminLoading = true
+    state.adminTried = true
+    refreshAdminPanel().finally(() => { state.adminLoading = false; render() })
+  }
+  const revealed = state.revealedEditorCode
+  return h('div', { class: 'admin-panel', style: { marginTop: '20px' } },
+    h('hr', { class: 'sep' }),
+    h('h3', {}, t('teamCodes')),
+    h('div', { class: 'field' },
+      h('label', {}, t('teamJoinCode')),
+      h('p', { class: 'help team-join-code' }, info.join_code || state.settings.joinCode || 'CUPC-ALABANZA')
+    ),
+    h('button', { class: 'btn secondary', disabled: !!state.syncBusy, onclick: async () => {
+      if (state.syncBusy) return
+      if (!confirm(t('rotateJoin') + '?')) return
+      state.syncBusy = true; render()
+      try {
+        const data = await sync.rotateJoinCode(state.settings)
+        if (data?.join_code) {
+          state.settings.joinCode = data.join_code
+          if (state.adminState) state.adminState.join_code = data.join_code
+          await persistSettings()
+          toast(t('codeRotated'))
+        }
+      } catch (e) { syncToast(e) }
+      finally { state.syncBusy = false; render() }
+    } }, t('rotateJoin')),
+    h('p', { class: 'help', style: { marginTop: '12px' } }, info.has_editor_code ? t('leaderCodeSet') : t('leaderCodeUnset')),
+    revealed ? h('div', { class: 'field' },
+      h('label', {}, t('newLeaderCode')),
+      h('p', { class: 'help new-leader-code' }, revealed),
+      h('button', { class: 'btn secondary', onclick: async () => { await copyText(revealed); toast(t('copied')) } }, t('copyCode'))
+    ) : null,
+    h('button', { class: 'btn', disabled: !!state.syncBusy, onclick: async () => {
+      if (state.syncBusy) return
+      state.syncBusy = true; render()
+      try {
+        const data = await sync.rotateEditorCode(state.settings)
+        state.revealedEditorCode = data?.editor_code || ''
+        if (state.adminState) state.adminState.has_editor_code = true
+        toast(t('codeRotated'))
+      } catch (e) { syncToast(e) }
+      finally { state.syncBusy = false; render() }
+    } }, t('rotateLeader')),
+    h('h3', { style: { marginTop: '20px' } }, t('teamMembersAdmin')),
+    ...members.map((m) => h('div', { class: 'row member-row', style: { marginTop: '8px' } },
+      h('div', { class: 'grow' },
+        h('div', {}, m.display_name || m.id),
+        h('div', { class: 'meta' }, m.role === 'admin' ? t('roleAdmin') : (m.can_edit ? t('editor') : t('viewOnly')))
+      ),
+      m.protected || m.id === state.settings.userId ? null : h('button', { class: 'btn ghost', onclick: async () => {
+        if (!confirm(t('removeMember') + '?')) return
+        try {
+          await sync.removeTeamMember(state.settings, m.id)
+          toast(t('memberRemoved'))
+          await refreshAdminPanel()
+          render()
+        } catch (e) { syncToast(e) }
+      } }, t('removeMember'))
+    ))
+  )
+}
+
 function pageSettings() {
   const s = state.settings
   const url = h('input', { value: s.supabaseUrl || '', placeholder: 'https://xxxx.supabase.co', autocomplete: 'off' })
@@ -1129,6 +1256,7 @@ function pageSettings() {
   const email = h('input', { type: 'email', value: s.userEmail || '', placeholder: 'you@church.org' })
   const join = h('input', { value: s.joinCode || '', placeholder: 'CUPC-XXXX', autocomplete: 'off' })
   const name = h('input', { value: s.displayName || '', placeholder: t('displayName') })
+  const editor = h('input', { class: 'editor-code', value: '', placeholder: 'CUPC-ED-…', autocomplete: 'off' })
 
   const page = h('div', { class: 'page' },
     h('div', { class: 'page-head' }, h('h2', {}, t('settings'))),
@@ -1158,60 +1286,42 @@ function pageSettings() {
     h('p', { class: 'help' }, t('installAndroid')),
     h('hr', { class: 'sep' }),
     h('h3', {}, t('teamSync')),
-    h('p', { class: 'help' }, t('setupLead')),
+    h('p', { class: 'help' }, t('joinHint')),
     h('p', { class: 'meta' }, sync.isConfigured(s) ? t('syncOn') : t('syncOff')),
-    h('div', { class: 'field' }, h('label', {}, t('supabaseUrl')), url),
-    h('div', { class: 'field' }, h('label', {}, t('supabaseKey')), key),
-    h('button', { class: 'btn', onclick: async () => {
-      s.supabaseUrl = url.value.trim().replace(/\/$/, '')
-      s.supabaseAnonKey = key.value.trim()
+    h('div', { class: 'field', style: { marginTop: '16px' } }, h('label', {}, t('displayName')), name),
+    h('div', { class: 'field' }, h('label', {}, t('joinCode')), join),
+    h('div', { class: 'field' }, h('label', {}, t('editorCode')), editor),
+    h('p', { class: 'help' }, t('editorCodeHint')),
+    s.teamId ? h('p', { class: 'help team-membership' }, membershipLabel(s)) : null,
+    h('button', { class: 'btn peach', disabled: !!state.syncBusy, onclick: () => submitJoin() }, state.syncBusy ? t('joining') : t('join')),
+    h('hr', { class: 'sep' }),
+    h('h3', {}, t('backupLogin')),
+    h('p', { class: 'help' }, t('backupLoginHint')),
+    h('div', { class: 'field' }, h('label', {}, t('magicLink')), email),
+    h('button', { class: 'btn secondary', onclick: async () => {
+      s.displayName = name.value.trim()
+      s.userEmail = email.value.trim()
       await persistSettings()
-      toast(t('saved'))
-      render()
-    } }, t('connect')),
-    sync.isConfigured(s) ? h('div', {},
-      h('div', { class: 'field', style: { marginTop: '16px' } }, h('label', {}, t('displayName')), name),
-      h('div', { class: 'field' }, h('label', {}, t('magicLink')), email),
-      h('button', { class: 'btn secondary', onclick: async () => {
-        s.displayName = name.value.trim()
-        s.userEmail = email.value.trim()
+      try {
+        await sync.sendMagicLink(s, email.value.trim(), `${location.origin}${BASE}`)
+        toast(t('linkSent'))
+      } catch (e) { syncToast(e) }
+    } }, t('sendLink')),
+    s.userEmail ? h('p', { class: 'help' }, t('signedInAs') + ' ' + (s.userEmail || '')) : null,
+    s.userId ? h('button', { class: 'btn ghost', onclick: async () => { await sync.signOut(s); s.teamId = s.teamId; toast(t('signOut')); render() } }, t('signOut')) : null,
+    s.role === 'admin' && s.teamId && s.userId ? adminPanel() : null,
+    h('details', { class: 'advanced-sync', style: { marginTop: '20px' } },
+      h('summary', {}, t('advancedSync')),
+      h('div', { class: 'field', style: { marginTop: '12px' } }, h('label', {}, t('supabaseUrl')), url),
+      h('div', { class: 'field' }, h('label', {}, t('supabaseKey')), key),
+      h('button', { class: 'btn', onclick: async () => {
+        s.supabaseUrl = url.value.trim().replace(/\/$/, '')
+        s.supabaseAnonKey = key.value.trim()
         await persistSettings()
-        try {
-          await sync.sendMagicLink(s, email.value.trim(), `${location.origin}${BASE}`)
-          toast('Email sent')
-        } catch (e) { toast(e.message || String(e)) }
-      } }, t('sendLink')),
-      h('div', { class: 'field', style: { marginTop: '16px' } }, h('label', {}, t('joinCode')), join),
-      h('button', { class: 'btn secondary', onclick: async () => {
-        s.joinCode = join.value.trim()
-        s.displayName = name.value.trim()
-        await persistSettings()
-        try {
-          const data = await sync.joinTeam(s, join.value, name.value)
-          if (data?.team_id) s.teamId = data.team_id
-          if (data?.role) s.role = data.role
-          await persistSettings()
-          toast(t('join'))
-          await tryPull()
-        } catch (e) { toast(e.message || String(e)) }
-      } }, t('join')),
-      h('button', { class: 'btn', style: { marginTop: '8px' }, onclick: async () => {
-        s.joinCode = join.value.trim()
-        s.displayName = name.value.trim()
-        await persistSettings()
-        try {
-          const data = await sync.createTeam(s, 'CUPC Mississauga Worship', join.value)
-          if (data?.team_id) s.teamId = data.team_id
-          s.role = 'admin'
-          s.canEdit = true
-          await persistSettings()
-          toast('Team created')
-          await tryPull()
-        } catch (e) { toast(e.message || String(e)) }
-      } }, 'Create team'),
-      s.userEmail ? h('p', { class: 'help' }, t('signedInAs') + ' ' + (s.userEmail || '')) : null,
-      h('button', { class: 'btn ghost', onclick: async () => { await sync.signOut(s); toast(t('signOut')) } }, t('signOut'))
-    ) : null,
+        toast(t('saved'))
+        render()
+      } }, t('connect'))
+    ),
     h('hr', { class: 'sep' }),
     h('h3', {}, t('backup')),
     h('div', { class: 'actions' },
@@ -1423,7 +1533,24 @@ async function boot() {
     applyTheme()
     state.ready = true
     render()
+    await sync.watchAuth(state.settings, async (event, session) => {
+      if (session?.user) {
+        state.settings.userEmail = session.user.email || state.settings.userEmail
+        state.settings.userId = session.user.id || state.settings.userId
+        await persistSettings()
+      }
+      if (event === 'SIGNED_IN') {
+        await tryPull()
+        render()
+      }
+      if (event === 'SIGNED_OUT') render()
+    })
+    if (sync.isAuthCallbackUrl()) {
+      toast(t('signInWait'))
+      await sync.ensureSession(state.settings, { timeoutMs: 8000 })
+    }
     await tryPull()
+    if (state.settings.role === 'admin' && state.settings.teamId) await refreshAdminPanel()
     render()
   } catch (e) {
     console.error(e)
@@ -1443,5 +1570,5 @@ try {
   registerSW({ immediate: true })
 } catch { /* dev without plugin */ }
 
-if (!location.hash || location.hash === '#') location.hash = '#/services'
+if ((!location.hash || location.hash === '#') && !sync.isAuthCallbackUrl()) location.hash = '#/services'
 boot()

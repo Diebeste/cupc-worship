@@ -2,6 +2,15 @@
 
 The live app at https://diebeste.github.io/cupc-worship/ is already pointed at the **CUPC Worship** Supabase project. The public URL and anon key are built in, and the join code is **CUPC-ALABANZA**. Teammates do not need to paste keys.
 
+
+Teammates can join **without email**: Settings → enter their name and team code **CUPC-ALABANZA** → **Join team**. That signs the device in anonymously and keeps the session on the phone. The team code alone is view-only. Leaders also enter the leader/editor code (ask Brandon; it is not stored in the repo).
+
+Magic-link email is optional, under **Back up my login / use on another device**.
+
+### Enable anonymous sign-ins
+
+The MCP tools cannot flip this switch. In the dashboard open [Authentication → Providers](https://supabase.com/dashboard/project/jpiwwwzozivkdgajiltm/auth/providers) (or **Authentication → Sign In / Providers**) and turn on **Allow anonymous sign-ins**. If abuse becomes a problem later, you can also enable CAPTCHA on that same Auth settings page.
+
 ## First sign-in (Brandon becomes admin)
 
 1. Open the live app → **Settings**.

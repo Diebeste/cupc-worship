@@ -341,3 +341,380 @@ grant execute on function public.create_team(text, text) to authenticated;
 grant execute on function public.join_team_with_code(text, text) to authenticated;
 grant execute on function public.my_team_id() to authenticated;
 grant execute on function public.is_team_editor(uuid) to authenticated;
+
+
+-- ---------------------------------------------------------------------------
+-- v5 (safe to re-run): hashed leader/editor code, anonymous-friendly join,
+-- admin rotate/remove helpers. Do not grant EXECUTE to the anon role.
+-- Anonymous signed-in users use the authenticated role (JWT is_anonymous).
+-- ---------------------------------------------------------------------------
+
+alter table public.teams add column if not exists editor_code_hash text;
+
+-- Brandon's existing email account must remain admin.
+create or replace function public.is_protected_admin(uid uuid)
+returns boolean
+language sql
+stable
+as $$
+  select uid = '6d0a3785-7884-4705-89eb-f38697abbac6'::uuid
+$$;
+
+create or replace function public.is_team_admin(tid uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid()
+      and team_id = tid
+      and role = 'admin'
+  )
+$$;
+
+-- Team code alone = view-only member. Valid editor code sets can_edit.
+-- Existing admins (including the protected account) are never demoted.
+drop function if exists public.join_team_with_code(text, text);
+
+create or replace function public.join_team_with_code(
+  p_code text,
+  p_display_name text default null,
+  p_editor_code text default null
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  tid uuid;
+  r text;
+  edit boolean;
+  editor_ok boolean := false;
+  stored_hash text;
+begin
+  if auth.uid() is null then
+    raise exception 'Not signed in';
+  end if;
+  select id, editor_code_hash into tid, stored_hash
+    from public.teams
+   where join_code = upper(trim(p_code));
+  if tid is null then
+    raise exception 'Unknown join code';
+  end if;
+
+  if p_editor_code is not null and length(trim(p_editor_code)) > 0 then
+    if stored_hash is null or stored_hash = '' then
+      raise exception 'Unknown editor code';
+    end if;
+    editor_ok := (stored_hash = crypt(upper(trim(p_editor_code)), stored_hash));
+    if not editor_ok then
+      raise exception 'Unknown editor code';
+    end if;
+  end if;
+
+  insert into public.profiles (id, team_id, display_name, role, can_edit)
+  values (
+    auth.uid(),
+    tid,
+    p_display_name,
+    'member',
+    editor_ok
+  )
+  on conflict (id) do update
+    set team_id = excluded.team_id,
+        display_name = coalesce(excluded.display_name, public.profiles.display_name),
+        role = case
+          when public.is_protected_admin(public.profiles.id) then 'admin'
+          when public.profiles.role = 'admin' then 'admin'
+          else 'member'
+        end,
+        can_edit = case
+          when public.is_protected_admin(public.profiles.id) then true
+          when public.profiles.role = 'admin' then true
+          when editor_ok then true
+          else public.profiles.can_edit
+        end;
+
+  -- Guarantee the protected account stays admin even if it joined some other way.
+  if public.is_protected_admin(auth.uid()) then
+    update public.profiles
+       set role = 'admin', can_edit = true, team_id = tid
+     where id = auth.uid();
+  end if;
+
+  select role, can_edit into r, edit from public.profiles where id = auth.uid();
+  return jsonb_build_object('team_id', tid, 'role', r, 'can_edit', edit);
+end;
+$$;
+
+create or replace function public.claim_editor_code(p_editor_code text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  tid uuid;
+  stored_hash text;
+  r text;
+  edit boolean;
+begin
+  if auth.uid() is null then
+    raise exception 'Not signed in';
+  end if;
+  select team_id into tid from public.profiles where id = auth.uid();
+  if tid is null then
+    raise exception 'Join a team first';
+  end if;
+  select editor_code_hash into stored_hash from public.teams where id = tid;
+  if stored_hash is null or stored_hash = ''
+     or stored_hash <> crypt(upper(trim(p_editor_code)), stored_hash) then
+    raise exception 'Unknown editor code';
+  end if;
+  update public.profiles
+     set can_edit = true,
+         role = case when public.is_protected_admin(id) or role = 'admin' then 'admin' else role end
+   where id = auth.uid();
+  select role, can_edit into r, edit from public.profiles where id = auth.uid();
+  return jsonb_build_object('team_id', tid, 'role', r, 'can_edit', edit);
+end;
+$$;
+
+create or replace function public.random_team_code(p_prefix text, p_len int)
+returns text
+language plpgsql
+as $$
+declare
+  alphabet text := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  bytes bytea;
+  out text := '';
+  i int;
+begin
+  bytes := gen_random_bytes(p_len);
+  for i in 0..p_len-1 loop
+    out := out || substr(alphabet, (get_byte(bytes, i) % length(alphabet)) + 1, 1);
+  end loop;
+  return p_prefix || out;
+end;
+$$;
+
+create or replace function public.rotate_editor_code()
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  tid uuid;
+  new_code text;
+begin
+  if auth.uid() is null then
+    raise exception 'Not signed in';
+  end if;
+  tid := public.my_team_id();
+  if tid is null or not public.is_team_admin(tid) then
+    raise exception 'Only a team admin can rotate codes';
+  end if;
+  new_code := public.random_team_code('CUPC-ED-', 8);
+  update public.teams
+     set editor_code_hash = crypt(upper(new_code), gen_salt('bf'))
+   where id = tid;
+  return jsonb_build_object('editor_code', new_code);
+end;
+$$;
+
+create or replace function public.rotate_join_code()
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  tid uuid;
+  new_code text;
+begin
+  if auth.uid() is null then
+    raise exception 'Not signed in';
+  end if;
+  tid := public.my_team_id();
+  if tid is null or not public.is_team_admin(tid) then
+    raise exception 'Only a team admin can rotate codes';
+  end if;
+  new_code := public.random_team_code('CUPC-', 8);
+  update public.teams set join_code = new_code where id = tid;
+  return jsonb_build_object('join_code', new_code);
+end;
+$$;
+
+create or replace function public.team_admin_state()
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  tid uuid;
+  rec record;
+begin
+  if auth.uid() is null then
+    raise exception 'Not signed in';
+  end if;
+  tid := public.my_team_id();
+  if tid is null or not public.is_team_admin(tid) then
+    raise exception 'Only a team admin can view team codes';
+  end if;
+  select name, join_code, (editor_code_hash is not null and editor_code_hash <> '') as has_editor_code
+    into rec
+    from public.teams where id = tid;
+  return jsonb_build_object(
+    'team_id', tid,
+    'name', rec.name,
+    'join_code', rec.join_code,
+    'has_editor_code', rec.has_editor_code
+  );
+end;
+$$;
+
+create or replace function public.list_team_members()
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  tid uuid;
+begin
+  if auth.uid() is null then
+    raise exception 'Not signed in';
+  end if;
+  tid := public.my_team_id();
+  if tid is null or not public.is_team_admin(tid) then
+    raise exception 'Only a team admin can list members';
+  end if;
+  return coalesce((
+    select jsonb_agg(jsonb_build_object(
+      'id', p.id,
+      'display_name', p.display_name,
+      'role', p.role,
+      'can_edit', p.can_edit,
+      'protected', public.is_protected_admin(p.id)
+    ) order by p.role desc, p.display_name)
+    from public.profiles p
+    where p.team_id = tid
+  ), '[]'::jsonb);
+end;
+$$;
+
+create or replace function public.remove_team_member(p_user_id uuid)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  tid uuid;
+  admin_count int;
+begin
+  if auth.uid() is null then
+    raise exception 'Not signed in';
+  end if;
+  tid := public.my_team_id();
+  if tid is null or not public.is_team_admin(tid) then
+    raise exception 'Only a team admin can remove members';
+  end if;
+  if p_user_id = auth.uid() then
+    raise exception 'You cannot remove yourself';
+  end if;
+  if public.is_protected_admin(p_user_id) then
+    raise exception 'That member cannot be removed';
+  end if;
+  if not exists (select 1 from public.profiles where id = p_user_id and team_id = tid) then
+    raise exception 'Member not found';
+  end if;
+  select count(*) into admin_count from public.profiles where team_id = tid and role = 'admin';
+  if admin_count <= 1 and exists (select 1 from public.profiles where id = p_user_id and team_id = tid and role = 'admin') then
+    raise exception 'Cannot remove the last admin';
+  end if;
+  update public.profiles
+     set team_id = null, role = 'member', can_edit = false
+   where id = p_user_id and team_id = tid;
+  return jsonb_build_object('removed', p_user_id);
+end;
+$$;
+
+-- RLS already keys off auth.uid() / my_team_id() / is_team_editor(), which works
+-- for both magic-link and anonymous JWTs (auth.jwt()->>'is_anonymous' = 'true').
+-- Writes stay limited to can_edit / admin. Re-assert policies are present.
+
+drop policy if exists songs_select on public.songs;
+create policy songs_select on public.songs
+  for select using (team_id = public.my_team_id());
+
+drop policy if exists songs_write on public.songs;
+create policy songs_write on public.songs
+  for all using (public.is_team_editor(team_id))
+  with check (public.is_team_editor(team_id));
+
+drop policy if exists services_select on public.services;
+create policy services_select on public.services
+  for select using (team_id = public.my_team_id());
+
+drop policy if exists services_write on public.services;
+create policy services_write on public.services
+  for all using (public.is_team_editor(team_id))
+  with check (public.is_team_editor(team_id));
+
+revoke all on function public.join_team_with_code(text, text, text) from public, anon;
+revoke all on function public.claim_editor_code(text) from public, anon;
+revoke all on function public.rotate_editor_code() from public, anon;
+revoke all on function public.rotate_join_code() from public, anon;
+revoke all on function public.team_admin_state() from public, anon;
+revoke all on function public.list_team_members() from public, anon;
+revoke all on function public.remove_team_member(uuid) from public, anon;
+revoke all on function public.is_team_admin(uuid) from public, anon;
+revoke all on function public.is_protected_admin(uuid) from public, anon;
+revoke all on function public.random_team_code(text, int) from public, anon, authenticated;
+
+grant execute on function public.join_team_with_code(text, text, text) to authenticated;
+grant execute on function public.claim_editor_code(text) to authenticated;
+grant execute on function public.rotate_editor_code() to authenticated;
+grant execute on function public.rotate_join_code() to authenticated;
+grant execute on function public.team_admin_state() to authenticated;
+grant execute on function public.list_team_members() to authenticated;
+grant execute on function public.remove_team_member(uuid) to authenticated;
+
+create or replace function public.is_protected_admin(uid uuid)
+returns boolean
+language sql
+stable
+set search_path = public
+as $$
+  select uid = '6d0a3785-7884-4705-89eb-f38697abbac6'::uuid
+$$;
+
+create or replace function public.random_team_code(p_prefix text, p_len int)
+returns text
+language plpgsql
+set search_path = public
+as $$
+declare
+  alphabet text := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  bytes bytea;
+  out text := '';
+  i int;
+begin
+  bytes := gen_random_bytes(p_len);
+  for i in 0..p_len-1 loop
+    out := out || substr(alphabet, (get_byte(bytes, i) % length(alphabet)) + 1, 1);
+  end loop;
+  return p_prefix || out;
+end;
+$$;
+
+revoke all on function public.is_team_admin(uuid) from public, anon, authenticated;
+revoke all on function public.is_protected_admin(uuid) from public, anon, authenticated;
+revoke all on function public.random_team_code(text, int) from public, anon, authenticated;
