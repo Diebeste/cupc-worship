@@ -266,3 +266,78 @@ create policy schedule_meta_write on public.schedule_meta
 
 grant select on public.members, public.schedule_meta to authenticated;
 grant insert, update, delete on public.members, public.schedule_meta to authenticated;
+
+
+-- ---------------------------------------------------------------------------
+-- v3 (safe to re-run): pre-seed the CUPC team; first person to join becomes admin
+-- ---------------------------------------------------------------------------
+
+insert into public.teams (name, join_code)
+values ('CUPC Mississauga Worship', 'CUPC-ALABANZA')
+on conflict (join_code) do nothing;
+
+create or replace function public.join_team_with_code(p_code text, p_display_name text default null)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  tid uuid;
+  r text;
+  edit boolean;
+  become_admin boolean;
+begin
+  if auth.uid() is null then
+    raise exception 'Not signed in';
+  end if;
+  select id into tid from public.teams where join_code = upper(trim(p_code));
+  if tid is null then
+    raise exception 'Unknown join code';
+  end if;
+
+  select not exists (
+    select 1 from public.profiles where team_id = tid and role = 'admin'
+  ) into become_admin;
+
+  insert into public.profiles (id, team_id, display_name, role, can_edit)
+  values (
+    auth.uid(),
+    tid,
+    p_display_name,
+    case when become_admin then 'admin' else 'member' end,
+    become_admin
+  )
+  on conflict (id) do update
+    set team_id = excluded.team_id,
+        display_name = coalesce(excluded.display_name, public.profiles.display_name),
+        role = case
+          when public.profiles.role = 'admin' then 'admin'
+          when become_admin then 'admin'
+          else public.profiles.role
+        end,
+        can_edit = case
+          when public.profiles.role = 'admin' or public.profiles.can_edit or become_admin then true
+          else public.profiles.can_edit
+        end;
+
+  select role, can_edit into r, edit from public.profiles where id = auth.uid();
+  return jsonb_build_object('team_id', tid, 'role', r, 'can_edit', edit);
+end;
+$$;
+
+
+-- ---------------------------------------------------------------------------
+-- v4 (safe to re-run): revoke SECURITY DEFINER execute from the anonymous role
+-- ---------------------------------------------------------------------------
+
+revoke all on function public.create_team(text, text) from public, anon;
+revoke all on function public.join_team_with_code(text, text) from public, anon;
+revoke all on function public.handle_new_user() from public, anon, authenticated;
+revoke all on function public.my_team_id() from public, anon;
+revoke all on function public.is_team_editor(uuid) from public, anon;
+
+grant execute on function public.create_team(text, text) to authenticated;
+grant execute on function public.join_team_with_code(text, text) to authenticated;
+grant execute on function public.my_team_id() to authenticated;
+grant execute on function public.is_team_editor(uuid) to authenticated;

@@ -1,6 +1,7 @@
 /** Curated songs and services from the team’s example documents (not invented). */
 
 import { novemberServices, applyNovemberMerge, SEED_MEMBERS, SEED_SCHEDULE_META, normalizeService } from './roles.js'
+import { buildSeedSongs, stampSongs, SONG_LIBRARY_VERSION } from './seedLibrary.js'
 
 const s = (type, label, linesEs = [], linesEn = [], notes = '') => ({
   type,
@@ -674,12 +675,14 @@ export const SEED_SERVICES = [
   }
 ]
 
+export { SONG_LIBRARY_VERSION, mergeSeedSongs, isPristineSeed } from './seedLibrary.js'
+
 export function stampedSeed() {
   const ts = '2026-11-15T00:00:00.000Z'
   const core = SEED_SERVICES.map((s) => applyNovemberMerge({ ...s, createdAt: ts, updatedAt: ts, seeded: true }))
   const extras = novemberServices().map((s) => ({ ...normalizeService(s), createdAt: ts, updatedAt: ts, seeded: true }))
   return {
-    songs: SEED_SONGS.map((s) => ({ ...s, createdAt: ts, updatedAt: ts, seeded: true })),
+    songs: stampSongs(buildSeedSongs(SEED_SONGS), ts),
     services: [...core, ...extras],
     members: SEED_MEMBERS.map((m) => ({ ...m })),
     scheduleMeta: { ...SEED_SCHEDULE_META }

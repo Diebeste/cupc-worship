@@ -394,3 +394,22 @@ test('import a VideoPsalm songbook with preview checkboxes and skip duplicates',
   await page.getByRole('button', { name: 'Select new only' }).click()
   await expect(page.getByRole('button', { name: /Import 0 song/ })).toBeVisible()
 })
+
+
+test('imported library count, search, bilingual song and key', async ({ page }) => {
+  await waitReady(page)
+  await page.goto('./#/songs')
+  const count = await page.locator('.page .card.clickable').count()
+  expect(count).toBeGreaterThanOrEqual(200)
+  await page.screenshot({ path: path.join(shots, '20-imported-library.png') })
+  await page.getByPlaceholder(/Search titles or lyrics|Buscar título/).fill('at your feet')
+  await expect(page.getByText('At your feet / A tus pies').first()).toBeVisible()
+  await page.getByText('At your feet / A tus pies').first().click()
+  await expect(page.getByText(/A Tus pies, arde mi corazón|A tus pies/i).first()).toBeVisible()
+  await expect(page.getByText(/At your feet, that's where/i).first()).toBeVisible()
+  await expect(page.locator('.key-badge').first()).toContainText(/G#|A♭|Ab/)
+
+  await page.goto('./#/settings')
+  await expect(page.locator('input[placeholder="https://xxxx.supabase.co"]')).toHaveValue('https://jpiwwwzozivkdgajiltm.supabase.co')
+  await expect(page.locator('input[placeholder="CUPC-XXXX"]')).toHaveValue('CUPC-ALABANZA')
+})

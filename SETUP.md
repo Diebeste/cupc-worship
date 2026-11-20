@@ -1,3 +1,34 @@
+# CUPC Worship — team setup
+
+The live app at https://diebeste.github.io/cupc-worship/ is already pointed at the **CUPC Worship** Supabase project. The public URL and anon key are built in, and the join code is **CUPC-ALABANZA**. Teammates do not need to paste keys.
+
+## First sign-in (Brandon becomes admin)
+
+1. Open the live app → **Settings**.
+2. Enter your email and tap **Send login link**.
+3. Open the email and tap the magic link (it should return to `https://diebeste.github.io/cupc-worship/`).
+4. Back in **Settings**, confirm the join code is `CUPC-ALABANZA` and tap **Join team**. The first person to join this pre-created team becomes **admin**; later teammates join as members (view only until an admin grants `can_edit` in **Table Editor → profiles**).
+
+## Auth URLs Brandon should confirm in the dashboard
+
+The MCP tools cannot set Auth URLs. In [Authentication → URL Configuration](https://supabase.com/dashboard/project/jpiwwwzozivkdgajiltm/auth/url-configuration) set:
+
+- **Site URL:** `https://diebeste.github.io/cupc-worship/`
+- **Redirect URLs:** `https://diebeste.github.io/cupc-worship/` and `http://127.0.0.1:4173/cupc-worship/` (local preview)
+
+If the magic-link email opens a blank or wrong page, those two fields are the usual cause. Also leave **Confirm email** enabled.
+
+To re-seed songs, services, members, and the November schedule later (use a service_role key at runtime; never commit it):
+
+```bash
+SUPABASE_URL=https://jpiwwwzozivkdgajiltm.supabase.co \
+SUPABASE_SERVICE_ROLE_KEY=… \
+TEAM_JOIN_CODE=CUPC-ALABANZA \
+node scripts/seed-supabase.mjs
+```
+
+---
+
 # Turn on team sync (Supabase)
 
 The app works fully on one phone or computer without this. Songs, services and backups stay in the browser. When you are ready for the whole CUPC Mississauga worship team to share one library, create a free Supabase project and paste two values into **Settings**.

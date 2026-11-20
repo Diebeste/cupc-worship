@@ -1,3 +1,4 @@
+import { BUILTIN_SUPABASE } from '../data/supabase-config.js'
 /** IndexedDB cache — source of truth in local/demo mode, cache when synced. */
 
 const DB_NAME = 'cupc-worship'
@@ -105,9 +106,9 @@ export function defaultSettings() {
     layout: 'stack',
     showChords: true,
     displayName: '',
-    supabaseUrl: '',
-    supabaseAnonKey: '',
-    joinCode: '',
+    supabaseUrl: BUILTIN_SUPABASE.url || '',
+    supabaseAnonKey: BUILTIN_SUPABASE.anonKey || '',
+    joinCode: BUILTIN_SUPABASE.joinCode || '',
     role: 'admin',
     userEmail: '',
     userId: '',

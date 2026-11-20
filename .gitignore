@@ -6,3 +6,8 @@ test-results/
 .DS_Store
 *.log
 test-results/
+
+import-zip/
+
+src/data/library-report.json
+tmp-migs/

@@ -3,7 +3,8 @@ import { h, clear, parseHash, go, copyText } from './dom.js'
 import { t as tr, weekdaysShort } from './i18n.js'
 import * as db from './db/local.js'
 import * as sync from './db/sync.js'
-import { stampedSeed } from './data/seed.js'
+import { stampedSeed, SONG_LIBRARY_VERSION, mergeSeedSongs } from './data/seed.js'
+import { BUILTIN_SUPABASE } from './data/supabase-config.js'
 import { DATA_VERSION, SERVICE_TYPES, normalizeService, migrateLocalData, rememberMany, membersFromService, currentMonth, shiftMonth, monthLabel, servicesForMonth, servicesOnDate, formatDayHeading } from './data/roles.js'
 import { mountRolesFields, renderRolesView } from './views/rolesForm.js'
 import { renderScheduleCard, buildPoster, renderMonthCalendar } from './views/schedule.js'
@@ -48,7 +49,8 @@ async function persistSettings() {
   await db.setMeta('settings', state.settings)
 }
 
-async function saveSong(song, { silent = false } = {}) {
+async function saveSong(song, { silent = false, fromSeed = false } = {}) {
+  if (!fromSeed) song.userEdited = true
   song.updatedAt = db.nowIso()
   if (!song.createdAt) song.createdAt = song.updatedAt
   const i = state.songs.findIndex((s) => s.id === song.id)
@@ -1369,12 +1371,17 @@ async function boot() {
   try {
     const saved = await db.getMeta('settings')
     if (saved) state.settings = { ...db.defaultSettings(), ...saved }
+    else state.settings = db.defaultSettings()
+    if (!state.settings.supabaseUrl && BUILTIN_SUPABASE.url) state.settings.supabaseUrl = BUILTIN_SUPABASE.url
+    if (!state.settings.supabaseAnonKey && BUILTIN_SUPABASE.anonKey) state.settings.supabaseAnonKey = BUILTIN_SUPABASE.anonKey
+    if (!state.settings.joinCode && BUILTIN_SUPABASE.joinCode) state.settings.joinCode = BUILTIN_SUPABASE.joinCode
     const [songs, services] = await Promise.all([db.getAll('songs'), db.getAll('services')])
     const existingMembers = await db.getMeta('members')
     const existingMeta = await db.getMeta('scheduleMeta')
     const version = await db.getMeta('dataVersion')
+    const libVer = await db.getMeta('songLibraryVersion')
+    const seed = stampedSeed()
     if (!songs.length && !services.length) {
-      const seed = stampedSeed()
       const migrated = migrateLocalData({ services: seed.services, members: seed.members, scheduleMeta: seed.scheduleMeta })
       state.songs = seed.songs
       state.services = migrated.services
@@ -1386,6 +1393,7 @@ async function boot() {
       await db.setMeta('scheduleMeta', state.scheduleMeta)
       await db.setMeta('seeded', true)
       await db.setMeta('dataVersion', DATA_VERSION)
+      await db.setMeta('songLibraryVersion', SONG_LIBRARY_VERSION)
     } else {
       state.songs = songs
       if (version !== DATA_VERSION) {
@@ -1405,6 +1413,11 @@ async function boot() {
         state.services = services.map(normalizeService)
         state.members = existingMembers || []
         state.scheduleMeta = existingMeta || {}
+      }
+      if (libVer !== SONG_LIBRARY_VERSION) {
+        state.songs = mergeSeedSongs(state.songs, seed.songs)
+        await db.putMany('songs', state.songs)
+        await db.setMeta('songLibraryVersion', SONG_LIBRARY_VERSION)
       }
     }
     applyTheme()
