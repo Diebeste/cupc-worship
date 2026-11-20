@@ -210,3 +210,59 @@ grant insert, update, delete on public.songs, public.services to authenticated;
 grant insert, update on public.profiles to authenticated;
 grant execute on function public.join_team_with_code(text, text) to authenticated;
 grant execute on function public.create_team(text, text) to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- v2 migration (safe to re-run): service roles, members, schedule month notes
+-- ---------------------------------------------------------------------------
+
+alter table public.services add column if not exists voices jsonb not null default '[]'::jsonb;
+alter table public.services add column if not exists instruments jsonb not null default '[]'::jsonb;
+alter table public.services add column if not exists ujier text not null default '';
+alter table public.services add column if not exists subtitle text not null default '';
+alter table public.services add column if not exists schedule_pin text not null default '';
+
+update public.services set type = 'service' where type = 'adhoc';
+
+create table if not exists public.members (
+  id text primary key,
+  team_id uuid not null references public.teams (id) on delete cascade,
+  name text not null,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.schedule_meta (
+  id text primary key,
+  team_id uuid not null references public.teams (id) on delete cascade,
+  month text not null,
+  practice_notes text not null default '',
+  banner text not null default '',
+  updated_at timestamptz not null default now(),
+  unique (team_id, month)
+);
+
+create index if not exists members_team_id_idx on public.members (team_id);
+create index if not exists schedule_meta_team_id_idx on public.schedule_meta (team_id);
+
+alter table public.members enable row level security;
+alter table public.schedule_meta enable row level security;
+
+drop policy if exists members_select on public.members;
+create policy members_select on public.members
+  for select using (team_id = public.my_team_id());
+
+drop policy if exists members_write on public.members;
+create policy members_write on public.members
+  for all using (public.is_team_editor(team_id))
+  with check (public.is_team_editor(team_id));
+
+drop policy if exists schedule_meta_select on public.schedule_meta;
+create policy schedule_meta_select on public.schedule_meta
+  for select using (team_id = public.my_team_id());
+
+drop policy if exists schedule_meta_write on public.schedule_meta;
+create policy schedule_meta_write on public.schedule_meta
+  for all using (public.is_team_editor(team_id))
+  with check (public.is_team_editor(team_id));
+
+grant select on public.members, public.schedule_meta to authenticated;
+grant insert, update, delete on public.members, public.schedule_meta to authenticated;

@@ -116,13 +116,15 @@ export function defaultSettings() {
   }
 }
 
-export async function exportBackup({ songs, services, settings }) {
+export async function exportBackup({ songs, services, settings, members, scheduleMeta }) {
   return {
-    version: 1,
+    version: 2,
     exportedAt: nowIso(),
     app: 'cupc-worship',
     settings: { ...settings, supabaseAnonKey: settings.supabaseAnonKey ? '[redacted — re-enter in Settings]' : '' },
     songs,
-    services
+    services,
+    members: members || [],
+    scheduleMeta: scheduleMeta || {}
   }
 }

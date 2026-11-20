@@ -1,12 +1,14 @@
 import { displayKey, transposePlan, transposeText } from './transpose.js'
 import { labelForType } from './parseLyrics.js'
+import { rolesTextLines } from '../data/roles.js'
 
 export function serviceWhatsAppText(service, songsById, { lang = 'both' } = {}) {
   const date = service.date ? formatDate(service.date) : ''
-  const header = [service.name, date, typeLabel(service.type), service.leader && `Lead: ${service.leader}`]
+  const header = [service.name, date, typeLabel(service.type), service.subtitle]
     .filter(Boolean)
     .join(' · ')
   const lines = [`*${header}*`, '']
+  lines.push(...rolesTextLines(service).map((l) => l), '')
   ;(service.items || []).forEach((item, i) => {
     const song = songsById[item.songId]
     const title = song?.title || '—'
@@ -63,6 +65,11 @@ export function encodeSharePayload(service, songs) {
       date: service.date,
       type: service.type,
       leader: service.leader,
+      voices: service.voices,
+      instruments: service.instruments,
+      ujier: service.ujier,
+      subtitle: service.subtitle,
+      schedulePin: service.schedulePin,
       notes: service.notes,
       items: service.items
     },
@@ -88,7 +95,7 @@ export function decodeSharePayload(token) {
 }
 
 function typeLabel(type) {
-  return { sunday: 'Sunday', thursday: 'Thursday', event: 'Event', adhoc: 'Ad hoc' }[type] || type || ''
+  return { sunday: 'Sunday', thursday: 'Thursday', event: 'Event', service: 'Service', adhoc: 'Service' }[type] || type || ''
 }
 
 export function formatDate(iso) {

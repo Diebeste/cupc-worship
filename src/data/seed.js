@@ -1,5 +1,7 @@
 /** Curated songs and services from the team’s example documents (not invented). */
 
+import { novemberServices, applyNovemberMerge, SEED_MEMBERS, SEED_SCHEDULE_META, normalizeService } from './roles.js'
+
 const s = (type, label, linesEs = [], linesEn = [], notes = '') => ({
   type,
   label,
@@ -629,8 +631,16 @@ export const SEED_SERVICES = [
     name: '15/11',
     date: '2026-11-15',
     type: 'sunday',
-    leader: '',
-    notes: 'Typical service setlist from the team’s “15/11” document. Date taken as 15 November 2026 from the file title (year not printed on the pages).',
+    leader: 'BRANDON',
+    subtitle: 'CULTO GENERAL',
+    voices: ['Kathy', 'Anamaria'],
+    instruments: [
+      { name: 'Piano', player: 'Daniel' },
+      { name: 'Bass', player: '' },
+      { name: 'Drums', player: 'Juan' }
+    ],
+    ujier: '',
+    notes: 'Typical service setlist from the team’s “15/11” document. Date taken as 15 November 2026 from the file title (year not printed on the pages). Roles from the November 2026 schedule sheet.',
     items: [
       { songId: 'song-cristo-yo-te-amo', key: 'F', lead: '', notes: '' },
       { songId: 'song-entra-en-la-presencia', key: 'G', lead: '', notes: '' },
@@ -642,10 +652,18 @@ export const SEED_SERVICES = [
   {
     id: 'service-semana-jueves',
     name: 'Semana de alabanza — Jueves Acústico',
-    date: '',
+    date: '2026-11-19',
     type: 'event',
-    leader: '',
-    notes: 'Special event setlist from the “Semana de alabanza Jueves” document. No calendar date was printed. Leads and harmony notes are on the song pages.',
+    subtitle: 'SEMANA DE ALABANZA',
+    leader: 'WILFREDO',
+    voices: ['Kathy', 'Alejandra', 'Brandon', 'Anamaria'],
+    instruments: [
+      { name: 'Piano', player: 'Daniel' },
+      { name: 'Bass', player: '' },
+      { name: 'Drums', player: 'Juan' }
+    ],
+    ujier: '',
+    notes: 'Special event setlist from the “Semana de alabanza Jueves” document, dated Thursday 19 November 2026 from the November schedule sheet. Leads and harmony notes are on the song pages.',
     items: [
       { songId: 'song-al-estar-ante-ti', key: 'C', lead: 'Wilfredo', notes: 'COMIENZO' },
       { songId: 'song-por-el-poder-de-tu-amor', key: 'G', lead: 'Kathy', notes: '' },
@@ -658,8 +676,12 @@ export const SEED_SERVICES = [
 
 export function stampedSeed() {
   const ts = '2026-11-15T00:00:00.000Z'
+  const core = SEED_SERVICES.map((s) => applyNovemberMerge({ ...s, createdAt: ts, updatedAt: ts, seeded: true }))
+  const extras = novemberServices().map((s) => ({ ...normalizeService(s), createdAt: ts, updatedAt: ts, seeded: true }))
   return {
     songs: SEED_SONGS.map((s) => ({ ...s, createdAt: ts, updatedAt: ts, seeded: true })),
-    services: SEED_SERVICES.map((s) => ({ ...s, createdAt: ts, updatedAt: ts, seeded: true }))
+    services: [...core, ...extras],
+    members: SEED_MEMBERS.map((m) => ({ ...m })),
+    scheduleMeta: { ...SEED_SCHEDULE_META }
   }
 }

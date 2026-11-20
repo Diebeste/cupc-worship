@@ -84,3 +84,8 @@ Local demo mode (no Supabase keys) treats everyone on that device as an editor.
 - **Need a fresh start:** Settings → Export JSON backup, then in Supabase Table Editor clear `songs` / `services` if you must, and re-import the backup while signed in as admin.
 
 The official schema file is the source of truth: [`supabase/schema.sql`](supabase/schema.sql).
+
+
+## Schema updates (v2 — roles and schedule)
+
+If you already ran the original `schema.sql`, run the file again in the SQL Editor. The new section at the bottom is safe to re-run: it adds `voices`, `instruments`, `ujier`, `subtitle` and `schedule_pin` on `services`, converts any `adhoc` type to `service`, and creates the `members` and `schedule_meta` tables with the same row-level security.

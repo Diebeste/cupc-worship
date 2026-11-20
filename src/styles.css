@@ -289,3 +289,88 @@ hr.sep { border: 0; border-top: 1px solid var(--line); margin: 16px 0; }
 @media (min-width: 720px) {
   .topbar .wordmark { display: block; height: 26px; margin-right: 8px; }
 }
+
+/* 5-tab nav */
+.bottom-nav { grid-template-columns: repeat(5, 1fr); }
+.bottom-nav a, .bottom-nav button { font-size: 10px; padding: 6px 2px; }
+.bottom-nav .ico { font-size: 18px; }
+
+.roles-block { margin: 8px 0 16px; }
+.voice-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.voice-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--blue-soft); color: var(--navy);
+  border-radius: 999px; padding: 4px 8px 4px 10px; font-size: 13px; font-weight: 600;
+}
+.voice-chip button { border: 0; background: transparent; cursor: pointer; color: var(--muted); padding: 0 2px; font-size: 16px; }
+.inst-row { display: grid; grid-template-columns: 1.1fr 1.3fr 36px; gap: 8px; align-items: end; margin-bottom: 8px; }
+.roles-view { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; margin: 10px 0; }
+.roles-view h3 { margin-bottom: 8px; }
+.roles-view .role-line { margin: 3px 0; font-size: 15px; }
+.roles-view .role-k { font-weight: 800; text-transform: uppercase; font-size: 12px; letter-spacing: 0.04em; color: var(--muted); }
+
+/* Schedule */
+.sched-page { padding-bottom: 8px; }
+.sched-title {
+  font-family: var(--font-serif);
+  font-size: 32px; text-align: center; letter-spacing: 0.12em;
+  margin: 4px 0 10px; color: var(--navy);
+}
+:root.theme-dark .sched-title { color: #fff; }
+.sched-switch { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
+.sched-switch h2 { font-size: 16px; min-width: 180px; text-align: center; text-transform: uppercase; letter-spacing: 0.08em; }
+.sched-meta { margin-bottom: 12px; }
+.sched-meta input { width: 100%; border: 1px dashed var(--line); background: transparent; border-radius: 10px; padding: 8px 10px; margin-bottom: 6px; }
+.sched-banner-input { background: #f8e8a0 !important; color: #2a2410; border-color: #e0c66a !important; font-weight: 800; }
+.sched-practice { font-weight: 600; }
+.sched-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 560px) {
+  .sched-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 860px) {
+  .sched-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+.sched-card {
+  border-radius: 22px;
+  padding: 14px 16px 16px;
+  border: 3px solid;
+  color: #1c1220;
+  min-height: 200px;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+.sched-card h3 {
+  font-family: var(--font-display);
+  font-size: 18px; letter-spacing: 0.02em;
+  text-transform: uppercase; margin: 0 0 2px;
+}
+.sched-sub { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; opacity: 0.9; }
+.sched-k { font-weight: 800; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; margin-top: 8px; }
+.sched-v { font-size: 14px; font-weight: 650; }
+.sched-v ul { margin: 2px 0 0 1.1em; padding: 0; }
+.sched-v li { margin: 0; }
+.sched-poster {
+  background: #fff; color: #111;
+  padding: 20px 16px;
+  max-width: 900px; margin: 0 auto;
+}
+.sched-poster .sched-title { font-size: 42px; color: #111; margin-bottom: 8px; }
+.sched-poster-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; font-weight: 600; }
+.sched-poster-head .banner-pill {
+  background: #f8e8a0; color: #2a2410; font-weight: 800;
+  padding: 4px 10px; border-radius: 8px; margin-left: auto;
+}
+.sched-poster .sched-grid { grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+@media (max-width: 640px) {
+  .sched-poster .sched-grid { grid-template-columns: 1fr; }
+}
+@media print {
+  .sched-poster { padding: 0; max-width: none; }
+  .sched-poster .sched-grid { grid-template-columns: 1fr 1fr 1fr !important; }
+  .sched-card { break-inside: avoid; box-shadow: none; }
+}
+
+.key-set { margin: 12px 0; }
+.key-set .field { margin-bottom: 8px; }
+.radio-row { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }

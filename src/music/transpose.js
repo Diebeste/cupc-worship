@@ -35,6 +35,9 @@ export const KEYS = ['C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'Gb', 'G'
 
 export const COMMON_KEYS = ['C', 'C#', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'Ab', 'A', 'Bb', 'B']
 
+export const ALL_SONG_KEYS = COMMON_KEYS.flatMap((k) => [k, k + 'm'])
+
+
 function normalizeNote(note) {
   if (!note) return null
   let n = String(note).trim().replace('♯', '#').replace('♭', 'b')
@@ -134,4 +137,13 @@ export function transposePlan(originalKey, targetKey, { preferOriginalShapes = t
 
 export function displayKey(key) {
   return parseKey(key) || key || '—'
+}
+
+export function transposeSections(sections, semitones, useFlats) {
+  if (!semitones) return (sections || []).map((s) => ({ ...s, linesEn: [...(s.linesEn || [])], linesEs: [...(s.linesEs || [])] }))
+  return (sections || []).map((s) => ({
+    ...s,
+    linesEn: (s.linesEn || []).map((line) => transposeText(line, semitones, useFlats)),
+    linesEs: (s.linesEs || []).map((line) => transposeText(line, semitones, useFlats))
+  }))
 }

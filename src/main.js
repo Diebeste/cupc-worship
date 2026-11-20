@@ -4,8 +4,11 @@ import { t as tr } from './i18n.js'
 import * as db from './db/local.js'
 import * as sync from './db/sync.js'
 import { stampedSeed } from './data/seed.js'
+import { DATA_VERSION, SERVICE_TYPES, normalizeService, migrateLocalData, rememberMany, membersFromService, currentMonth, shiftMonth, monthLabel, servicesForMonth } from './data/roles.js'
+import { mountRolesFields, renderRolesView } from './views/rolesForm.js'
+import { renderScheduleCard, buildPoster } from './views/schedule.js'
 import { parseSongsFromText, parseSongChunk, searchHaystack, songToPlainText } from './music/parseLyrics.js'
-import { COMMON_KEYS, displayKey, stepsBetween, preferFlatsFor, capoSuggestion } from './music/transpose.js'
+import { COMMON_KEYS, ALL_SONG_KEYS, displayKey, stepsBetween, preferFlatsFor, capoSuggestion, transposeSections } from './music/transpose.js'
 import { importFilesToSongs } from './music/importFile.js'
 import { serviceWhatsAppText, encodeSharePayload, decodeSharePayload, formatDate, renderSongPlain } from './music/export.js'
 import { renderLyrics, planFor, sectionsToPaste } from './views/lyrics.js'
@@ -20,7 +23,9 @@ const state = {
   toast: '',
   online: navigator.onLine,
   importPreview: null,
-  stageSize: 28
+  stageSize: 28,
+  members: [],
+  scheduleMeta: {}
 }
 
 let wakeLock = null
@@ -145,6 +150,7 @@ function shell(content, { stage = false, print = false, title } = {}) {
   if (!stage && !print) {
     app.append(
       h('nav', { class: 'bottom-nav' },
+        navItem('/schedule', '📅', t('schedule'), tab === 'schedule'),
         navItem('/services', '🗓️', t('services'), tab === 'services' || !tab),
         navItem('/songs', '🎵', t('songs'), tab === 'songs'),
         navItem('/import', '📥', t('import'), tab === 'import'),
@@ -205,7 +211,7 @@ function pageServices() {
 }
 
 function typeLabel(type) {
-  return ({ sunday: t('typeSunday'), thursday: t('typeThursday'), event: t('typeEvent'), adhoc: t('typeAdhoc') })[type] || type || ''
+  return ({ sunday: t('typeSunday'), thursday: t('typeThursday'), event: t('typeEvent'), service: t('typeService'), adhoc: t('typeService') })[type] || type || ''
 }
 
 function pageServiceDetail(id) {
@@ -227,7 +233,9 @@ function pageServiceDetail(id) {
       h('button', { class: 'btn secondary', onclick: () => copyServiceText(svc) }, t('whatsapp'))
     )
   )
+  if (svc.subtitle) page.append(h('div', { class: 'meta' }, svc.subtitle))
   if (svc.notes) page.append(h('p', { class: 'help' }, svc.notes))
+  page.append(renderRolesView(normalizeService(svc), t))
   page.append(h('h3', { style: { margin: '8px 0' } }, t('serviceSongs')))
   if (!svc.items?.length) page.append(h('div', { class: 'empty' }, t('emptySetlist')))
   ;(svc.items || []).forEach((item, idx) => {
@@ -322,16 +330,16 @@ async function copyServiceText(svc) {
 function pageServiceEdit(id) {
   const isNew = id === 'new'
   const svc = isNew
-    ? { id: db.uid('service'), name: '', date: new Date().toISOString().slice(0, 10), type: 'adhoc', leader: '', notes: '', items: [], createdAt: db.nowIso() }
-    : structuredClone(byId(state.services, id) || null)
-  if (!svc) return shell(h('div', { class: 'page' }, 'Not found'))
+    ? normalizeService({ id: db.uid('service'), name: '', date: new Date().toISOString().slice(0, 10), type: 'service', leader: '', notes: '', items: [], createdAt: db.nowIso() })
+    : normalizeService(structuredClone(byId(state.services, id) || null))
+  if (!svc || !svc.id) return shell(h('div', { class: 'page' }, 'Not found'))
   const name = h('input', { value: svc.name, placeholder: t('untitledService') })
   const date = h('input', { type: 'date', value: svc.date || '' })
   const type = h('select', {},
-    ...['sunday', 'thursday', 'event', 'adhoc'].map((v) => h('option', { value: v, selected: svc.type === v }, typeLabel(v)))
+    ...SERVICE_TYPES.map((v) => h('option', { value: v, selected: svc.type === v }, typeLabel(v)))
   )
-  const leader = h('input', { value: svc.leader || '', placeholder: t('leader') })
   const notes = h('textarea', { value: svc.notes || '', style: { minHeight: '80px' } })
+  const roles = mountRolesFields({ svc, members: state.members, t })
   const itemsBox = h('div')
 
   const redrawItems = () => {
@@ -380,7 +388,7 @@ function pageServiceEdit(id) {
       h('div', { class: 'field' }, h('label', {}, t('date')), date),
       h('div', { class: 'field' }, h('label', {}, t('type')), type)
     ),
-    h('div', { class: 'field' }, h('label', {}, t('leader')), leader),
+    roles.el,
     h('div', { class: 'field' }, h('label', {}, t('notes')), notes),
     h('h3', {}, t('serviceSongs')),
     itemsBox,
@@ -389,8 +397,10 @@ function pageServiceEdit(id) {
         svc.name = name.value.trim() || t('untitledService')
         svc.date = date.value
         svc.type = type.value
-        svc.leader = leader.value.trim()
+        Object.assign(svc, roles.read())
         svc.notes = notes.value
+        state.members = roles.nextMembers(state.members)
+        await db.setMeta('members', state.members)
         await saveService(svc)
         go('/services/' + svc.id)
       } }, t('save')),
@@ -402,8 +412,9 @@ function pageServiceEdit(id) {
 
 function keySelect(current) {
   const val = displayKey(current) === '—' ? '' : displayKey(current)
-  const opts = [h('option', { value: '' }, '—'), ...COMMON_KEYS.map((k) => h('option', { value: k, selected: k === val }, k))]
-  if (val && !COMMON_KEYS.includes(val)) opts.push(h('option', { value: val, selected: true }, val))
+  const keys = ALL_SONG_KEYS
+  const opts = [h('option', { value: '' }, '—'), ...keys.map((k) => h('option', { value: k, selected: k === val }, k))]
+  if (val && !keys.includes(val)) opts.push(h('option', { value: val, selected: true }, val))
   return h('select', {}, ...opts)
 }
 
@@ -508,6 +519,7 @@ function pageSongDetail(id) {
       )
     ),
     lyricsHost,
+    canEdit() ? setOriginalKeyCard(song) : null,
     h('div', { class: 'actions' },
       canEdit() ? h('button', { class: 'btn secondary', onclick: () => go('/songs/' + song.id + '/edit') }, t('edit')) : null,
       h('button', { class: 'btn secondary', onclick: async () => {
@@ -534,7 +546,40 @@ function pageSongDetail(id) {
   return shell(page, { title: song.title })
 }
 
+
+async function applyOriginalKeyChange(song, newKey, mode) {
+  const from = song.originalKey || ''
+  const to = newKey || ''
+  if (to && from && mode === 'transpose' && displayKey(from) !== displayKey(to)) {
+    const steps = stepsBetween(from, to)
+    song.sections = transposeSections(song.sections, steps, preferFlatsFor(to))
+  }
+  song.originalKey = to
+  await saveSong(song)
+  toast(t('keySaved'))
+}
+
+function setOriginalKeyCard(song) {
+  const sel = keySelect(song.originalKey || '')
+  const modeWrap = h('div', { class: 'radio-row' },
+    h('label', {}, h('input', { type: 'radio', name: 'keymode-' + song.id, value: 'relabel', checked: true }), ' ', t('relabelKey')),
+    h('label', {}, h('input', { type: 'radio', name: 'keymode-' + song.id, value: 'transpose' }), ' ', t('transposeStored'))
+  )
+  return h('div', { class: 'card key-set' },
+    h('h3', {}, t('setOriginalKey')),
+    h('div', { class: 'field' }, h('label', {}, t('originalKey')), sel),
+    modeWrap,
+    h('button', { class: 'btn secondary', type: 'button', onclick: async () => {
+      const mode = modeWrap.querySelector('input:checked')?.value || 'relabel'
+      await applyOriginalKeyChange(song, sel.value, mode)
+      go('/songs/' + song.id, { replace: true })
+      render()
+    } }, t('save'))
+  )
+}
+
 function pageSongEdit(id) {
+
   const isNew = id === 'new'
   const existing = isNew ? null : byId(state.songs, id)
   if (!isNew && !existing) return shell(h('div', { class: 'page' }, 'Not found'))
@@ -557,6 +602,10 @@ function pageSongEdit(id) {
       h('div', { class: 'field' }, h('label', {}, t('originalKey')), key),
       h('div', { class: 'field' }, h('label', {}, t('bpm')), bpm)
     ),
+    !isNew ? h('div', { class: 'radio-row field' },
+      h('label', {}, h('input', { type: 'radio', name: 'keymode', value: 'relabel', checked: true }), ' ', t('relabelKey')),
+      h('label', {}, h('input', { type: 'radio', name: 'keymode', value: 'transpose' }), ' ', t('transposeStored'))
+    ) : null,
     h('div', { class: 'field' }, h('label', {}, t('artist')), artist),
     isNew ? h('div', { class: 'field' }, h('label', {}, t('pasteLyrics')), pasteAll, h('div', { class: 'help' }, t('pasteHint'))) : null,
     h('div', { class: 'field' }, h('label', {}, t('lyricsEs')), es),
@@ -620,10 +669,18 @@ function pageSongEdit(id) {
     } else {
       song.title = title.value.trim() || t('untitled')
       song.artist = artist.value.trim()
+      const mode = page.querySelector('input[name=keymode]:checked')?.value || 'relabel'
+      const fromKey = existing?.originalKey || ''
+      if (!isNew && key.value && fromKey && mode === 'transpose' && displayKey(fromKey) !== displayKey(key.value)) {
+        const steps = stepsBetween(fromKey, key.value)
+        const parsed = mergeEditorSections(es.value, en.value)
+        song.sections = transposeSections(parsed, steps, preferFlatsFor(key.value))
+      } else {
+        song.sections = mergeEditorSections(es.value, en.value)
+      }
       song.originalKey = key.value
       song.bpm = bpm.value.trim()
       song.notes = notes.value
-      song.sections = mergeEditorSections(es.value, en.value)
     }
     if (!song.title) song.title = t('untitled')
     await saveSong(song)
@@ -825,7 +882,8 @@ function pagePrint(id) {
       h('button', { class: 'btn secondary', onclick: () => go('/services/' + svc.id) }, t('close'))
     ),
     h('h1', {}, svc.name),
-    h('p', {}, [formatDate(svc.date), typeLabel(svc.type), svc.leader].filter(Boolean).join(' · ')),
+    h('p', {}, [formatDate(svc.date), typeLabel(svc.type), svc.subtitle].filter(Boolean).join(' · ')),
+    renderRolesView(normalizeService(svc), t),
     svc.notes ? h('p', {}, svc.notes) : null,
     h('table', {},
       h('thead', {}, h('tr', {}, h('th', {}, t('title')), h('th', {}, t('key')), h('th', {}, t('lead')))),
@@ -846,6 +904,96 @@ function pagePrint(id) {
     root.append(renderLyrics(song, { lang: state.settings.lyricLang || 'both', layout: 'stack', showChords: true, steps, useFlats: preferFlatsFor(key) }))
   }
   return shell(root, { print: true, title: svc.name })
+}
+
+
+async function persistMembers() {
+  await db.setMeta('members', state.members)
+  if (sync.isConfigured(state.settings) && canEdit()) {
+    for (const m of state.members) {
+      try { await sync.pushMember(state.settings, m) } catch (e) { console.warn(e) }
+    }
+  }
+}
+
+async function persistScheduleMeta() {
+  await db.setMeta('scheduleMeta', state.scheduleMeta)
+  if (sync.isConfigured(state.settings) && canEdit()) {
+    for (const [month, meta] of Object.entries(state.scheduleMeta || {})) {
+      try { await sync.pushScheduleMeta(state.settings, month, meta) } catch (e) { console.warn(e) }
+    }
+  }
+}
+
+function pageSchedule() {
+  const q = parseHash().query
+  const month = q.month || currentMonth()
+  const meta = state.scheduleMeta[month] || { practiceNotes: '', banner: '' }
+  const list = servicesForMonth(state.services, month)
+  const practice = h('input', { class: 'sched-practice', value: meta.practiceNotes || '', placeholder: t('practiceNotes') })
+  const banner = h('input', { class: 'sched-banner-input', value: meta.banner || '', placeholder: t('eventBanner') })
+  const saveMeta = async () => {
+    state.scheduleMeta[month] = { practiceNotes: practice.value, banner: banner.value }
+    await persistScheduleMeta()
+  }
+  practice.addEventListener('change', saveMeta)
+  banner.addEventListener('change', saveMeta)
+
+  const page = h('div', { class: 'page sched-page' },
+    h('div', { class: 'page-head' }, h('h2', {}, t('schedule'))),
+    h('div', { class: 'sched-switch' },
+      h('button', { class: 'step-btn', type: 'button', 'aria-label': t('prevMonth'), onclick: () => go('/schedule?month=' + shiftMonth(month, -1), { replace: true }) }, '‹'),
+      h('h2', {}, monthLabel(month, state.settings.uiLang)),
+      h('button', { class: 'step-btn', type: 'button', 'aria-label': t('nextMonth'), onclick: () => go('/schedule?month=' + shiftMonth(month, 1), { replace: true }) }, '›')
+    ),
+    h('div', { class: 'sched-meta' }, practice, banner),
+    h('div', { class: 'actions' },
+      canEdit() ? h('button', { class: 'btn peach', onclick: () => go('/services/new') }, '+ ' + t('newService')) : null,
+      h('button', { class: 'btn secondary', onclick: () => go('/schedule/print?month=' + month) }, t('printSchedule'))
+    ),
+    h('div', { class: 'sched-grid' },
+      ...list.map((svc) => renderScheduleCard(svc, { onOpen: (s) => go('/services/' + s.id) }))
+    )
+  )
+  if (!list.length) page.append(h('div', { class: 'empty' }, t('emptyServices')))
+  return shell(page, { title: t('schedule') })
+}
+
+function pageSchedulePrint() {
+  const month = parseHash().query.month || currentMonth()
+  const meta = state.scheduleMeta[month] || { practiceNotes: '', banner: '' }
+  const list = servicesForMonth(state.services, month)
+  const poster = buildPoster(list, { month, practiceNotes: meta.practiceNotes, banner: meta.banner })
+  const root = h('div', {},
+    h('div', { class: 'no-print actions', style: { padding: '12px 16px' } },
+      h('button', { class: 'btn', onclick: () => window.print() }, t('exportPdf')),
+      h('button', { class: 'btn peach', onclick: () => shareScheduleImage(poster) }, t('shareImage')),
+      h('button', { class: 'btn secondary', onclick: () => go('/schedule?month=' + month) }, t('close'))
+    ),
+    poster
+  )
+  return shell(root, { print: true, title: monthLabel(month, state.settings.uiLang) })
+}
+
+async function shareScheduleImage(node) {
+  try {
+    const { toBlob } = await import('html-to-image')
+    const blob = await toBlob(node, { pixelRatio: 2, backgroundColor: '#ffffff' })
+    if (!blob) throw new Error('Could not create image')
+    const file = new File([blob], `cupc-schedule-${parseHash().query.month || currentMonth()}.png`, { type: 'image/png' })
+    if (navigator.share && navigator.canShare?.({ files: [file] })) {
+      await navigator.share({ files: [file], title: t('schedule') })
+      return
+    }
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = file.name
+    a.click()
+    URL.revokeObjectURL(a.href)
+    toast(t('saved'))
+  } catch (e) {
+    toast(e.message || String(e))
+  }
 }
 
 function pageSettings() {
@@ -953,7 +1101,7 @@ function pageSettings() {
 }
 
 async function exportBackup() {
-  const data = await db.exportBackup({ songs: state.songs, services: state.services, settings: state.settings })
+  const data = await db.exportBackup({ songs: state.songs, services: state.services, settings: state.settings, members: state.members, scheduleMeta: state.scheduleMeta })
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
   const a = document.createElement('a')
   a.href = URL.createObjectURL(blob)
@@ -974,9 +1122,19 @@ function importBackup() {
       const data = JSON.parse(await file.text())
       if (!data.songs || !data.services) throw new Error('Invalid backup')
       state.songs = data.songs
-      state.services = data.services
+      const migrated = migrateLocalData({
+        services: data.services,
+        members: data.members || [],
+        scheduleMeta: data.scheduleMeta || {}
+      })
+      state.services = migrated.services
+      state.members = migrated.members
+      state.scheduleMeta = migrated.scheduleMeta
       await db.putMany('songs', data.songs)
-      await db.putMany('services', data.services)
+      await db.putMany('services', state.services)
+      await db.setMeta('members', state.members)
+      await db.setMeta('scheduleMeta', state.scheduleMeta)
+      await db.setMeta('dataVersion', DATA_VERSION)
       toast(t('importN', { n: data.songs.length }))
       render()
     } catch (e) { toast(e.message || String(e)) }
@@ -1000,6 +1158,8 @@ function render() {
   else if (parts[0] === 'songs' && parts[1]) view = pageSongDetail(parts[1])
   else if (parts[0] === 'songs') view = pageSongs()
   else if (parts[0] === 'import') view = pageImport()
+  else if (parts[0] === 'schedule' && parts[1] === 'print') view = pageSchedulePrint()
+  else if (parts[0] === 'schedule') view = pageSchedule()
   else if (parts[0] === 'settings') view = pageSettings()
   else if (parts[0] === 'services' && parts[1] === 'new') view = pageServiceEdit('new')
   else if (parts[0] === 'services' && parts[2] === 'edit') view = pageServiceEdit(parts[1])
@@ -1028,6 +1188,7 @@ async function ingestShare(token) {
     createdAt: db.nowIso(),
     updatedAt: db.nowIso()
   }
+  Object.assign(svc, normalizeService(svc))
   await saveService(svc, { silent: true })
   go('/services/' + svc.id)
 }
@@ -1060,10 +1221,20 @@ async function tryPull() {
       const map = new Map(state.services.map((s) => [s.id, s]))
       for (const s of result.services) {
         const local = map.get(s.id)
-        if (!local || String(s.updatedAt) >= String(local.updatedAt || '')) map.set(s.id, s)
+        if (!local || String(s.updatedAt) >= String(local.updatedAt || '')) map.set(s.id, normalizeService(s))
       }
-      state.services = [...map.values()]
+      state.services = [...map.values()].map(normalizeService)
       await db.putMany('services', state.services)
+    }
+    if (result.members?.length) {
+      const map = new Map(state.members.map((m) => [m.id, m]))
+      for (const m of result.members) map.set(m.id, m)
+      state.members = [...map.values()]
+      await db.setMeta('members', state.members)
+    }
+    if (result.scheduleMeta && Object.keys(result.scheduleMeta).length) {
+      state.scheduleMeta = { ...state.scheduleMeta, ...result.scheduleMeta }
+      await db.setMeta('scheduleMeta', state.scheduleMeta)
     }
   } catch (e) {
     console.warn('sync pull failed', e)
@@ -1075,16 +1246,42 @@ async function boot() {
     const saved = await db.getMeta('settings')
     if (saved) state.settings = { ...db.defaultSettings(), ...saved }
     const [songs, services] = await Promise.all([db.getAll('songs'), db.getAll('services')])
+    const existingMembers = await db.getMeta('members')
+    const existingMeta = await db.getMeta('scheduleMeta')
+    const version = await db.getMeta('dataVersion')
     if (!songs.length && !services.length) {
       const seed = stampedSeed()
+      const migrated = migrateLocalData({ services: seed.services, members: seed.members, scheduleMeta: seed.scheduleMeta })
       state.songs = seed.songs
-      state.services = seed.services
+      state.services = migrated.services
+      state.members = migrated.members
+      state.scheduleMeta = migrated.scheduleMeta
       await db.putMany('songs', seed.songs)
-      await db.putMany('services', seed.services)
+      await db.putMany('services', state.services)
+      await db.setMeta('members', state.members)
+      await db.setMeta('scheduleMeta', state.scheduleMeta)
       await db.setMeta('seeded', true)
+      await db.setMeta('dataVersion', DATA_VERSION)
     } else {
       state.songs = songs
-      state.services = services
+      if (version !== DATA_VERSION) {
+        const migrated = migrateLocalData({
+          services,
+          members: existingMembers || [],
+          scheduleMeta: existingMeta || {}
+        })
+        state.services = migrated.services
+        state.members = migrated.members
+        state.scheduleMeta = migrated.scheduleMeta
+        await db.putMany('services', state.services)
+        await db.setMeta('members', state.members)
+        await db.setMeta('scheduleMeta', state.scheduleMeta)
+        await db.setMeta('dataVersion', DATA_VERSION)
+      } else {
+        state.services = services.map(normalizeService)
+        state.members = existingMembers || []
+        state.scheduleMeta = existingMeta || {}
+      }
     }
     applyTheme()
     state.ready = true
