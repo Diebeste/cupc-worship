@@ -1,4 +1,5 @@
 import { parseSongsFromText } from './parseLyrics.js'
+import { looksLikeVideoPsalm, parseImportedSongs } from './videopsalm.js'
 
 let pdfjsReady = null
 
@@ -15,8 +16,8 @@ async function loadPdfjs() {
 
 export async function extractTextFromFile(file) {
   const name = (file.name || '').toLowerCase()
-  if (name.endsWith('.txt') || name.endsWith('.md') || name.endsWith('.text')) {
-    return { text: await file.text(), kind: 'text' }
+  if (name.endsWith('.txt') || name.endsWith('.md') || name.endsWith('.text') || name.endsWith('.json')) {
+    return { text: await file.text(), kind: name.endsWith('.json') ? 'videopsalm' : 'text' }
   }
   if (name.endsWith('.docx')) {
     const mammoth = await import('mammoth')
@@ -117,12 +118,26 @@ export async function importFilesToSongs(fileList) {
   for (const file of files) {
     try {
       const { text, kind } = await extractTextFromFile(file)
-      const songs = parseSongsFromText(text).map((s) => ({
+      let songs
+      let usedKind = kind
+      try {
+        const vp = parseImportedSongs(text)
+        if (vp && vp.length) {
+          songs = vp
+          usedKind = 'videopsalm'
+        } else {
+          songs = parseSongsFromText(text)
+        }
+      } catch (err) {
+        if (looksLikeVideoPsalm(text) || (file.name || '').toLowerCase().endsWith('.json')) throw err
+        songs = parseSongsFromText(text)
+      }
+      songs = songs.map((s) => ({
         ...s,
         notes: s.notes || `Imported from ${file.name}`,
         sourceFile: file.name
       }))
-      results.push({ file: file.name, kind, text, songs, error: null })
+      results.push({ file: file.name, kind: usedKind, text, songs, error: null })
     } catch (err) {
       results.push({ file: file.name, kind: null, text: '', songs: [], error: err.message || String(err) })
     }

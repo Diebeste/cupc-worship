@@ -513,3 +513,15 @@ hr.sep { border: 0; border-top: 1px solid var(--line); margin: 16px 0; }
 }
 .cal-chip-lead { font-weight: 600; opacity: 0.9; }
 .day-sheet .card { margin-bottom: 8px; }
+
+.preview-song {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+}
+.preview-song input[type="checkbox"] { margin-top: 10px; flex-shrink: 0; width: 18px; height: 18px; }
+.preview-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.merge-row { display: flex; align-items: center; gap: 8px; font-size: 14px; margin: 6px 0 10px; }
+.dup-badge { background: #f8e8a0; color: #2a2410; }
+:root.theme-dark .dup-badge, :root.theme-system.theme-dark .dup-badge { background: #5a4a18; color: #ffe9a0; }

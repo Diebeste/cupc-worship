@@ -1,0 +1,12 @@
+﻿{Abbreviation:"CUPC",Copyright:"For import testing",Songs:[{ID:1,Composer:"",Author:"Equipo CUPC",Copyright:"© Iglesia CUPC Mississauga",Theme:"alabanza",CCLI:"0000000",Alias:"Dios es fiel",Memo1:"",Reference:"",Guid:"testdiosesfiel",Verses:[{Text:"V1.
+[G]Dios es fiel en cada [C]amanecer,
+su [G]amor no se acaba, no se [D]va a perder."},{ID:2,Text:"C.
+[G]Cantamos tu [C]nombre, Señor,
+[D]grande es tu [G]fidelidad."},{ID:3,Text:"B.
+En la [Em]prueba y en la [C]calma,
+tú [G]estás, Señor, con [D]migo."}],IsAudioFileEnabled:0,
+Text:"Dios es fiel"},{ID:2,Composer:"Unknown",Author:"Test Author",Copyright:"Public domain",Theme:"praise",CCLI:"11111",Alias:"",Memo1:"A memo line",Guid:"testenglishhope",Verses:[{Text:"Verse 1
+[D]We lift our [G]voices in the [A]morning [D]light."},{ID:2,Text:"Chorus
+[D]Your love endures, your [G]mercy [A]stays."}],IsAudioFileEnabled:0,
+Text:"Morning Light (D)"}],Guid:"testbookguid",VersionDate:"20261120000000",
+Text:"CUPC Test Songbook"}

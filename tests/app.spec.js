@@ -363,3 +363,34 @@ test('calendar view shows November 2026 services, opens a day, and creates on th
   await expect(page.getByText('Mié', { exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Calendario' })).toBeVisible()
 })
+
+test('import a VideoPsalm songbook with preview checkboxes and skip duplicates', async ({ page }) => {
+  await waitReady(page)
+  await page.goto('./#/import')
+  const input = page.locator('input[type=file]')
+  await input.setInputFiles([
+    path.join(examples, 'videopsalm-cupc-test.json'),
+    path.join(examples, 'videopsalm-as-safe-a-stronghold.json')
+  ])
+  await expect(page.getByText('Dios es fiel')).toBeVisible()
+  await expect(page.getByText(/Morning Light/)).toBeVisible()
+  await expect(page.getByText('A Safe Stronghold Our God is Still')).toBeVisible()
+  await expect(page.getByText('CCLI 0000000')).toBeVisible()
+  await expect(page.getByText(/Import 3 song/)).toBeVisible()
+  await expect(page.locator('.preview-song input[type=checkbox]').first()).toBeChecked()
+  await page.screenshot({ path: path.join(shots, '19-videopsalm-import.png'), fullPage: true })
+
+  await page.getByRole('button', { name: /Import 3 song/ }).click()
+  await expect(page).toHaveURL(/#\/songs/)
+  await expect(page.getByText('Dios es fiel')).toBeVisible()
+  await expect(page.getByText('A Safe Stronghold Our God is Still')).toBeVisible()
+
+  await page.goto('./#/import')
+  await page.locator('input[type=file]').setInputFiles(path.join(examples, 'videopsalm-cupc-test.json'))
+  await expect(page.getByText('Already in library').first()).toBeVisible()
+  await expect(page.getByRole('button', { name: /Import 0 song/ })).toBeVisible()
+  await page.getByRole('button', { name: 'Select all' }).click()
+  await expect(page.getByRole('button', { name: /Import 2 song/ })).toBeVisible()
+  await page.getByRole('button', { name: 'Select new only' }).click()
+  await expect(page.getByRole('button', { name: /Import 0 song/ })).toBeVisible()
+})

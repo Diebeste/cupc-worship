@@ -10,6 +10,7 @@ import { renderScheduleCard, buildPoster, renderMonthCalendar } from './views/sc
 import { parseSongsFromText, parseSongChunk, searchHaystack, songToPlainText } from './music/parseLyrics.js'
 import { COMMON_KEYS, ALL_SONG_KEYS, displayKey, stepsBetween, preferFlatsFor, capoSuggestion, transposeSections } from './music/transpose.js'
 import { importFilesToSongs } from './music/importFile.js'
+import { parseImportedSongs } from './music/videopsalm.js'
 import { serviceWhatsAppText, encodeSharePayload, decodeSharePayload, formatDate, renderSongPlain } from './music/export.js'
 import { renderLyrics, planFor, sectionsToPaste } from './views/lyrics.js'
 
@@ -723,26 +724,84 @@ function mergeEditorSections(esText, enText) {
   return out.filter((s) => s.linesEn?.some(Boolean) || s.linesEs?.some(Boolean) || s.notes)
 }
 
+function foldTitle(s) {
+  return String(s || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function findSongByTitle(title) {
+  const k = foldTitle(title)
+  if (!k) return null
+  return state.songs.find((s) => foldTitle(s.title) === k) || null
+}
+
 function pageImport() {
-  const ta = h('textarea', { placeholder: t('pasteHint') })
+  const ta = h('textarea', { placeholder: t('importPasteHint') })
   const preview = h('div')
-  const fileInput = h('input', { type: 'file', accept: '.pdf,.docx,.txt,.md,text/plain,application/pdf', multiple: true, style: { display: 'none' } })
+  const fileInput = h('input', { type: 'file', accept: '.pdf,.docx,.txt,.md,.json,text/plain,application/pdf,application/json', multiple: true, style: { display: 'none' } })
 
   const showPreview = (songs, sourceLabel) => {
     state.importPreview = songs
     clear(preview)
     preview.append(h('h3', {}, t('preview') + (sourceLabel ? ' — ' + sourceLabel : '')))
-    if (!songs.length) preview.append(h('p', { class: 'muted' }, t('noResults')))
-    songs.forEach((s, i) => {
-      preview.append(
-        h('div', { class: 'preview-song' },
-          h('div', { class: 'row' }, keyBadge(s.originalKey), h('strong', {}, s.title), h('span', { class: 'meta' }, `${s.sections?.length || 0} ${t('sections')}`))
-        )
-      )
-    })
-    if (songs.length) {
-      preview.append(h('button', { class: 'btn block', onclick: () => commitImport(songs) }, t('importN', { n: songs.length })))
+    if (!songs.length) {
+      preview.append(h('p', { class: 'muted' }, t('noResults')))
+      return
     }
+    const items = songs.map((s) => {
+      const existing = findSongByTitle(s.title)
+      return { song: s, existing, selected: !existing, check: null }
+    })
+    const merge = h('input', { type: 'checkbox' })
+    const count = () => items.filter((it) => it.selected).length
+    const importBtn = h('button', { class: 'btn block' }, t('importN', { n: count() }))
+    const redrawBtn = () => {
+      importBtn.textContent = t('importN', { n: count() })
+      importBtn.disabled = count() === 0
+    }
+    importBtn.addEventListener('click', () => {
+      const chosen = items.filter((it) => it.selected).map((it) => ({ ...it.song, existing: it.existing }))
+      commitImport(chosen, { merge: merge.checked })
+    })
+    const list = h('div')
+    const drawList = () => {
+      clear(list)
+      items.forEach((it) => {
+        const box = h('input', { type: 'checkbox', checked: it.selected })
+        box.addEventListener('change', () => { it.selected = box.checked; redrawBtn() })
+        it.check = box
+        const meta = `${it.song.sections?.length || 0} ${t('sections')}`
+        const extra = [it.song.artist, it.song.originalKey && (t('key') + ' ' + it.song.originalKey), it.song.ccli && ('CCLI ' + it.song.ccli)].filter(Boolean).join(' · ')
+        list.append(
+          h('label', { class: 'preview-song' },
+            box,
+            keyBadge(it.song.originalKey),
+            h('div', { class: 'grow' },
+              h('div', { class: 'row' },
+                h('strong', {}, it.song.title),
+                it.existing ? h('span', { class: 'chip dup-badge' }, t('alreadyInLibrary')) : null
+              ),
+              h('div', { class: 'meta' }, extra || meta)
+            )
+          )
+        )
+      })
+    }
+    drawList()
+    preview.append(
+      h('div', { class: 'preview-toolbar' },
+        h('button', { class: 'btn ghost', type: 'button', onclick: () => { items.forEach((it) => { it.selected = true; if (it.check) it.check.checked = true }); redrawBtn() } }, t('selectAll')),
+        h('button', { class: 'btn ghost', type: 'button', onclick: () => { items.forEach((it) => { it.selected = !it.existing; if (it.check) it.check.checked = it.selected }); redrawBtn() } }, t('selectNew'))
+      ),
+      h('label', { class: 'merge-row' }, merge, ' ', t('mergeDuplicates')),
+      list,
+      importBtn
+    )
+    redrawBtn()
   }
 
   fileInput.addEventListener('change', async () => {
@@ -760,9 +819,17 @@ function pageImport() {
     h('div', { class: 'field' },
       h('label', {}, t('pasteLyrics')),
       ta,
-      h('div', { class: 'help' }, t('pasteHint'))
+      h('div', { class: 'help' }, t('importPasteHint'))
     ),
-    h('button', { class: 'btn secondary', onclick: () => showPreview(parseSongsFromText(ta.value), t('pasteLyrics')) }, t('preview')),
+    h('button', { class: 'btn secondary', onclick: () => {
+      try {
+        const vp = parseImportedSongs(ta.value)
+        showPreview((vp && vp.length) ? vp : parseSongsFromText(ta.value), t('pasteLyrics'))
+      } catch (err) {
+        showPreview([], t('pasteLyrics'))
+        preview.prepend(h('p', { class: 'help' }, err.message || String(err)))
+      }
+    } }, t('preview')),
     h('hr', { class: 'sep' }),
     h('label', { class: 'file-drop', onclick: () => fileInput.click() },
       h('div', {}, t('importFiles')),
@@ -774,9 +841,21 @@ function pageImport() {
   return shell(page, { title: t('import') })
 }
 
-async function commitImport(songs) {
+async function commitImport(songs, { merge = false } = {}) {
   let n = 0
   for (const p of songs) {
+    const existing = p.existing || findSongByTitle(p.title)
+    if (existing && merge) {
+      existing.title = p.title || existing.title
+      existing.artist = p.artist || existing.artist
+      existing.originalKey = p.originalKey || existing.originalKey
+      existing.bpm = p.bpm || existing.bpm
+      existing.notes = p.notes || existing.notes
+      existing.sections = p.sections
+      await saveSong(existing, { silent: true })
+      n++
+      continue
+    }
     const rec = {
       id: db.uid('song'),
       title: p.title,

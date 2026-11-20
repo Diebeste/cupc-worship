@@ -38,7 +38,7 @@ export default defineConfig({
         ]
       },
       workbox: {
-        cacheId: 'cupc-worship-v3',
+        cacheId: 'cupc-worship-v4',
         globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2,json,mjs}'],
         navigateFallback: '/cupc-worship/index.html',
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024
