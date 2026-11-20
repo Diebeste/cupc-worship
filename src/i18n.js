@@ -162,7 +162,11 @@ export const STRINGS = {
     create: 'Create',
     untitled: 'Untitled song',
     untitledService: 'Untitled service',
-    today: 'Today'
+    today: 'Today',
+    viewCards: 'Cards',
+    viewCalendar: 'Calendar',
+    newServiceOnDate: 'New service on this date',
+    noServicesOnDay: 'No services on this day'
   },
   es: {
     appName: 'CUPC Alabanza',
@@ -327,7 +331,11 @@ export const STRINGS = {
     create: 'Crear',
     untitled: 'Canción sin título',
     untitledService: 'Servicio sin nombre',
-    today: 'Hoy'
+    today: 'Hoy',
+    viewCards: 'Tarjetas',
+    viewCalendar: 'Calendario',
+    newServiceOnDate: 'Nuevo servicio en esta fecha',
+    noServicesOnDay: 'No hay servicios este día'
   }
 }
 
@@ -336,4 +344,10 @@ export function t(lang, key, vars = {}) {
   let s = table[key] || STRINGS.en[key] || key
   for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v))
   return s
+}
+
+export function weekdaysShort(lang) {
+  return lang === 'es'
+    ? ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+    : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 }

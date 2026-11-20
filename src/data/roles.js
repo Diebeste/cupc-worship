@@ -169,6 +169,57 @@ export function membersFromService(svc) {
   return [svc.leader, svc.ujier, ...(svc.voices || []), ...(svc.instruments || []).map((i) => i.player)]
 }
 
+export function pad2(n) {
+  return String(n).padStart(2, '0')
+}
+
+export function toIsoDate(y, m, d) {
+  return `${y}-${pad2(m)}-${pad2(d)}`
+}
+
+export function todayIso(now = new Date()) {
+  return toIsoDate(now.getFullYear(), now.getMonth() + 1, now.getDate())
+}
+
+/** Sun–Sat cells for a month, including leading/trailing days from adjacent months. */
+export function monthGrid(ym) {
+  const [y, m] = String(ym).split('-').map(Number)
+  const first = new Date(y, (m || 1) - 1, 1)
+  const startDow = first.getDay()
+  const daysInMonth = new Date(y, m, 0).getDate()
+  const prevDays = new Date(y, (m || 1) - 1, 0).getDate()
+  const cells = []
+  const prev = new Date(y, (m || 1) - 2, 1)
+  for (let i = startDow - 1; i >= 0; i--) {
+    const d = prevDays - i
+    cells.push({ iso: toIsoDate(prev.getFullYear(), prev.getMonth() + 1, d), day: d, inMonth: false })
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    cells.push({ iso: toIsoDate(y, m, d), day: d, inMonth: true })
+  }
+  const next = new Date(y, m, 1)
+  let d = 1
+  while (cells.length % 7) {
+    cells.push({ iso: toIsoDate(next.getFullYear(), next.getMonth() + 1, d), day: d, inMonth: false })
+    d += 1
+  }
+  return cells
+}
+
+export function servicesOnDate(services, iso) {
+  return (services || [])
+    .filter((s) => s.date && String(s.date).slice(0, 10) === iso)
+    .sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')))
+}
+
+export function formatDayHeading(iso, lang = 'en') {
+  const p = parseDateParts(iso)
+  if (!p) return iso || ''
+  return p.date.toLocaleDateString(lang === 'es' ? 'es-CA' : 'en-CA', {
+    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+  })
+}
+
 export function servicesForMonth(services, ym) {
   return (services || []).filter((s) => {
     if (s.schedulePin === ym) return true

@@ -11,6 +11,46 @@ async function waitReady(page) {
   await expect(page.getByText('15/11', { exact: true }).first()).toBeVisible({ timeout: 20_000 })
 }
 
+
+async function contrastOf(locator) {
+  return locator.evaluate((el) => {
+    const parse = (c) => {
+      const m = String(c).match(/rgba?\((\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s/]+([0-9.]+))?/)
+      if (!m) return null
+      return { r: +m[1], g: +m[2], b: +m[3], a: m[4] == null ? 1 : +m[4] }
+    }
+    const lin = (v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4 }
+    const lum = ({ r, g, b }) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
+    const blend = (fg, bg) => {
+      const a = Math.max(0, Math.min(1, fg.a))
+      return { r: fg.r * a + bg.r * (1 - a), g: fg.g * a + bg.g * (1 - a), b: fg.b * a + bg.b * (1 - a), a: 1 }
+    }
+    const fg = parse(getComputedStyle(el).color) || { r: 0, g: 0, b: 0, a: 1 }
+    let bg = parse(getComputedStyle(el).backgroundColor)
+    let n = el
+    while (n && (!bg || bg.a < 0.99)) {
+      n = n.parentElement
+      if (!n) break
+      const p = parse(getComputedStyle(n).backgroundColor)
+      if (!p || p.a === 0) continue
+      bg = !bg || bg.a === 0 ? p : blend(bg, p)
+    }
+    if (!bg) bg = { r: 255, g: 255, b: 255, a: 1 }
+    if (bg.a < 1) bg = blend(bg, { r: 255, g: 255, b: 255, a: 1 })
+    const L1 = lum(fg)
+    const L2 = lum(bg)
+    const [hi, lo] = L1 > L2 ? [L1, L2] : [L2, L1]
+    return (hi + 0.05) / (lo + 0.05)
+  })
+}
+
+async function buttonStyles(locator) {
+  return locator.evaluate((el) => {
+    const s = getComputedStyle(el)
+    return { color: s.color, background: s.backgroundColor, border: s.borderColor, cursor: s.cursor }
+  })
+}
+
 test.beforeAll(async () => {
   const fs = await import('fs')
   fs.mkdirSync(shots, { recursive: true })
@@ -260,4 +300,66 @@ test('schedule print / share view looks like the month sheet', async ({ page }) 
   await expect(page.getByRole('heading', { name: 'DOMINGO MAR 29' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Share as image' })).toBeVisible()
   await page.screenshot({ path: path.join(shots, '15-schedule-print.png'), fullPage: true })
+})
+
+
+test('dark and light mode secondary buttons meet WCAG AA contrast', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await waitReady(page)
+  await page.goto('./#/services/new')
+  await expect(page.locator('html')).toHaveClass(/theme-dark/)
+  await expect(page.getByRole('button', { name: '+ Add instrument' })).toBeVisible()
+  await page.screenshot({ path: path.join(shots, '16-dark-new-service.png'), fullPage: true })
+
+  const names = ['+ Add instrument', '+ Add song', 'Cancel']
+  for (const name of names) {
+    const ratio = await contrastOf(page.getByRole('button', { name }))
+    expect(ratio, `dark ${name}`).toBeGreaterThanOrEqual(4.5)
+  }
+  const enabled = await buttonStyles(page.getByRole('button', { name: 'Cancel' }))
+  const disabled = await buttonStyles(page.locator('.inst-row button').first())
+  expect(disabled.cursor === 'not-allowed' || disabled.color !== enabled.color || disabled.background !== enabled.background).toBeTruthy()
+
+  await page.emulateMedia({ colorScheme: 'light' })
+  await page.goto('./#/services/new')
+  await expect(page.locator('html')).not.toHaveClass(/theme-dark/)
+  for (const name of names) {
+    const ratio = await contrastOf(page.getByRole('button', { name }))
+    expect(ratio, `light ${name}`).toBeGreaterThanOrEqual(4.5)
+  }
+})
+
+test('calendar view shows November 2026 services, opens a day, and creates on that date', async ({ page }) => {
+  await waitReady(page)
+  await page.goto('./#/schedule?month=2026-11&view=calendar')
+  await expect(page.getByRole('button', { name: 'Calendar' })).toBeVisible()
+  await expect(page.getByText('Sun', { exact: true })).toBeVisible()
+  await expect(page.getByText('Sat', { exact: true })).toBeVisible()
+  for (const d of [1, 5, 8, 12, 15, 19, 22, 26]) {
+    const iso = `2026-11-${String(d).padStart(2, '0')}`
+    const cell = page.locator(`.cal-cell[data-date="${iso}"]`)
+    await expect(cell).toBeVisible()
+    await expect(cell.locator('.cal-chip')).toHaveCount(1)
+  }
+  await expect(page.locator('.cal-cell[data-date="2026-11-01"]')).toContainText('BRANDON')
+  await expect(page.locator('.cal-cell[data-date="2026-11-05"]')).toContainText('JUAN')
+  await page.screenshot({ path: path.join(shots, '17-schedule-calendar.png'), fullPage: true })
+
+  await page.locator('.cal-cell[data-date="2026-11-05"]').click()
+  await expect(page.getByRole('heading', { name: /Thursday, November 5, 2026/i })).toBeVisible()
+  await expect(page.getByText('JUEVES NOV 05')).toBeVisible()
+  await expect(page.getByText('Leader: JUAN')).toBeVisible()
+  await expect(page.getByRole('button', { name: /New service on this date/ })).toBeVisible()
+  await page.screenshot({ path: path.join(shots, '18-calendar-day.png'), fullPage: true })
+
+  await page.getByRole('button', { name: /New service on this date/ }).click()
+  await expect(page.getByRole('heading', { name: 'New service', level: 2 })).toBeVisible()
+  await expect(page.locator('input[type="date"]')).toHaveValue('2026-11-05')
+
+  await page.goto('./#/schedule?month=2026-11&view=calendar')
+  await page.locator('.lang-toggle').getByRole('button', { name: 'ES', exact: true }).click()
+  await expect(page.getByText('Dom', { exact: true })).toBeVisible()
+  await expect(page.getByText('Lun', { exact: true })).toBeVisible()
+  await expect(page.getByText('Mié', { exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Calendario' })).toBeVisible()
 })

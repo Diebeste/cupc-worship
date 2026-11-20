@@ -1,12 +1,12 @@
 import './styles.css'
 import { h, clear, parseHash, go, copyText } from './dom.js'
-import { t as tr } from './i18n.js'
+import { t as tr, weekdaysShort } from './i18n.js'
 import * as db from './db/local.js'
 import * as sync from './db/sync.js'
 import { stampedSeed } from './data/seed.js'
-import { DATA_VERSION, SERVICE_TYPES, normalizeService, migrateLocalData, rememberMany, membersFromService, currentMonth, shiftMonth, monthLabel, servicesForMonth } from './data/roles.js'
+import { DATA_VERSION, SERVICE_TYPES, normalizeService, migrateLocalData, rememberMany, membersFromService, currentMonth, shiftMonth, monthLabel, servicesForMonth, servicesOnDate, formatDayHeading } from './data/roles.js'
 import { mountRolesFields, renderRolesView } from './views/rolesForm.js'
-import { renderScheduleCard, buildPoster } from './views/schedule.js'
+import { renderScheduleCard, buildPoster, renderMonthCalendar } from './views/schedule.js'
 import { parseSongsFromText, parseSongChunk, searchHaystack, songToPlainText } from './music/parseLyrics.js'
 import { COMMON_KEYS, ALL_SONG_KEYS, displayKey, stepsBetween, preferFlatsFor, capoSuggestion, transposeSections } from './music/transpose.js'
 import { importFilesToSongs } from './music/importFile.js'
@@ -329,8 +329,9 @@ async function copyServiceText(svc) {
 
 function pageServiceEdit(id) {
   const isNew = id === 'new'
+  const presetDate = isNew && /^\d{4}-\d{2}-\d{2}$/.test(parseHash().query.date || '') ? parseHash().query.date : ''
   const svc = isNew
-    ? normalizeService({ id: db.uid('service'), name: '', date: new Date().toISOString().slice(0, 10), type: 'service', leader: '', notes: '', items: [], createdAt: db.nowIso() })
+    ? normalizeService({ id: db.uid('service'), name: '', date: presetDate || new Date().toISOString().slice(0, 10), type: 'service', leader: '', notes: '', items: [], createdAt: db.nowIso() })
     : normalizeService(structuredClone(byId(state.services, id) || null))
   if (!svc || !svc.id) return shell(h('div', { class: 'page' }, 'Not found'))
   const name = h('input', { value: svc.name, placeholder: t('untitledService') })
@@ -925,9 +926,40 @@ async function persistScheduleMeta() {
   }
 }
 
+function scheduleHref(month, view) {
+  const q = new URLSearchParams()
+  if (month) q.set('month', month)
+  if (view === 'calendar') q.set('view', 'calendar')
+  const s = q.toString()
+  return '/schedule' + (s ? '?' + s : '')
+}
+
+function openDaySheet(iso) {
+  const list = servicesOnDate(state.services, iso)
+  const picker = h('div', { class: 'picker', onclick: (e) => { if (e.target === picker) picker.remove() } })
+  const items = list.length
+    ? list.map((svc) => h('div', {
+      class: 'card clickable',
+      onclick: () => go('/services/' + svc.id)
+    },
+      h('div', { class: 'list-title' }, svc.name || svc.subtitle || iso),
+      svc.subtitle ? h('div', { class: 'meta' }, svc.subtitle) : null,
+      svc.leader ? h('div', { class: 'meta' }, t('leader') + ': ' + svc.leader) : null
+    ))
+    : [h('div', { class: 'empty' }, t('noServicesOnDay'))]
+  picker.append(h('div', { class: 'sheet day-sheet' },
+    h('h3', {}, formatDayHeading(iso, state.settings.uiLang)),
+    ...items,
+    canEdit() ? h('button', { class: 'btn block', type: 'button', style: { marginTop: '8px' }, onclick: () => go('/services/new?date=' + iso) }, '+ ' + t('newServiceOnDate')) : null,
+    h('button', { class: 'btn ghost block', type: 'button', onclick: () => picker.remove() }, t('close'))
+  ))
+  document.getElementById('app').append(picker)
+}
+
 function pageSchedule() {
   const q = parseHash().query
   const month = q.month || currentMonth()
+  const view = q.view === 'calendar' ? 'calendar' : 'cards'
   const meta = state.scheduleMeta[month] || { practiceNotes: '', banner: '' }
   const list = servicesForMonth(state.services, month)
   const practice = h('input', { class: 'sched-practice', value: meta.practiceNotes || '', placeholder: t('practiceNotes') })
@@ -939,23 +971,36 @@ function pageSchedule() {
   practice.addEventListener('change', saveMeta)
   banner.addEventListener('change', saveMeta)
 
+  const body = view === 'calendar'
+    ? renderMonthCalendar({
+      month,
+      services: state.services,
+      weekdays: weekdaysShort(state.settings.uiLang),
+      onDay: (iso) => openDaySheet(iso)
+    })
+    : h('div', { class: 'sched-grid' },
+      ...list.map((svc) => renderScheduleCard(svc, { onOpen: (s) => go('/services/' + s.id) }))
+    )
+
   const page = h('div', { class: 'page sched-page' },
     h('div', { class: 'page-head' }, h('h2', {}, t('schedule'))),
     h('div', { class: 'sched-switch' },
-      h('button', { class: 'step-btn', type: 'button', 'aria-label': t('prevMonth'), onclick: () => go('/schedule?month=' + shiftMonth(month, -1), { replace: true }) }, '‹'),
+      h('button', { class: 'step-btn', type: 'button', 'aria-label': t('prevMonth'), onclick: () => go(scheduleHref(shiftMonth(month, -1), view), { replace: true }) }, '‹'),
       h('h2', {}, monthLabel(month, state.settings.uiLang)),
-      h('button', { class: 'step-btn', type: 'button', 'aria-label': t('nextMonth'), onclick: () => go('/schedule?month=' + shiftMonth(month, 1), { replace: true }) }, '›')
+      h('button', { class: 'step-btn', type: 'button', 'aria-label': t('nextMonth'), onclick: () => go(scheduleHref(shiftMonth(month, 1), view), { replace: true }) }, '›')
+    ),
+    h('div', { class: 'view-toggle seg' },
+      h('button', { type: 'button', class: view === 'cards' ? 'on' : '', onclick: () => go(scheduleHref(month, 'cards'), { replace: true }) }, t('viewCards')),
+      h('button', { type: 'button', class: view === 'calendar' ? 'on' : '', onclick: () => go(scheduleHref(month, 'calendar'), { replace: true }) }, t('viewCalendar'))
     ),
     h('div', { class: 'sched-meta' }, practice, banner),
     h('div', { class: 'actions' },
       canEdit() ? h('button', { class: 'btn peach', onclick: () => go('/services/new') }, '+ ' + t('newService')) : null,
       h('button', { class: 'btn secondary', onclick: () => go('/schedule/print?month=' + month) }, t('printSchedule'))
     ),
-    h('div', { class: 'sched-grid' },
-      ...list.map((svc) => renderScheduleCard(svc, { onOpen: (s) => go('/services/' + s.id) }))
-    )
+    body
   )
-  if (!list.length) page.append(h('div', { class: 'empty' }, t('emptyServices')))
+  if (view === 'cards' && !list.length) page.append(h('div', { class: 'empty' }, t('emptyServices')))
   return shell(page, { title: t('schedule') })
 }
 

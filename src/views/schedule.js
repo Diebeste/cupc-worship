@@ -1,7 +1,7 @@
 import { h } from '../dom.js'
 import {
   cardTheme, scheduleHeader, monthLabel, shiftMonth, currentMonth,
-  servicesForMonth
+  servicesForMonth, monthGrid, todayIso, servicesOnDate
 } from '../data/roles.js'
 
 export function renderScheduleCard(svc, { onOpen } = {}) {
@@ -46,4 +46,44 @@ export function buildPoster(svcList, { month, practiceNotes, banner }) {
   return poster
 }
 
-export { currentMonth, shiftMonth, monthLabel, servicesForMonth }
+export function renderMonthCalendar({ month, services, weekdays, today, onDay }) {
+  const cells = monthGrid(month)
+  const todayVal = today || todayIso()
+  return h('div', { class: 'cal' },
+    h('div', { class: 'cal-weekdays' },
+      ...weekdays.map((w) => h('span', {}, w))
+    ),
+    h('div', { class: 'cal-grid', role: 'grid' },
+      ...cells.map((cell) => {
+        const list = servicesOnDate(services, cell.iso)
+        const isToday = cell.iso === todayVal
+        const labelParts = [cell.iso, ...list.map((s) => [s.subtitle || s.name, s.leader].filter(Boolean).join(', '))]
+        return h('button', {
+          type: 'button',
+          class: 'cal-cell' + (cell.inMonth ? '' : ' is-out') + (isToday ? ' is-today' : '') + (list.length ? ' has-svc' : ''),
+          'data-date': cell.iso,
+          'aria-label': labelParts.filter(Boolean).join('. '),
+          'aria-current': isToday ? 'date' : undefined,
+          onclick: onDay ? () => onDay(cell.iso, list) : null
+        },
+          h('span', { class: 'cal-num' }, String(cell.day)),
+          h('span', { class: 'cal-chips' },
+            ...list.map((svc) => {
+              const theme = cardTheme(svc)
+              const title = svc.subtitle || svc.name || ''
+              return h('span', {
+                class: 'cal-chip',
+                style: { background: theme.bg, color: theme.ink, borderColor: theme.accent }
+              },
+                title ? h('span', { class: 'cal-chip-name' }, title) : null,
+                svc.leader ? h('span', { class: 'cal-chip-lead' }, svc.leader) : (!title ? '·' : null)
+              )
+            })
+          )
+        )
+      })
+    )
+  )
+}
+
+export { currentMonth, shiftMonth, monthLabel, servicesForMonth, servicesOnDate, todayIso, monthGrid }
