@@ -5,6 +5,9 @@ export default defineConfig({
   base: '/cupc-worship/',
   plugins: [
     VitePWA({
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.js',
       registerType: 'autoUpdate',
       includeAssets: [
         'logo-wordmark.png',
@@ -37,10 +40,8 @@ export default defineConfig({
           }
         ]
       },
-      workbox: {
-        cacheId: 'cupc-worship-v7',
+      injectManifest: {
         globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2,json,mjs}'],
-        navigateFallback: '/cupc-worship/index.html',
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024
       }
     })

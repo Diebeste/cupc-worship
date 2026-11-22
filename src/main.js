@@ -5,6 +5,7 @@ import * as db from './db/local.js'
 import * as sync from './db/sync.js'
 import { stampedSeed, SONG_LIBRARY_VERSION, mergeSeedSongs } from './data/seed.js'
 import { BUILTIN_SUPABASE } from './data/supabase-config.js'
+import { APP_VERSION } from './data/build-info.js'
 import { DATA_VERSION, SERVICE_TYPES, normalizeService, migrateLocalData, rememberMany, membersFromService, currentMonth, shiftMonth, monthLabel, servicesForMonth, servicesOnDate, formatDayHeading } from './data/roles.js'
 import { mountRolesFields, renderRolesView } from './views/rolesForm.js'
 import { renderScheduleCard, buildPoster, renderMonthCalendar } from './views/schedule.js'
@@ -1323,6 +1324,7 @@ function pageSettings() {
 
   const page = h('div', { class: 'page' },
     h('div', { class: 'page-head' }, h('h2', {}, t('settings'))),
+    h('p', { class: 'help build-stamp' }, 'Version ' + APP_VERSION),
     h('div', { class: 'field' },
       h('label', {}, t('uiLanguage')),
       h('div', { class: 'seg' },
@@ -1448,8 +1450,9 @@ function render() {
   applyTheme()
   const root = document.getElementById('app')
   const { parts, path } = parseHash()
-  // Never tear down a focused input/textarea just because search, a toast,
-  // auth, or a Supabase pull asked for a redraw of the same page.
+  // Never rebuild the current page while an input is focused. A toast,
+  // auth event, sync pull, or search-hash tweak must not steal focus.
+  // A real route change (path differs) still remounts.
   if (state.ready && isEditingInApp() && path === lastRenderPath) {
     syncChrome()
     return
@@ -1641,8 +1644,30 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme
 
 try {
   const { registerSW } = await import('virtual:pwa-register')
-  registerSW({ immediate: true })
+  registerSW({
+    immediate: true,
+    onRegisteredSW(_url, registration) {
+      if (!registration) return
+      const poke = () => { registration.update().catch(() => {}) }
+      setInterval(poke, 60 * 1000)
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') poke()
+      })
+    }
+  })
 } catch { /* dev without plugin */ }
+
+if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+  // Reload only when replacing an existing controller (an update). A first-time
+  // claim also fires controllerchange and must not bounce the page.
+  const hadController = !!navigator.serviceWorker.controller
+  let reloading = false
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController || reloading) return
+    reloading = true
+    location.reload()
+  })
+}
 
 if ((!location.hash || location.hash === '#') && !sync.isAuthCallbackUrl()) location.hash = '#/services'
 boot()
