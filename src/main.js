@@ -1,5 +1,5 @@
 import './styles.css'
-import { h, clear, parseHash, go, copyText } from './dom.js'
+import { h, clear, parseHash, go, copyText, replaceHashSilent, isEditableFocus, captureFocusedField, restoreFocusedField } from './dom.js'
 import { t as tr, weekdaysShort } from './i18n.js'
 import * as db from './db/local.js'
 import * as sync from './db/sync.js'
@@ -44,9 +44,33 @@ const byId = (list, id) => list.find((x) => x.id === id)
 
 function toast(msg) {
   state.toast = msg
-  render()
+  if (isEditingInApp()) syncChrome()
+  else render()
   clearTimeout(toastTimer)
-  toastTimer = setTimeout(() => { state.toast = ''; render() }, 2400)
+  toastTimer = setTimeout(() => {
+    state.toast = ''
+    if (isEditingInApp()) syncChrome()
+    else render()
+  }, 2400)
+}
+
+function isEditingInApp() {
+  const root = document.getElementById('app')
+  const ae = document.activeElement
+  return !!(root && isEditableFocus(ae) && root.contains(ae))
+}
+
+function syncChrome() {
+  const root = document.getElementById('app')
+  const shellEl = root?.querySelector('.app-shell')
+  if (!shellEl) return
+  const existing = shellEl.querySelector('.toast')
+  if (state.toast) {
+    if (existing) existing.textContent = state.toast
+    else shellEl.append(h('div', { class: 'toast' }, state.toast))
+  } else if (existing) {
+    existing.remove()
+  }
 }
 
 function syncToast(err) {
@@ -203,39 +227,61 @@ function songSearch(q) {
 }
 
 /* ---------- Pages ---------- */
-function pageServices() {
-  const q = (parseHash().query.q || '')
-  const list = state.services
-    .filter((s) => !q || `${s.name} ${s.leader} ${s.notes}`.toLowerCase().includes(q.toLowerCase()))
+function filterServices(q) {
+  const needle = (q || '').trim().toLowerCase()
+  return state.services
+    .filter((s) => !needle || `${s.name} ${s.leader} ${s.notes}`.toLowerCase().includes(needle))
     .slice()
     .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')))
+}
+
+function serviceCard(svc) {
+  return h('div', { class: 'card clickable', onclick: () => go('/services/' + svc.id) },
+    h('div', { class: 'row spread' },
+      h('div', { class: 'grow' },
+        h('h3', { class: 'list-title' }, svc.name),
+        h('div', { class: 'meta' }, [formatDate(svc.date) || '—', typeLabel(svc.type), svc.leader].filter(Boolean).join(' · '))
+      ),
+      h('div', { class: 'meta' }, `${svc.items?.length || 0}`)
+    ),
+    h('div', { class: 'chips' },
+      ...(svc.items || []).slice(0, 6).map((it) => {
+        const song = byId(state.songs, it.songId)
+        return h('span', { class: 'chip' }, `${song?.title || '—'} ${it.key || song?.originalKey || ''}`.trim())
+      })
+    )
+  )
+}
+
+function pageServices() {
+  const initialQ = parseHash().query.q || ''
+  const listHost = h('div', { class: 'search-results' })
+  const search = h('input', {
+    class: 'search',
+    'data-field': 'search-services',
+    placeholder: t('searchServices'),
+    value: initialQ
+  })
+  const drawList = (query) => {
+    const list = filterServices(query)
+    clear(listHost)
+    if (!list.length) listHost.append(h('div', { class: 'empty' }, t('emptyServices')))
+    else list.forEach((svc) => listHost.append(serviceCard(svc)))
+  }
+  search.addEventListener('input', () => {
+    const query = search.value
+    drawList(query)
+    replaceHashSilent(query ? `/services?q=${encodeURIComponent(query)}` : '/services')
+  })
+  drawList(initialQ)
   const page = h('div', { class: 'page' },
     h('div', { class: 'page-head' }, h('h2', {}, t('services'))),
     h('div', { class: 'fab-row' },
-      canEdit() ? h('button', { class: 'btn peach', onclick: () => go('/services/new') }, '+ ' + t('newService')) : null
+      canEdit() ? h('button', { class: 'btn peach', type: 'button', onclick: () => go('/services/new') }, '+ ' + t('newService')) : null
     ),
-    h('input', { class: 'search', placeholder: t('searchServices'), value: q, oninput: (e) => go('/services?q=' + encodeURIComponent(e.target.value), { replace: true }) })
+    search,
+    listHost
   )
-  if (!list.length) page.append(h('div', { class: 'empty' }, t('emptyServices')))
-  for (const svc of list) {
-    page.append(
-      h('div', { class: 'card clickable', onclick: () => go('/services/' + svc.id) },
-        h('div', { class: 'row spread' },
-          h('div', { class: 'grow' },
-            h('h3', { class: 'list-title' }, svc.name),
-            h('div', { class: 'meta' }, [formatDate(svc.date) || '—', typeLabel(svc.type), svc.leader].filter(Boolean).join(' · '))
-          ),
-          h('div', { class: 'meta' }, `${svc.items?.length || 0}`)
-        ),
-        h('div', { class: 'chips' },
-          ...(svc.items || []).slice(0, 6).map((it) => {
-            const song = byId(state.songs, it.songId)
-            return h('span', { class: 'chip' }, `${song?.title || '—'} ${it.key || song?.originalKey || ''}`.trim())
-          })
-        )
-      )
-    )
-  }
   return shell(page, { title: t('services') })
 }
 
@@ -295,7 +341,7 @@ function pageServiceDetail(id) {
 
 function openAddSong(svc) {
   const overlay = h('div', { class: 'picker', onclick: (e) => { if (e.target === overlay) overlay.remove() } })
-  const qBox = h('input', { class: 'search', placeholder: t('searchSongs') })
+  const qBox = h('input', { class: 'search', 'data-field': 'search-picker-songs', placeholder: t('searchSongs') })
   const list = h('div')
   const draw = () => {
     clear(list)
@@ -363,12 +409,12 @@ function pageServiceEdit(id) {
     ? normalizeService({ id: db.uid('service'), name: '', date: presetDate || new Date().toISOString().slice(0, 10), type: 'service', leader: '', notes: '', items: [], createdAt: db.nowIso() })
     : normalizeService(structuredClone(byId(state.services, id) || null))
   if (!svc || !svc.id) return shell(h('div', { class: 'page' }, 'Not found'))
-  const name = h('input', { value: svc.name, placeholder: t('untitledService') })
-  const date = h('input', { type: 'date', value: svc.date || '' })
+  const name = h('input', { 'data-field': 'service-name', value: svc.name, placeholder: t('untitledService') })
+  const date = h('input', { type: 'date', 'data-field': 'service-date', value: svc.date || '' })
   const type = h('select', {},
     ...SERVICE_TYPES.map((v) => h('option', { value: v, selected: svc.type === v }, typeLabel(v)))
   )
-  const notes = h('textarea', { value: svc.notes || '', style: { minHeight: '80px' } })
+  const notes = h('textarea', { 'data-field': 'service-notes', value: svc.notes || '', style: { minHeight: '80px' } })
   const roles = mountRolesFields({ svc, members: state.members, t })
   const itemsBox = h('div')
 
@@ -378,7 +424,7 @@ function pageServiceEdit(id) {
       const song = byId(state.songs, item.songId)
       const keySel = keySelect(item.key || song?.originalKey || '')
       keySel.addEventListener('change', () => { item.key = keySel.value })
-      const lead = h('input', { value: item.lead || '', placeholder: t('lead') })
+      const lead = h('input', { 'data-field': 'item-lead', value: item.lead || '', placeholder: t('lead') })
       lead.addEventListener('input', () => { item.lead = lead.value })
       itemsBox.append(
         h('div', { class: 'card' },
@@ -448,31 +494,48 @@ function keySelect(current) {
   return h('select', {}, ...opts)
 }
 
+function songCard(song) {
+  return h('div', { class: 'card clickable', onclick: () => go('/songs/' + song.id) },
+    h('div', { class: 'row' },
+      keyBadge(song.originalKey),
+      h('div', { class: 'grow' },
+        h('h3', { class: 'list-title' }, song.title),
+        h('div', { class: 'meta' }, [song.artist, song.bpm && `${song.bpm} BPM`].filter(Boolean).join(' · ') || t('key') + ' ' + (song.originalKey || t('unsetKey')))
+      )
+    )
+  )
+}
+
 function pageSongs() {
-  const q = parseHash().query.q || ''
-  const list = songSearch(q)
+  const initialQ = parseHash().query.q || ''
+  const listHost = h('div', { class: 'search-results' })
+  const search = h('input', {
+    class: 'search',
+    'data-field': 'search-songs',
+    placeholder: t('searchSongs'),
+    value: initialQ
+  })
+  const drawList = (query) => {
+    const list = songSearch(query)
+    clear(listHost)
+    if (!list.length) listHost.append(h('div', { class: 'empty' }, query ? t('noResults') : t('emptySongs')))
+    else list.forEach((song) => listHost.append(songCard(song)))
+  }
+  search.addEventListener('input', () => {
+    const query = search.value
+    drawList(query)
+    replaceHashSilent(query ? `/songs?q=${encodeURIComponent(query)}` : '/songs')
+  })
+  drawList(initialQ)
   const page = h('div', { class: 'page' },
     h('div', { class: 'page-head' }, h('h2', {}, t('songs'))),
     h('div', { class: 'fab-row' },
-      canEdit() ? h('button', { class: 'btn peach', onclick: () => go('/songs/new') }, '+ ' + t('newSong')) : null,
-      canEdit() ? h('button', { class: 'btn secondary', onclick: () => go('/import') }, t('import')) : null
+      canEdit() ? h('button', { class: 'btn peach', type: 'button', onclick: () => go('/songs/new') }, '+ ' + t('newSong')) : null,
+      canEdit() ? h('button', { class: 'btn secondary', type: 'button', onclick: () => go('/import') }, t('import')) : null
     ),
-    h('input', { class: 'search', placeholder: t('searchSongs'), value: q, oninput: (e) => go('/songs?q=' + encodeURIComponent(e.target.value), { replace: true }) })
+    search,
+    listHost
   )
-  if (!list.length) page.append(h('div', { class: 'empty' }, q ? t('noResults') : t('emptySongs')))
-  for (const song of list) {
-    page.append(
-      h('div', { class: 'card clickable', onclick: () => go('/songs/' + song.id) },
-        h('div', { class: 'row' },
-          keyBadge(song.originalKey),
-          h('div', { class: 'grow' },
-            h('h3', { class: 'list-title' }, song.title),
-            h('div', { class: 'meta' }, [song.artist, song.bpm && `${song.bpm} BPM`].filter(Boolean).join(' · ') || t('key') + ' ' + (song.originalKey || t('unsetKey')))
-          )
-        )
-      )
-    )
-  }
   return shell(page, { title: t('songs') })
 }
 
@@ -616,14 +679,14 @@ function pageSongEdit(id) {
   const song = existing ? structuredClone(existing) : {
     id: db.uid('song'), title: '', artist: '', originalKey: '', bpm: '', notes: '', sections: [], createdAt: db.nowIso()
   }
-  const title = h('input', { value: song.title, placeholder: t('untitled') })
-  const artist = h('input', { value: song.artist || '' })
+  const title = h('input', { 'data-field': 'song-title', value: song.title, placeholder: t('untitled') })
+  const artist = h('input', { 'data-field': 'song-artist', value: song.artist || '' })
   const key = keySelect(song.originalKey || '')
-  const bpm = h('input', { value: song.bpm || '', inputmode: 'numeric', placeholder: '—' })
-  const notes = h('textarea', { value: song.notes || '', style: { minHeight: '70px' } })
-  const pasteAll = h('textarea', { placeholder: t('pasteHint'), style: { minHeight: '120px' } })
-  const es = h('textarea', { value: sectionsToPaste(song.sections, 'es'), placeholder: t('lyricsEs') })
-  const en = h('textarea', { value: sectionsToPaste(song.sections, 'en'), placeholder: t('lyricsEn') })
+  const bpm = h('input', { 'data-field': 'song-bpm', value: song.bpm || '', inputmode: 'numeric', placeholder: '—' })
+  const notes = h('textarea', { 'data-field': 'song-notes', value: song.notes || '', style: { minHeight: '70px' } })
+  const pasteAll = h('textarea', { 'data-field': 'song-paste', placeholder: t('pasteHint'), style: { minHeight: '120px' } })
+  const es = h('textarea', { 'data-field': 'song-lyrics-es', value: sectionsToPaste(song.sections, 'es'), placeholder: t('lyricsEs') })
+  const en = h('textarea', { 'data-field': 'song-lyrics-en', value: sectionsToPaste(song.sections, 'en'), placeholder: t('lyricsEn') })
 
   const page = h('div', { class: 'page' },
     h('div', { class: 'page-head' }, h('h2', {}, isNew ? t('newSong') : t('edit'))),
@@ -768,7 +831,7 @@ function findSongByTitle(title) {
 }
 
 function pageImport() {
-  const ta = h('textarea', { placeholder: t('importPasteHint') })
+  const ta = h('textarea', { 'data-field': 'import-paste', placeholder: t('importPasteHint') })
   const preview = h('div')
   const fileInput = h('input', { type: 'file', accept: '.pdf,.docx,.txt,.md,.json,text/plain,application/pdf,application/json', multiple: true, style: { display: 'none' } })
 
@@ -1069,8 +1132,8 @@ function pageSchedule() {
   const view = q.view === 'calendar' ? 'calendar' : 'cards'
   const meta = state.scheduleMeta[month] || { practiceNotes: '', banner: '' }
   const list = servicesForMonth(state.services, month)
-  const practice = h('input', { class: 'sched-practice', value: meta.practiceNotes || '', placeholder: t('practiceNotes') })
-  const banner = h('input', { class: 'sched-banner-input', value: meta.banner || '', placeholder: t('eventBanner') })
+  const practice = h('input', { class: 'sched-practice', 'data-field': 'sched-practice', value: meta.practiceNotes || '', placeholder: t('practiceNotes') })
+  const banner = h('input', { class: 'sched-banner-input', 'data-field': 'sched-banner', value: meta.banner || '', placeholder: t('eventBanner') })
   const saveMeta = async () => {
     state.scheduleMeta[month] = { practiceNotes: practice.value, banner: banner.value }
     await persistScheduleMeta()
@@ -1251,12 +1314,12 @@ function adminPanel() {
 
 function pageSettings() {
   const s = state.settings
-  const url = h('input', { value: s.supabaseUrl || '', placeholder: 'https://xxxx.supabase.co', autocomplete: 'off' })
-  const key = h('input', { value: s.supabaseAnonKey || '', placeholder: 'eyJ…', autocomplete: 'off' })
-  const email = h('input', { type: 'email', value: s.userEmail || '', placeholder: 'you@church.org' })
-  const join = h('input', { value: s.joinCode || '', placeholder: 'CUPC-XXXX', autocomplete: 'off' })
-  const name = h('input', { value: s.displayName || '', placeholder: t('displayName') })
-  const editor = h('input', { class: 'editor-code', value: '', placeholder: 'CUPC-ED-…', autocomplete: 'off' })
+  const url = h('input', { 'data-field': 'settings-url', value: s.supabaseUrl || '', placeholder: 'https://xxxx.supabase.co', autocomplete: 'off' })
+  const key = h('input', { 'data-field': 'settings-anon-key', value: s.supabaseAnonKey || '', placeholder: 'eyJ…', autocomplete: 'off' })
+  const email = h('input', { type: 'email', 'data-field': 'settings-email', value: s.userEmail || '', placeholder: 'you@church.org' })
+  const join = h('input', { 'data-field': 'settings-join', value: s.joinCode || '', placeholder: 'CUPC-XXXX', autocomplete: 'off' })
+  const name = h('input', { 'data-field': 'settings-name', value: s.displayName || '', placeholder: t('displayName') })
+  const editor = h('input', { class: 'editor-code', 'data-field': 'settings-editor', value: '', placeholder: 'CUPC-ED-…', autocomplete: 'off' })
 
   const page = h('div', { class: 'page' },
     h('div', { class: 'page-head' }, h('h2', {}, t('settings'))),
@@ -1379,10 +1442,19 @@ function importBackup() {
 }
 
 /* ---------- Router ---------- */
+let lastRenderPath = ''
+
 function render() {
   applyTheme()
   const root = document.getElementById('app')
-  const { parts } = parseHash()
+  const { parts, path } = parseHash()
+  // Never tear down a focused input/textarea just because search, a toast,
+  // auth, or a Supabase pull asked for a redraw of the same page.
+  if (state.ready && isEditingInApp() && path === lastRenderPath) {
+    syncChrome()
+    return
+  }
+  const saved = (path === lastRenderPath) ? captureFocusedField(root) : null
   let view
   if (!state.ready) {
     view = h('div', { class: 'page' }, h('p', { class: 'muted' }, '…'))
@@ -1404,6 +1476,8 @@ function render() {
   else if (parts[0] === 'services' && parts[1]) view = pageServiceDetail(parts[1])
   else view = pageServices()
   clear(root).append(view)
+  restoreFocusedField(root, saved)
+  lastRenderPath = path
 }
 
 async function ingestShare(token) {

@@ -25,6 +25,15 @@ export default defineConfig({
         ...devices['Pixel 7'],
         viewport: { width: 390, height: 844 }
       }
+    },
+    {
+      name: 'desktop',
+      testMatch: /typing\.spec\.js/,
+      use: {
+        viewport: { width: 1280, height: 800 },
+        isMobile: false,
+        hasTouch: false
+      }
     }
   ]
 })

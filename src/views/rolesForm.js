@@ -14,12 +14,13 @@ export function mountRolesFields({ svc, members, t }) {
   const root = h('div', { class: 'roles-block' })
 
   const subtitle = h('input', {
+    'data-field': 'service-subtitle',
     value: data.subtitle || '',
     list: 'subtitle-suggest',
     placeholder: t('subtitleHint')
   })
-  const leader = h('input', { value: data.leader || '', list: listId, placeholder: t('leader') })
-  const ujier = h('input', { value: data.ujier || '', list: listId, placeholder: t('ujier') })
+  const leader = h('input', { 'data-field': 'service-leader', value: data.leader || '', list: listId, placeholder: t('leader') })
+  const ujier = h('input', { 'data-field': 'service-ujier', value: data.ujier || '', list: listId, placeholder: t('ujier') })
   const voiceBox = h('div')
   const instBox = h('div')
 
@@ -31,7 +32,7 @@ export function mountRolesFields({ svc, members, t }) {
         h('button', { type: 'button', 'aria-label': t('remove'), onclick: () => { data.voices.splice(i, 1); drawVoices() } }, '×')
       ))
     ))
-    const add = h('input', { list: listId, placeholder: t('addVoice') })
+    const add = h('input', { 'data-field': 'service-add-voice', list: listId, placeholder: t('addVoice') })
     add.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ',') {
         e.preventDefault()
@@ -53,8 +54,8 @@ export function mountRolesFields({ svc, members, t }) {
   const drawInst = () => {
     clear(instBox)
     data.instruments.forEach((row, i) => {
-      const name = h('input', { value: row.name, placeholder: t('instrumentName') })
-      const player = h('input', { value: row.player, list: listId, placeholder: t('player') })
+      const name = h('input', { 'data-field': 'instrument-name', value: row.name, placeholder: t('instrumentName') })
+      const player = h('input', { 'data-field': 'instrument-player', value: row.player, list: listId, placeholder: t('player') })
       name.addEventListener('input', () => { row.name = name.value })
       player.addEventListener('input', () => { row.player = player.value })
       const locked = DEFAULT_INSTRUMENTS.includes(row.name)

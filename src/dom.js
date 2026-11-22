@@ -51,3 +51,60 @@ export async function copyText(text) {
     return ok
   }
 }
+
+export function replaceHashSilent(to) {
+  const hash = to.startsWith('#') ? to : '#' + (to.startsWith('/') ? to : '/' + to)
+  if (location.hash === hash) return
+  history.replaceState(null, '', `${location.pathname}${location.search}${hash}`)
+}
+
+export function isEditableFocus(el = document.activeElement) {
+  return !!(el && el !== document.body && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) && !el.readOnly)
+}
+
+export function captureFocusedField(root = document) {
+  const ae = document.activeElement
+  if (!isEditableFocus(ae)) return null
+  if (root && !root.contains(ae)) return null
+  const all = [...root.querySelectorAll('input, textarea, select')]
+  return {
+    index: all.indexOf(ae),
+    field: ae.getAttribute('data-field') || '',
+    tag: ae.tagName,
+    type: ae.type || '',
+    className: String(ae.className || ''),
+    placeholder: ae.placeholder || '',
+    name: ae.name || '',
+    id: ae.id || '',
+    value: (ae.type === 'checkbox' || ae.type === 'radio') ? null : ae.value,
+    checked: (ae.type === 'checkbox' || ae.type === 'radio') ? ae.checked : null,
+    start: ae.selectionStart,
+    end: ae.selectionEnd
+  }
+}
+
+export function restoreFocusedField(root, saved) {
+  if (!saved || !root) return
+  const all = [...root.querySelectorAll('input, textarea, select')]
+  let el = saved.field ? all.find((c) => c.getAttribute('data-field') === saved.field) : null
+  if (!el) {
+    el = all.find((c) =>
+      c.tagName === saved.tag &&
+      (c.type || '') === saved.type &&
+      String(c.className || '') === saved.className &&
+      (c.placeholder || '') === saved.placeholder &&
+      (c.name || '') === saved.name &&
+      (c.id || '') === saved.id
+    )
+  }
+  if (!el && saved.index >= 0 && all[saved.index] && all[saved.index].tagName === saved.tag) el = all[saved.index]
+  if (!el) return
+  if (saved.checked != null) el.checked = saved.checked
+  else if (saved.value != null && el.type !== 'file') el.value = saved.value
+  el.focus()
+  try {
+    if (typeof saved.start === 'number' && typeof el.setSelectionRange === 'function') {
+      el.setSelectionRange(saved.start, saved.end)
+    }
+  } catch { /* some input types do not support a selection range */ }
+}
