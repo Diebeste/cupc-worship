@@ -4,7 +4,7 @@ import { foldTitle } from '../music/foldTitle.js'
 import librarySongs from './library-songs.json' with { type: 'json' }
 
 /** Bump when the packaged library changes so existing installs merge new songs. */
-export const SONG_LIBRARY_VERSION = 1
+export const SONG_LIBRARY_VERSION = 2
 
 export { librarySongs }
 

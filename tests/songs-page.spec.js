@@ -14,7 +14,7 @@ test('search is accent-insensitive and keeps focus while typing', async ({ page 
   await expect(search).toHaveValue('senor')
   expect(await page.evaluate(() => document.activeElement && document.activeElement.__focusProbe === 1)).toBe(true)
   await expect(page.getByText(/El Señor está en este lugar/i).first()).toBeVisible()
-  await expect(page.getByText(/ERES SENOR/i).first()).toBeVisible()
+  await expect(page.getByText(/Eres Se[nñ]or/i).first()).toBeVisible()
   await expect(page.locator('.list-count')).toContainText(/match/i)
 })
 
@@ -47,7 +47,7 @@ test('both languages are visible side by side on a bilingual song', async ({ pag
 test('songs without a key do not pretend they are in C', async ({ page }) => {
   await waitSongs(page)
   await page.goto('./#/songs/song-alto-sublime')
-  await expect(page.getByRole('heading', { name: /A EL ALTO Y SUBLIME/i, level: 2 })).toBeVisible({ timeout: 15_000 })
+  await expect(page.getByRole('heading', { name: /A el alto y sublime/i, level: 2 })).toBeVisible({ timeout: 15_000 })
   await expect(page.locator('#cur-key')).toHaveText(/No key listed|Sin tono/)
   await expect(page.locator('.no-key-hint')).toBeVisible()
   await expect(page.locator('.key-chip.on')).toHaveCount(0)

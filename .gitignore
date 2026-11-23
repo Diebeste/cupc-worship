@@ -11,3 +11,10 @@ import-zip/
 
 src/data/library-report.json
 tmp-migs/
+
+# Local backups of the song library / Supabase dumps (may be large). Keep the README.
+backups/*.json
+backups/*.sha256.txt
+backups/screenshots-before/
+backups/screenshots-after/
+backups/review/
