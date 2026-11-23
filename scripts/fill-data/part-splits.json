@@ -1,0 +1,697 @@
+{
+  "updates": [
+    {
+      "id": "song-tu-pueblo-dice-gracias",
+      "title": "Tu pueblo dice gracias",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [],
+          "linesEs": [
+            "Tu pueblo dice gracias",
+            "Oh cuan amor inagotable",
+            "Fidelidad incomparable",
+            "Grandes cosas ha hecho Dios",
+            "Por su pueblo."
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [],
+          "linesEs": [
+            "Ha sido lluvia a las naciones",
+            "Cambiaste el lloro por canciones",
+            "Grandes cosas ha hecho Dios",
+            "Por su pueblo."
+          ]
+        },
+        {
+          "type": "prechorus",
+          "label": "Pre-Chorus",
+          "notes": "",
+          "linesEn": [],
+          "linesEs": [
+            "Toda la creación se levanta",
+            "Y delante de su trono proclama",
+            "Que grande y bueno es Dios."
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [],
+          "linesEs": [
+            "Tu pueblo dice gracias",
+            "Tu pueblo dice gracias",
+            "Porque grandes cosas ha hecho Dios",
+            "Por su pueblo"
+          ]
+        }
+      ],
+      "filled": "Moved Spanish out of the English box; removed appended extra songs so the original is complete. No official English found — Spanish only",
+      "url": "(original lyrics already in the record; no official English source found)",
+      "notes": "Not newly authored; language-field correction and split only.",
+      "splits": [
+        {
+          "removed": "I am a friend of God / Eres mi amigo fiel",
+          "moved_to": "already present as song-am-friend-god / song-i-am-friend-god / song-eres-mi-amigo-fiel (not duplicated)"
+        },
+        {
+          "removed": "Thank you, Lord, for saving me",
+          "moved_to": "already present as song-thank-you-lord-for-saving-me (not duplicated)"
+        },
+        {
+          "removed": "De gloria en gloria",
+          "moved_to": "already present as song-gloria-en-gloria (not duplicated)"
+        }
+      ]
+    },
+    {
+      "id": "song-alto-sublime",
+      "title": "A el alto y sublime",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse",
+          "notes": "",
+          "linesEn": [],
+          "linesEs": [
+            "A el alto y sublime Que habita la eternidad",
+            "Y su nombre es el Santo de Israel",
+            "",
+            "Al que habita en las alturas",
+            "Y en la santidad",
+            "Y con el quebrantado y humilde de espíritu",
+            "",
+            "Para hacer vivir El espíritu humilde",
+            "Y para vivificar El corazón quebrantado",
+            "",
+            "Sea la gloria, honor",
+            "Alabanza y poder",
+            "Al que reina por los siglos",
+            "Y su nombre santo es"
+          ]
+        }
+      ],
+      "filled": "Removed appended How Great Is Our God, Cristo Jesús eres mi plenitud, and How Great Thou Art so the original is complete. No official English found for this first song",
+      "url": "(original lyrics already in the record; no official English source found)",
+      "notes": "Language-field / split only.",
+      "splits": [
+        {
+          "removed": "Cristo Jesús, eres mi plenitud",
+          "moved_to": "already present as song-cristo-jesus-eres-mi-plenitud (not duplicated)"
+        },
+        {
+          "removed": "How Great Is Our God / Cuán grande es mi Dios",
+          "moved_to": "already present as song-how-great-is-our-god (not duplicated)"
+        }
+      ]
+    },
+    {
+      "id": "song-entera-consagracion",
+      "title": "Entera consagración",
+      "kind": "structural",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "Take my life and let it be",
+            "consecrated, Lord, to thee.",
+            "Take my moments and my days;",
+            "let them flow in endless praise,"
+          ],
+          "linesEs": [
+            "Que mis pies tan sólo en pos",
+            "De lo Santo puedan ir,",
+            "Y que a ti, Señor, mi voz",
+            "Se complazca en bendecir."
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [],
+          "linesEs": [
+            "¡Lávame en tu sangre, salvador!,",
+            "Límpiame de toda mi maldad.",
+            "¡Traigo a ti mi vida, para ser Señor,",
+            "Tuya por la eternidad!."
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [
+            "Take my will and make it thine;",
+            "it shall be no longer mine.",
+            "Take my heart it is thine own;",
+            "it shall be thy royal throne,"
+          ],
+          "linesEs": [
+            "Que mi tiempo todo esté",
+            "Consagrado a tu loor,",
+            "Que mis labios al hablar",
+            "Hablen sólo de tu amor."
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 3",
+          "notes": "",
+          "linesEn": [],
+          "linesEs": [
+            "Toma tú mi amor, que hoy",
+            "A tus pies vengo a poner;",
+            "Toma todo lo que soy,",
+            "¡Todo tuyo quiero ser!."
+          ]
+        }
+      ],
+      "filled": "Moved English (“Take my life and let it be”) out of the Spanish box and re-paired existing Spanish verses. Split run-together lines. Did not invent missing English for verse 3 or a published English chorus",
+      "url": "(language-field correction of lyrics already in the record)",
+      "notes": "This is Take My Life material, not I Surrender All. Singer-name cues dropped."
+    },
+    {
+      "id": "song-lord-i-lift-your-name-on-high",
+      "title": "Lord I lift Your name on high",
+      "kind": "structural",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse",
+          "notes": "",
+          "linesEn": [
+            "Lord I lift Your name on high",
+            "Lord I love to sing Your praises",
+            "I'm so glad You're in my life",
+            "I'm so glad You came to save us"
+          ],
+          "linesEs": []
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "You came from heaven to earth",
+            "To show the way",
+            "From the earth to the cross",
+            "My debt to pay",
+            "From the cross to the grave",
+            "From the grave to the sky",
+            "Lord I lift Your name on high"
+          ],
+          "linesEs": []
+        }
+      ],
+      "filled": "Removed appended Rooftops, Let Revival Come, and Jesus, the most beautiful name so the original is complete. Official Spanish (“Tu nombre levantaré”) exists but a complete source text was not confirmed this pass — Spanish left empty",
+      "url": "(structural split only; Spanish not filled)",
+      "notes": "Published Spanish attested at https://hymnary.org/hymn/SSS2019/205 and PraiseCharts but full lyric was not confirmed.",
+      "splits": [
+        {
+          "removed": "Rooftops; Let Revival Come; Jesus, the most beautiful name",
+          "moved_to": "already present as song-rooftops, song-let-revival-come, song-jesus-most-beautiful-name (not duplicated)"
+        }
+      ]
+    },
+    {
+      "id": "song-lord-i-give-you-my-heart",
+      "title": "Lord I give You my heart",
+      "kind": "structural",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse",
+          "notes": "",
+          "linesEn": [
+            "This is my desire, to honour You",
+            "Lord with all my heart I worship You",
+            "All I have within me",
+            "I give You praise",
+            "All that I adore is in You"
+          ],
+          "linesEs": []
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "Lord I give You my heart",
+            "I give You my soul",
+            "I live for You alone",
+            "Every breath that I take",
+            "Every moment I'm awake",
+            "Lord have Your way in me"
+          ],
+          "linesEs": []
+        }
+      ],
+      "filled": "Removed appended When the Roll Is Called Up Yonder. Official Spanish (“Hoy te rindo mi ser”) exists on PraiseCharts but a complete official text was not confirmed this pass — Spanish left empty",
+      "url": "(structural split only; Spanish not filled)",
+      "notes": "https://www.praisecharts.com/songs/details/31688/hoy-te-rindo-mi-ser-i-give-you-my-heart-chords",
+      "splits": [
+        {
+          "removed": "When the Roll Is Called Up Yonder",
+          "moved_to": "already present as song-when-roll-is-called (not duplicated)"
+        }
+      ]
+    },
+    {
+      "id": "song-abre-mis-ojos-oh-cristo-abre-mis-ojos",
+      "title": "Abre mis ojos oh Cristo",
+      "kind": "structural",
+      "sections": [
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "Open the eyes of my heart, Lord",
+            "Open the eyes of my heart",
+            "I want to see You",
+            "I want to see You",
+            "",
+            "Open the eyes of my heart, Lord",
+            "Open the eyes of my heart",
+            "I want to see You",
+            "I want to see You"
+          ],
+          "linesEs": [
+            "Abre mis ojos, oh, Cristo",
+            "Abre mis ojos, te pido",
+            "Yo quiero verte",
+            "Yo quiero verte"
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse",
+          "notes": "",
+          "linesEn": [
+            "To see You high and lifted up",
+            "Shinin' in the light of Your glory"
+          ],
+          "linesEs": [
+            "Y contemplar tu majestad",
+            "Y el resplandor de tu gloria",
+            "Derrama tu amor y poder",
+            "Cuando cantamos (santo, santo)",
+            "Santo, santo, santo",
+            "Santo, santo, santo",
+            "Santo, santo, santo",
+            "Yo quiero verte"
+          ]
+        }
+      ],
+      "filled": "Removed appended I Speak Jesus so Open the Eyes of My Heart is complete; kept the existing bilingual Open the Eyes lines",
+      "url": "(structural split of lyrics already in the record)",
+      "notes": "I Speak Jesus Spanish/English moved to song-i-just-wanna-speak-name-jesus.",
+      "splits": [
+        {
+          "removed": "I Speak Jesus / Declaro el nombre de Jesús",
+          "moved_to": "song-i-just-wanna-speak-name-jesus (existing incomplete record, now filled from the paste)"
+        }
+      ]
+    },
+    {
+      "id": "song-i-just-wanna-speak-name-jesus",
+      "title": "I Speak Jesus",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "I just wanna speak the name of Jesus",
+            "Over every heart and every mind",
+            "'Cause I know there is peace within Your presence",
+            "I speak Jesus"
+          ],
+          "linesEs": [
+            "Declaro el nombre de Jesús ahora",
+            "Sobre cada mente y corazón",
+            "Pues sé que encuentro paz en su presencia",
+            "Lo declaro"
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [
+            "I just wanna speak the name of Jesus",
+            "'Til every dark addiction starts to break",
+            "Declaring there is hope and there is freedom",
+            "I speak Jesus"
+          ],
+          "linesEs": [
+            "Declaro el nombre de Jesús ahora",
+            "Hasta que se rompa la adicción",
+            "Porque hay libertad y esperanza",
+            "Lo declaro"
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "'Cause Your name is power",
+            "Your name is healing",
+            "Your name is life",
+            "Break every stronghold",
+            "Shine through the shadows",
+            "Burn like a fire"
+          ],
+          "linesEs": [
+            "Jesús tu nombre",
+            "Es poderoso",
+            "Vida nos da",
+            "Rompe cadenas",
+            "Vence tinieblas",
+            "Trae sanidad"
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 3",
+          "notes": "",
+          "linesEn": [
+            "I just wanna speak the name of Jesus",
+            "Over fear and all anxiety",
+            "To every soul held captive by depression",
+            "I speak Jesus"
+          ],
+          "linesEs": [
+            "Declaro el nombre de Jesús ahora",
+            "Sobre el miedo y toda ansiedad",
+            "Que toda alma en depresión sea libre",
+            "En tu nombre"
+          ]
+        },
+        {
+          "type": "bridge",
+          "label": "Bridge",
+          "notes": "",
+          "linesEn": [
+            "Shout Jesus from the mountains",
+            "Jesus in the streets",
+            "Jesus in the darkness, over every enemy",
+            "Jesus for my family",
+            "I speak the holy name",
+            "Jesus"
+          ],
+          "linesEs": [
+            "Declaro en las montañas",
+            "También en la ciudad",
+            "Jesús a la maldad y al enemigo vencerá",
+            "Jesús por mi familia",
+            "Proclamo el nombre",
+            "de Jesús"
+          ]
+        }
+      ],
+      "filled": "Filled Spanish from the published lyrics already pasted in Abre mis ojos, structured and paired with the existing English",
+      "url": "https://www.letras.com/iglesia-pentecostal-unida-de-colombia/proclamo-el-nombre-de-jesus-i-speak-jesus-en-espanol/",
+      "notes": "Church paste uses “Declaro el nombre…”; IPUC published recording uses “Proclamo el nombre…”. Kept the church’s already-pasted “Declaro” wording rather than substituting the IPUC variant."
+    }
+  ],
+  "new_songs": [
+    {
+      "id": "song-glorious-day-glorioso-dia",
+      "title": "Glorious Day / Glorioso día",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "I was buried beneath my shame",
+            "Who could carry that kind of weight",
+            "It was my tomb",
+            "Till I met You"
+          ],
+          "linesEs": [
+            "Mi vergüenza me sepultó",
+            "Yo buscaba un salvador",
+            "Más tu perdón, me libero"
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [
+            "I was breathing, but not alive",
+            "All my failures I tried to hide",
+            "It was my tomb",
+            "Till I met You"
+          ],
+          "linesEs": [
+            "Muerto estaba en mi interior",
+            "Me escondía de Ti Señor",
+            "Más tu perdón, me libero"
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "You called my name",
+            "And I ran out of that grave",
+            "Out of the darkness",
+            "Into Your glorious day"
+          ],
+          "linesEs": [
+            "Tu voz me habló",
+            "Y a la muerte venció",
+            "Glorioso día, tu sangre me rescató"
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 3",
+          "notes": "",
+          "linesEn": [
+            "Now Your mercy has saved my soul",
+            "Now Your freedom is all I know",
+            "The old made new",
+            "Jesus, when I met You"
+          ],
+          "linesEs": [
+            "Ahora libre soy en tu amor",
+            "Es tu gracia la que me sano",
+            "Más tu perdon, a mí me libero"
+          ]
+        },
+        {
+          "type": "bridge",
+          "label": "Bridge",
+          "notes": "",
+          "linesEn": [
+            "I needed rescue",
+            "My sin was heavy",
+            "But chains break at the weight of Your glory",
+            "I needed shelter",
+            "I was an orphan",
+            "But You call me a citizen of heaven",
+            "When I was broken",
+            "You were my healing",
+            "Your love is the air that I'm breathing",
+            "I have a future",
+            "My eyes are open"
+          ],
+          "linesEs": [
+            "De mi pecado me rescataste",
+            "En tu gloria cadenas se rompen",
+            "Vivía solo y sin consuelo",
+            "Ahora soy ciudadano del cielo",
+            "Tu me sanaste estando herido",
+            "Jesús por tu amor yo respiro",
+            "Tengo futuro, ahora veo",
+            "Porque tú voz me habló",
+            "Y a la muerte venció"
+          ]
+        }
+      ],
+      "aliases": [
+        "Glorioso día",
+        "Glorious Day"
+      ],
+      "filled": "New song entry moved out of Tu pueblo dice gracias (Passion / Kristian Stanfill lyrics already in the library)",
+      "url": "(moved from song-tu-pueblo-dice-gracias paste; independent official Spanish URL not confirmed this pass)",
+      "notes": "https://www.cifraclub.com/passion/glorioso-dia/ lists a Spanish-titled official recording; lyric text was already in the church paste.",
+      "split_from": "song-tu-pueblo-dice-gracias",
+      "removed": "Glorious Day / Glorioso día",
+      "moved_to": "song-glorious-day-glorioso-dia (new entry; bilingual lyrics already in the paste, not newly translated)"
+    },
+    {
+      "id": "song-cuan-grande-es-el-how-great-thou-art",
+      "title": "Cuán grande es Él / How Great Thou Art",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "O Lord my God, When I in awesome wonder,",
+            "Consider all the worlds Thy Hands have made;",
+            "I see the stars, I hear the rolling thunder,",
+            "Thy power throughout the universe displayed."
+          ],
+          "linesEs": [
+            "Señor, mi Dios, al contemplar los cielos,",
+            "El firmamento y las estrellas mil;",
+            "Al oír tu voz en los potentes truenos",
+            "Y ver brillar el sol en su cenit..."
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "Then sings my soul, My Saviour God, to Thee,",
+            "How great Thou art, How great Thou art.",
+            "Then sings my soul, My Saviour God, to Thee,",
+            "How great Thou art, How great Thou art!"
+          ],
+          "linesEs": [
+            "Mi corazón entona esta canción:",
+            "¡Cuán grande es El, cuán grande es El!",
+            "Mi corazón entona esta canción:",
+            "¡Cuán grande es El, cuán grande es El!"
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [],
+          "linesEs": [
+            "Al recorrer los montes y los valles,",
+            "Y ver las bellas flores al pasar;",
+            "Al escuchar el canto de las aves,",
+            "Y el murmurar del claro manantial..."
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 3",
+          "notes": "",
+          "linesEn": [],
+          "linesEs": [
+            "Cuando recuerdo del amor divino",
+            "Que desde el cielo al Salvador envió;",
+            "Aquel Jesús que por salvarme vino",
+            "Y en una cruz sufrió por mí y murió..."
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 4",
+          "notes": "",
+          "linesEn": [
+            "When Christ shall come, with shout of acclamation,",
+            "And take me home, what joy shall fill my heart.",
+            "Then I shall bow, in humble adoration,",
+            "And then proclaim: \"My God, how great Thou art!\""
+          ],
+          "linesEs": [
+            "Cuando el Señor me llame a su presencia,",
+            "Al dulce hogar, al cielo de esplendor,",
+            "Le adoraré, cantando la grandeza",
+            "De su poder y su infinito amor"
+          ]
+        }
+      ],
+      "aliases": [
+        "How Great Thou Art",
+        "Cuán grande es Él",
+        "Cuan grande es El"
+      ],
+      "filled": "New song entry moved out of A el alto y sublime (published hymn lyrics already in the library). English verses 2–3 left empty (not in the paste, not invented)",
+      "url": "(moved from song-alto-sublime; Spanish/English texts already present in that record)",
+      "notes": "English verses 1 and the “When Christ shall come” stanza plus the chorus were in the paste; verses 2–3 English were not.",
+      "split_from": "song-alto-sublime",
+      "removed": "How Great Thou Art / Cuán grande es Él",
+      "moved_to": "song-cuan-grande-es-el-how-great-thou-art (new entry). English verses 2–3 were not in the paste and were left empty."
+    },
+    {
+      "id": "song-aqui-estoy-yo-confiando-en-dios",
+      "title": "Y aquí estoy yo confiando en Dios",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [],
+          "linesEs": [
+            "Ha pasado el atardecer",
+            "Ha llegado el anochecer",
+            "Siento miedo al mirar la penumbra llegar",
+            "Porque en ella se oculta el mal",
+            "Ya las sombras cubren la ciudad",
+            "Ronda el miedo en cada lugar",
+            "Se oye un carro pasar y disparos sonar",
+            "Un quejido en la oscuridad."
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [],
+          "linesEs": [
+            "Y aquí estoy yo confiando en Dios",
+            "Yo se que Él me guardará",
+            "A mi familia cuidará",
+            "Bajo sus alas de bondad",
+            "Y el malo nunca llegará",
+            "Porque el Señor lo detendrá",
+            "Y tengo fe que en mi país",
+            "Pronto la paz renacerá."
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [],
+          "linesEs": [
+            "Hoy los niños se escuchan llorar",
+            "Y las viudas también sollozar",
+            "Oh Señor ten piedad, de esta linda nación",
+            "Que ha perdido la tranquilidad",
+            "Ya la vida no tiene valor",
+            "Y se mata por satisfacción",
+            "¿Que se hizo el amor?",
+            "Ya no hay compasión",
+            "Es que el mundo se olvido de Dios"
+          ]
+        }
+      ],
+      "aliases": [
+        "Aquí estoy yo confiando en Dios",
+        "Pronto la paz renacerá"
+      ],
+      "filled": "New song entry moved out of The Blessing paste (lyrics already in the library; not web-filled). English side left empty",
+      "url": "(moved from song-blessing; no independent official URL confirmed this pass)",
+      "notes": "English side left empty.",
+      "split_from": "song-blessing",
+      "removed": "Y aquí estoy yo confiando en Dios / Pronto la paz renacerá",
+      "moved_to": "song-aqui-estoy-yo-confiando-en-dios (new entry; Spanish already in the paste, no English added)"
+    }
+  ]
+}

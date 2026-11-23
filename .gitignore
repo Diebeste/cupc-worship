@@ -18,3 +18,7 @@ backups/*.sha256.txt
 backups/screenshots-before/
 backups/screenshots-after/
 backups/review/
+
+backups/screenshots-fill-before/
+backups/screenshots-fill-after/
+scripts/__pycache__/

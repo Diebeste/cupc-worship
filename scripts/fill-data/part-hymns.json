@@ -1,0 +1,356 @@
+{
+  "updates": [
+    {
+      "id": "song-he-decidido-seguir-cristo",
+      "title": "He decidido seguir a Cristo / I Have Decided to Follow Jesus",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "I have decided to follow Jesus;",
+            "I have decided to follow Jesus;",
+            "I have decided to follow Jesus;",
+            "No turning back, no turning back."
+          ],
+          "linesEs": [
+            "He decidido seguir a Cristo,",
+            "he decidido seguir a Cristo,",
+            "he decidido seguir a Cristo.",
+            "No vuelvo atrás, no vuelvo atrás."
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [
+            "If no one joins me, still I will follow;",
+            "If no one joins me, still I will follow;",
+            "If no one joins me, still I will follow;",
+            "No turning back, no turning back."
+          ],
+          "linesEs": [
+            "Si otros vuelven, yo sigo a Cristo,",
+            "si otros vuelven, yo sigo a Cristo,",
+            "si otros vuelven, yo sigo a Cristo.",
+            "No vuelvo atrás, no vuelvo atrás."
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 3",
+          "notes": "",
+          "linesEn": [
+            "The cross before me, the world behind me;",
+            "The cross before me, the world behind me;",
+            "The cross before me, the world behind me;",
+            "No turning back, no turning back."
+          ],
+          "linesEs": [
+            "La cruz delante y el mundo atrás,",
+            "la cruz delante y el mundo atrás,",
+            "la cruz delante y el mundo atrás.",
+            "No vuelvo atrás, no vuelvo atrás."
+          ]
+        }
+      ],
+      "filled": "Moved mixed Spanish out of the English box; filled official English and Spanish hymn stanzas, paired",
+      "url": "https://hymnary.org/text/i_have_decided_to_follow_jesus",
+      "notes": "Spanish: https://www.hymnal.pro/himnario-adventista-2010/281-he-decidido-seguir-a-cristo.html (also https://ebherencia.org/cantos/27-he-decidido-seguir-a-cristo)."
+    },
+    {
+      "id": "song-he-decidido",
+      "title": "He decidido / I Have Decided to Follow Jesus",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "I have decided to follow Jesus;",
+            "I have decided to follow Jesus;",
+            "I have decided to follow Jesus;",
+            "No turning back, no turning back."
+          ],
+          "linesEs": [
+            "He decidido seguir a Cristo,",
+            "he decidido seguir a Cristo,",
+            "he decidido seguir a Cristo.",
+            "No vuelvo atrás, no vuelvo atrás."
+          ]
+        }
+      ],
+      "filled": "Restored missing leading “I”; added official Spanish for this one stanza only (record is verse 1, not the full hymn)",
+      "url": "https://hymnary.org/text/i_have_decided_to_follow_jesus",
+      "notes": "Spanish: https://www.hymnal.pro/himnario-adventista-2010/281-he-decidido-seguir-a-cristo.html"
+    },
+    {
+      "id": "song-tho-none-go-with-me-i-still-will-follow",
+      "title": "Though none go with me, I still will follow",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse",
+          "notes": "",
+          "linesEn": [
+            "Though none go with me, still I will follow;",
+            "Though none go with me, still I will follow;",
+            "Though none go with me, still I will follow;",
+            "No turning back, no turning back."
+          ],
+          "linesEs": [
+            "Si otros vuelven, yo sigo a Cristo,",
+            "si otros vuelven, yo sigo a Cristo,",
+            "si otros vuelven, yo sigo a Cristo.",
+            "No vuelvo atrás, no vuelvo atrás."
+          ]
+        }
+      ],
+      "filled": "Completed the official stanza variant; paired with published Spanish equivalent “Si otros vuelven, yo sigo a Cristo”",
+      "url": "https://hymnary.org/text/i_have_decided_to_follow_jesus",
+      "notes": "Hymnary notes “Though none go with me” is a traditional variant of stanza 2. Spanish from Himnario Adventista 2010 #281."
+    },
+    {
+      "id": "song-when-roll-is-called",
+      "title": "When the Roll Is Called Up Yonder / Cuando allá se pase lista",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "When the trumpet of the Lord shall sound, and time shall be no more,",
+            "And the morning breaks, eternal, bright, and fair;",
+            "When the saved of earth shall gather over on the other shore,",
+            "And the roll is called up yonder, I'll be there."
+          ],
+          "linesEs": [
+            "Cuando la trompeta suene",
+            "En aquel día final,",
+            "Y que el alba eterna rompa en claridad;",
+            "Cuando las naciones salvas",
+            "A su patria lleguen ya,",
+            "Y que sea pasada lista, allí he de estar."
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder, I'll be there."
+          ],
+          "linesEs": [
+            "Cuando allá se pase lista,",
+            "Cuando allá se pase lista,",
+            "Cuando allá se pase lista;",
+            "A mi nombre yo feliz responderé."
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [
+            "On that bright and cloudless morning when the dead in Christ shall rise,",
+            "And the glory of His resurrection share;",
+            "When His chosen ones shall gather to their home beyond the skies,",
+            "And the roll is called up yonder, I'll be there."
+          ],
+          "linesEs": [
+            "En aquel día sin tinieblas,",
+            "En que muerte ya no habrá,",
+            "Y su gloria el Salvador impartirá;",
+            "Cuando los llamados entren",
+            "A su celestial hogar,",
+            "Y que sea pasada lista, allí he de estar."
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder, I'll be there."
+          ],
+          "linesEs": [
+            "Cuando allá se pase lista,",
+            "Cuando allá se pase lista,",
+            "Cuando allá se pase lista;",
+            "A mi nombre yo feliz responderé."
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 3",
+          "notes": "",
+          "linesEn": [
+            "Let us labor for the Master from the dawn till setting sun,",
+            "Let us talk of all His wondrous love and care;",
+            "Then when all of life is over, and our work on earth is done,",
+            "And the roll is called up yonder, I'll be there."
+          ],
+          "linesEs": [
+            "Trabajemos por el Maestro,",
+            "Desde el alba al vislumbrar;",
+            "Siempre hablemos de su amor y fiel bondad;",
+            "Cuando todo aquí fenezca",
+            "Y nuestra obra cese ya,",
+            "Y que sea pasada lista, allí he de estar."
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder, I'll be there."
+          ],
+          "linesEs": [
+            "Cuando allá se pase lista,",
+            "Cuando allá se pase lista,",
+            "Cuando allá se pase lista;",
+            "A mi nombre yo feliz responderé."
+          ]
+        }
+      ],
+      "filled": "Removed appended “I want to be a worker”; replaced typo “saved diverse” with official hymnal English; added published Spanish",
+      "url": "https://hymnary.org/hymn/BH1991/516",
+      "notes": "Spanish from the church’s existing published text in the sister record and https://celeste-iglesiadecristo.com/himnos/cuando-alla-se-pase-lista. Typo “En qué muerte” corrected to “En que muerte”.",
+      "splits": [
+        {
+          "removed": "I will work, I will pray / I want to be a worker for the Lord",
+          "moved_to": "already present as song-trabajad-orad-en-vina-senor-i-will-work-i-will-pray (not duplicated)"
+        }
+      ]
+    },
+    {
+      "id": "song-cuando-alla-se-pase-lista-when-roll-is-called-up-yonder-when-trumpet-lord-shall-",
+      "title": "Cuando allá se pase lista / When the Roll Is Called Up Yonder",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "When the trumpet of the Lord shall sound, and time shall be no more,",
+            "And the morning breaks, eternal, bright, and fair;",
+            "When the saved of earth shall gather over on the other shore,",
+            "And the roll is called up yonder, I'll be there."
+          ],
+          "linesEs": [
+            "Cuando la trompeta suene",
+            "En aquel día final,",
+            "Y que el alba eterna rompa en claridad;",
+            "Cuando las naciones salvas",
+            "A su patria lleguen ya,",
+            "Y que sea pasada lista, allí he de estar."
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder, I'll be there."
+          ],
+          "linesEs": [
+            "Cuando allá se pase lista,",
+            "Cuando allá se pase lista,",
+            "Cuando allá se pase lista;",
+            "A mi nombre yo feliz responderé."
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [
+            "On that bright and cloudless morning when the dead in Christ shall rise,",
+            "And the glory of His resurrection share;",
+            "When His chosen ones shall gather to their home beyond the skies,",
+            "And the roll is called up yonder, I'll be there."
+          ],
+          "linesEs": [
+            "En aquel día sin tinieblas,",
+            "En que muerte ya no habrá,",
+            "Y su gloria el Salvador impartirá;",
+            "Cuando los llamados entren",
+            "A su celestial hogar,",
+            "Y que sea pasada lista, allí he de estar."
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder, I'll be there."
+          ],
+          "linesEs": [
+            "Cuando allá se pase lista,",
+            "Cuando allá se pase lista,",
+            "Cuando allá se pase lista;",
+            "A mi nombre yo feliz responderé."
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 3",
+          "notes": "",
+          "linesEn": [
+            "Let us labor for the Master from the dawn till setting sun,",
+            "Let us talk of all His wondrous love and care;",
+            "Then when all of life is over, and our work on earth is done,",
+            "And the roll is called up yonder, I'll be there."
+          ],
+          "linesEs": [
+            "Trabajemos por el Maestro,",
+            "Desde el alba al vislumbrar;",
+            "Siempre hablemos de su amor y fiel bondad;",
+            "Cuando todo aquí fenezca",
+            "Y nuestra obra cese ya,",
+            "Y que sea pasada lista, allí he de estar."
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder,",
+            "When the roll is called up yonder, I'll be there."
+          ],
+          "linesEs": [
+            "Cuando allá se pase lista,",
+            "Cuando allá se pase lista,",
+            "Cuando allá se pase lista;",
+            "A mi nombre yo feliz responderé."
+          ]
+        }
+      ],
+      "filled": "Completed missing official English verse 2; replaced typo/variant English with Baptist Hymnal 1991 text; structured Spanish already in the record",
+      "url": "https://hymnary.org/hymn/BH1991/516",
+      "notes": "Spanish: existing church text + https://celeste-iglesiadecristo.com/himnos/cuando-alla-se-pase-lista"
+    }
+  ]
+}

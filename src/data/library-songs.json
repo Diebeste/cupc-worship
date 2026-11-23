@@ -9,7 +9,7 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse",
         "notes": "",
         "linesEn": [],
         "linesEs": [
@@ -26,149 +26,7 @@
           "Sea la gloria, honor",
           "Alabanza y poder",
           "Al que reina por los siglos",
-          "Y su nombre santo es",
-          "",
-          "Eres mi plenitud"
-        ]
-      },
-      {
-        "type": "chorus",
-        "label": "Chorus 1",
-        "notes": "",
-        "linesEn": [],
-        "linesEs": [
-          "Cristo Jesús, eres mi plenitud",
-          "Cristo Jesús, eres mi plenitud",
-          "Cristo Jesús, eres mi plenitud",
-          "Cristo Jesús, eres mi plenitud"
-        ]
-      },
-      {
-        "type": "verse",
-        "label": "Verse 1",
-        "notes": "",
-        "linesEn": [],
-        "linesEs": [
-          "Si te tengo a Ti, lo tengo todo",
-          "Mi amado, mi tesoro",
-          "Fuera de Ti, nada deseo",
-          "Señor",
-          "",
-          "How Great is Our God",
-          "The splendour of a King,",
-          "clothed in majesty",
-          "Let all the Earth rejoice",
-          "All the Earth rejoice",
-          "He wraps himself in light",
-          "And darkness tries to hide",
-          "And trembles at His voice",
-          "Trembles at His voice",
-          "",
-          "How great is our God, sing with me",
-          "How great is our God, and all will see",
-          "How great, how great is our God"
-        ]
-      },
-      {
-        "type": "bridge",
-        "label": "Bridge",
-        "notes": "",
-        "linesEn": [],
-        "linesEs": [
-          "Name above all names",
-          "Worthy of our praise",
-          "My heart will sing",
-          "How great is our God",
-          "El esplendor de un rey",
-          "Vestido en majestad",
-          "La tierra alegre está",
-          "La tierra alegre está",
-          "",
-          "Cubierto está de luz",
-          "Venció la oscuridad",
-          "Y tiembla a su voz",
-          "Tiembla a su voz",
-          "",
-          "-Chorus-",
-          "Cuán grande es mi Dios",
-          "Cántale cuán grande es mi Dios",
-          "Y todos lo verán, cuán grande es mi Dios",
-          "",
-          "Cuán grande es el – Manantial de Inspiración",
-          "Señor, mi Dios, al contemplar los cielos,",
-          "El firmamento y las estrellas mil;",
-          "Al oír tu voz en los potentes truenos",
-          "Y ver brillar el sol en su cenit..."
-        ]
-      },
-      {
-        "type": "chorus",
-        "label": "Chorus",
-        "notes": "",
-        "linesEn": [],
-        "linesEs": [
-          "Mi corazón entona esta canción:",
-          "¡Cuán grande es El, cuán grande es El!",
-          "Mi corazón entona esta canción:",
-          "¡Cuán grande es El, cuán grande es El!"
-        ]
-      },
-      {
-        "type": "chorus",
-        "label": "Verse 2",
-        "notes": "",
-        "linesEn": [],
-        "linesEs": [
-          "Al recorrer los montes y los valles,",
-          "Y ver las bellas flores al pasar;",
-          "Al escuchar el canto de las aves,",
-          "Y el murmurar del claro manantial..."
-        ]
-      },
-      {
-        "type": "chorus",
-        "label": "Verse 3",
-        "notes": "",
-        "linesEn": [],
-        "linesEs": [
-          "Cuando recuerdo del amor divino",
-          "Que desde el cielo al Salvador envió;",
-          "Aquel Jesús que por salvarme vino",
-          "Y en una cruz sufrió por mí y murió..."
-        ]
-      },
-      {
-        "type": "chorus",
-        "label": "Verse 4",
-        "notes": "",
-        "linesEn": [],
-        "linesEs": [
-          "Cuando el Señor me llame a su presencia,",
-          "Al dulce hogar, al cielo de esplendor,",
-          "Le adoraré, cantando la grandeza",
-          "De su poder y su infinito amor",
-          "",
-          "O Lord my God, When I in awesome wonder,",
-          "Consider all the worlds Thy Hands have made;",
-          "I see the stars, I hear the rolling thunder,",
-          "Thy power throughout the universe displayed."
-        ]
-      },
-      {
-        "type": "chorus",
-        "label": "Chorus",
-        "notes": "",
-        "linesEn": [],
-        "linesEs": [
-          "Then sings my soul, My Saviour God, to Thee,",
-          "How great Thou art, How great Thou art.",
-          "Then sings my soul, My Saviour God, to Thee,",
-          "How great Thou art, How great Thou art!",
-          "",
-          "When Christ shall come, with shout of acclamation,",
-          "And take me home, what joy shall fill my heart.",
-          "Then I shall bow, in humble adoration,",
-          "And then proclaim: \"My God, how great Thou art!\""
+          "Y su nombre santo es"
         ]
       }
     ],
@@ -494,9 +352,9 @@
     "notes": "",
     "sections": [
       {
-        "type": "verse",
-        "label": "Verse",
-        "notes": "armonia Daniel",
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
         "linesEn": [
           "Open the eyes of my heart, Lord",
           "Open the eyes of my heart",
@@ -512,8 +370,18 @@
           "Abre mis ojos, oh, Cristo",
           "Abre mis ojos, te pido",
           "Yo quiero verte",
-          "Yo quiero verte",
-          "",
+          "Yo quiero verte"
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse",
+        "notes": "",
+        "linesEn": [
+          "To see You high and lifted up",
+          "Shinin' in the light of Your glory"
+        ],
+        "linesEs": [
           "Y contemplar tu majestad",
           "Y el resplandor de tu gloria",
           "Derrama tu amor y poder",
@@ -521,93 +389,8 @@
           "Santo, santo, santo",
           "Santo, santo, santo",
           "Santo, santo, santo",
-          "Yo quiero verte",
-          "",
-          "I just wanna speak the name of Jesus(mi/e)",
-          "Over every heart and every mind",
-          "'Cause I know there is peace within Your presence",
-          "I speak Jesus",
-          "",
-          "I just wanna speak the name of Jesus",
-          "'Til every dark addiction starts to break",
-          "Declaring there is hope and there is freedom",
-          "I speak Jesus",
-          "",
-          "'Cause Your name is power",
-          "Your name is healing",
-          "Your name is life",
-          "Break every stronghold",
-          "Shine through the shadows",
-          "Burn like a fire",
-          "",
-          "I just wanna speak the name of Jesus",
-          "Over fear and all anxiety",
-          "To every soul held captive by depression",
-          "I speak Jesus",
-          "",
-          "'Cause Your name is power",
-          "Your name is healing",
-          "Your name is life",
-          "Break every stronghold",
-          "Shine through the shadows",
-          "Burn like a fire",
-          "",
-          "Shout Jesus from the mountains",
-          "Jesus in the streets",
-          "Jesus in the darkness, over every enemy",
-          "Jesus for my family",
-          "I speak the holy name",
-          "Jesus, oh (oh)",
-          "Declaro el nombre de Jesús ahora",
-          "Sobre cada mente y corazón",
-          "Pues sé que encuentro paz en su presencia",
-          "Lo declaro",
-          "",
-          "Declaro el nombre de Jesús ahora",
-          "Hasta que se rompa la",
-          "adicción",
-          "Porque hay libertad",
-          "y esperanza",
-          "Lo declaro",
-          "",
-          "Jesús tu nombre",
-          "Es poderoso",
-          "Vida nos da",
-          "Rompe cadenas",
-          "Vence tinieblas",
-          "Trae sanidad",
-          "",
-          "Declaro el nombre de Jesús ahora",
-          "Sobre el miedo y toda ansiedad",
-          "Que toda alma en depresión",
-          "sea libre",
-          "En tu nombre",
-          "",
-          "Jesús tu nombre",
-          "Es poderoso",
-          "Vida nos da",
-          "Rompe cadenas",
-          "Vence tinieblas",
-          "Trae sanidad",
-          "",
-          "Declaro en las montañas",
-          "También en la ciudad",
-          "Jesús a la maldad y al enemigo",
-          "vencerá",
-          "Jesús por mi familia",
-          "Proclamo el nombre",
-          "de Jesús"
+          "Yo quiero verte"
         ]
-      },
-      {
-        "type": "chorus",
-        "label": "Chorus",
-        "notes": "",
-        "linesEn": [
-          "To see You high and lifted up",
-          "Shinin' in the light of Your glory"
-        ],
-        "linesEs": []
       }
     ],
     "aliases": [
@@ -1577,7 +1360,7 @@
   },
   {
     "id": "song-am-friend-god",
-    "title": "am a friend of God",
+    "title": "I am a friend of God",
     "artist": "",
     "originalKey": "A",
     "bpm": "",
@@ -1658,7 +1441,7 @@
   },
   {
     "id": "song-amor-sin-condicion-reckless-love",
-    "title": "Amor sin condicion / Reckless Love",
+    "title": "Amor sin condición / Reckless Love",
     "artist": "",
     "originalKey": "C",
     "bpm": "",
@@ -1666,20 +1449,24 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 1",
         "notes": "",
         "linesEn": [
-          "- Verso 1",
           "Before I spoke a word, You were singing over me",
           "You have been so, so good to me, uh-uh",
           "Before I took a breath, You breathed Your life in me",
           "You have been so, so kind to me"
         ],
-        "linesEs": []
+        "linesEs": [
+          "Antes de hablar, cantaste sobre mí",
+          "Has sido tan bueno para mí",
+          "Antes de respirar, soplaste vida en mí",
+          "Has sido tan bueno para mí"
+        ]
       },
       {
-        "type": "verse",
-        "label": "",
+        "type": "chorus",
+        "label": "Chorus",
         "notes": "",
         "linesEn": [
           "Oh, the overwhelming, never-ending, reckless love of God",
@@ -1687,35 +1474,56 @@
           "I couldn't earn it, and I don't deserve it, still, You give Yourself away",
           "Oh, the overwhelming, never-ending, reckless love of God"
         ],
-        "linesEs": []
+        "linesEs": [
+          "Oh, tu amor me envuelve, me sostiene",
+          "Amor sin condición",
+          "Me persigue y deja las noventa y nueve",
+          "Y va por mí",
+          "",
+          "No puedo ganarlo ni merecerlo",
+          "Tu amor se entregó por mí",
+          "Oh, tu amor me envuelve, me sostiene",
+          "Amor sin condición"
+        ]
       },
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 2",
         "notes": "",
         "linesEn": [
           "When I was Your foe, still Your love fought for me (hmm)",
           "You have been so, so good to me (yeah)",
           "When I felt no worth, You paid it all for me, oh",
-          "",
           "You have been so, so kind to me, yeah"
         ],
-        "linesEs": []
+        "linesEs": [
+          "Aun lejos de ti, tu amor luchó por mí",
+          "Has sido tan bueno para mí",
+          "Cuando no vi mi valor, te entregaste por mí",
+          "Has sido tan bueno para mí"
+        ]
       },
       {
-        "type": "verse",
-        "label": "",
+        "type": "bridge",
+        "label": "Bridge",
         "notes": "",
         "linesEn": [
           "There's no shadow You won't light up",
           "Mountain You won't climb up",
           "Coming after me",
-          "",
           "There's no wall You won't kick down",
           "Lie You won't tear down",
           "Coming after me"
         ],
-        "linesEs": []
+        "linesEs": [
+          "No hay sombra que no alumbres",
+          "Monte que no escales",
+          "Para encontrarme a mí",
+          "",
+          "No hay pared que no derrumbas",
+          "Mentira que no rompas",
+          "Para encontrarme a mí"
+        ]
       }
     ],
     "aliases": [
@@ -3649,7 +3457,7 @@
   },
   {
     "id": "song-cuando-alla-se-pase-lista-when-roll-is-called-up-yonder-when-trumpet-lord-shall-",
-    "title": "Cuando allá se pase lista / when the roll is called up yonder / When the trumpet of the Lord shall sound",
+    "title": "Cuando allá se pase lista / When the Roll Is Called Up Yonder",
     "artist": "",
     "originalKey": "E",
     "bpm": "",
@@ -3657,23 +3465,13 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 1",
         "notes": "",
         "linesEn": [
-          "When the trumpet of the Lord shall sound and time shall be no more",
-          "And the morning breaks eternal bright and fair",
-          "When the saved diverse shall gather over on the other shore",
-          "And the roll is called up yonder, I'll be there",
-          "",
-          "When the roll is called up yonder",
-          "When the roll is called up yonder",
-          "When the roll is called up yonder",
-          "When the roll is called up yonder, I'll be there",
-          "",
-          "Let us lay before the master and his word",
-          "Let us talk of all his wondrous love and care",
-          "Then when all of life is over and our work on Earth is done",
-          "And the roll is called up yonder, I'll be there"
+          "When the trumpet of the Lord shall sound, and time shall be no more,",
+          "And the morning breaks, eternal, bright, and fair;",
+          "When the saved of earth shall gather over on the other shore,",
+          "And the roll is called up yonder, I'll be there."
         ],
         "linesEs": [
           "Cuando la trompeta suene",
@@ -3681,26 +3479,96 @@
           "Y que el alba eterna rompa en claridad;",
           "Cuando las naciones salvas",
           "A su patria lleguen ya,",
-          "Y que sea pasada lista, allí he de estar.",
-          "",
+          "Y que sea pasada lista, allí he de estar."
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder, I'll be there."
+        ],
+        "linesEs": [
           "Cuando allá se pase lista,",
           "Cuando allá se pase lista,",
           "Cuando allá se pase lista;",
-          "A mi nombre yo feliz responderé.",
-          "",
+          "A mi nombre yo feliz responderé."
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [
+          "On that bright and cloudless morning when the dead in Christ shall rise,",
+          "And the glory of His resurrection share;",
+          "When His chosen ones shall gather to their home beyond the skies,",
+          "And the roll is called up yonder, I'll be there."
+        ],
+        "linesEs": [
           "En aquel día sin tinieblas,",
-          "En qué muerte ya no habrá,",
+          "En que muerte ya no habrá,",
           "Y su gloria el Salvador impartirá;",
           "Cuando los llamados entren",
-          "A su celestial hogar.",
-          "Y que sea pasada lista, allí he de estar.",
-          "",
+          "A su celestial hogar,",
+          "Y que sea pasada lista, allí he de estar."
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder, I'll be there."
+        ],
+        "linesEs": [
+          "Cuando allá se pase lista,",
+          "Cuando allá se pase lista,",
+          "Cuando allá se pase lista;",
+          "A mi nombre yo feliz responderé."
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 3",
+        "notes": "",
+        "linesEn": [
+          "Let us labor for the Master from the dawn till setting sun,",
+          "Let us talk of all His wondrous love and care;",
+          "Then when all of life is over, and our work on earth is done,",
+          "And the roll is called up yonder, I'll be there."
+        ],
+        "linesEs": [
           "Trabajemos por el Maestro,",
-          "Desde el alba al vislumbrar:",
-          "Siempre hablemos de su amor y fiel bondad",
+          "Desde el alba al vislumbrar;",
+          "Siempre hablemos de su amor y fiel bondad;",
           "Cuando todo aquí fenezca",
           "Y nuestra obra cese ya,",
-          "Y que sea pasada lista, allí he de estar"
+          "Y que sea pasada lista, allí he de estar."
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder, I'll be there."
+        ],
+        "linesEs": [
+          "Cuando allá se pase lista,",
+          "Cuando allá se pase lista,",
+          "Cuando allá se pase lista;",
+          "A mi nombre yo feliz responderé."
         ]
       }
     ],
@@ -5228,7 +5096,7 @@
   },
   {
     "id": "song-dios-que-adoramos-oh-great-i",
-    "title": "El Dios que adoramos / Oh, Great I",
+    "title": "El Dios que adoramos / The God We Worship",
     "artist": "",
     "originalKey": "Am",
     "bpm": "",
@@ -5236,36 +5104,19 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 1",
         "notes": "",
         "linesEn": [
-          "Todo es de el y para el",
-          "………………………….",
-          "-1-",
           "The God who made the heavens and the earth",
-          "By the power of His Word",
-          "And reigns with all authority",
-          "The God who makes the wind and waves obey Him",
-          "One word's enough, it is sufficient",
-          "To make the dead come back to life"
-        ],
-        "linesEs": [
-          "Nadie es como Él",
-          "Oh gran Yo Soy",
-          "",
-          "A Él sea la gloria y el poder"
-        ]
-      },
-      {
-        "type": "verse",
-        "label": "",
-        "notes": "",
-        "linesEn": [
-          "There is none like You"
+          "With the power of His word",
+          "And reigns with authority",
+          "The God whom even the winds obey",
+          "One word is enough",
+          "To raise the dead"
         ],
         "linesEs": [
           "El Dios que hizo los cielos y la tierra",
-          "Con el poder de su palabra",
+          "Con el poder de Su palabra",
           "Reina con autoridad",
           "El Dios que aún los vientos le obedecen",
           "Una palabra es suficiente",
@@ -5273,30 +5124,12 @@
         ]
       },
       {
-        "type": "verse",
-        "label": "",
-        "notes": "",
-        "linesEn": [
-          "ENGLISH",
-          "The God who made the heavens and the earth",
-          "By the power of His Word",
-          "And reigns with all authority",
-          "",
-          "The God who makes the wind and waves obey Him",
-          "One word's enough, it is sufficient",
-          "To make the dead come back to life"
-        ],
-        "linesEs": [
-          "A Él sea la gloria y el poder",
-          "Todo es de el y para el"
-        ]
-      },
-      {
         "type": "prechorus",
         "label": "Pre-Chorus",
         "notes": "",
         "linesEn": [
-          "There is none like You"
+          "No one is like Him",
+          "Oh, great I Am"
         ],
         "linesEs": [
           "Nadie es como Él",
@@ -5307,26 +5140,40 @@
         "type": "chorus",
         "label": "Chorus",
         "notes": "",
-        "linesEn": [],
+        "linesEn": [
+          "You are the God we worship",
+          "Almighty and sovereign",
+          "Great in mercy",
+          "And power to save",
+          "You are the God we worship",
+          "Who defeated death and sin",
+          "Glorious redeemer and king",
+          "We worship You",
+          "We worship You, oh Lord"
+        ],
         "linesEs": [
           "Tú eres el Dios que adoramos",
           "Todopoderoso y soberano",
-          "Grande en misericordia",
-          "y poder para salvar",
-          "",
+          "Grande en misericordia y poder para salvar",
           "Tú eres el Dios que adoramos",
           "Quien derrotó la muerte y el pecado",
-          "Glorioso Redentor y Rey,",
-          "Te adoramos"
+          "Glorioso Redentor y Rey, Te adoramos"
         ]
       },
       {
         "type": "verse",
         "label": "Verse 2",
         "notes": "",
-        "linesEn": [],
+        "linesEn": [
+          "The God who came down from His throne",
+          "To carry on His shoulders",
+          "Our guilt and transgression",
+          "Jesus, exalted above all",
+          "Name above all names",
+          "Only in Him is salvation"
+        ],
         "linesEs": [
-          "El Dios que descendió desde su trono",
+          "El Dios que descendió desde Su trono",
           "Para llevar sobre Sus hombros",
           "Nuestra culpa y transgresión",
           "Jesús, exaltado sobre todo",
@@ -5338,15 +5185,13 @@
         "type": "bridge",
         "label": "Bridge",
         "notes": "",
-        "linesEn": [],
+        "linesEn": [
+          "To Him be the glory and power",
+          "Everything is from Him and for Him"
+        ],
         "linesEs": [
-          "Nadie es como Él",
-          "Oh gran Yo Soy",
-          "",
-          "Nadie es como Él",
-          "Oh gran Yo Soy",
-          "",
-          "There is none like You"
+          "A Él sea la gloria y el poder",
+          "Todo es de Él y para Él"
         ]
       }
     ],
@@ -5736,7 +5581,7 @@
   },
   {
     "id": "song-entera-consagracion",
-    "title": "Entera consagracion",
+    "title": "Entera consagración",
     "artist": "",
     "originalKey": "C",
     "bpm": "",
@@ -5744,14 +5589,15 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 1",
         "notes": "",
-        "linesEn": [],
+        "linesEn": [
+          "Take my life and let it be",
+          "consecrated, Lord, to thee.",
+          "Take my moments and my days;",
+          "let them flow in endless praise,"
+        ],
         "linesEs": [
-          "Ana Maria",
-          "Kathy",
-          "Take my life and let it beconsecrated, Lord, to thee.Take my moments and my days;let them flow in endless praise,",
-          "Alejandra",
           "Que mis pies tan sólo en pos",
           "De lo Santo puedan ir,",
           "Y que a ti, Señor, mi voz",
@@ -5765,40 +5611,38 @@
         "linesEn": [],
         "linesEs": [
           "¡Lávame en tu sangre, salvador!,",
-          "Límpiame de toda mi maldad.¡Traigo a ti mi vida, para ser Señor,¡Tuya por la eternidad!.",
-          "Wilfredo",
+          "Límpiame de toda mi maldad.",
+          "¡Traigo a ti mi vida, para ser Señor,",
+          "Tuya por la eternidad!."
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [
+          "Take my will and make it thine;",
+          "it shall be no longer mine.",
+          "Take my heart it is thine own;",
+          "it shall be thy royal throne,"
+        ],
+        "linesEs": [
           "Que mi tiempo todo esté",
           "Consagrado a tu loor,",
           "Que mis labios al hablar",
-          "Hablen sólo de tu amor.",
-          "Ana Maria",
-          "Take my will and make it thine;it shall be no longer mine.Take my heart it is thine own;it shall be thy royal throne,"
+          "Hablen sólo de tu amor."
         ]
       },
       {
-        "type": "chorus",
-        "label": "Chorus",
+        "type": "verse",
+        "label": "Verse 3",
         "notes": "",
         "linesEn": [],
         "linesEs": [
-          "¡Lávame en tu sangre, salvador!,",
-          "Límpiame de toda mi maldad.¡Traigo a ti mi vida, para ser Señor,¡Tuya por la eternidad!.",
-          "Daniel",
           "Toma tú mi amor, que hoy",
           "A tus pies vengo a poner;",
-          "Toma todoer lo que soy,¡Todo tuyo quiero ser!."
-        ]
-      },
-      {
-        "type": "chorus",
-        "label": "Chorus",
-        "notes": "",
-        "linesEn": [],
-        "linesEs": [
-          "¡Lávame en tu sangre, salvador!,",
-          "Límpiame de toda mi maldad.¡Traigo a ti mi vida, para ser Señor,¡Tuya por la eternidad!.",
-          "¡Lávame en tu sangre, salvador!,",
-          "Límpiame de toda mi maldad.¡Traigo a ti mi vida, para ser Señor,¡Tuya por la eternidad!."
+          "Toma todo lo que soy,",
+          "¡Todo tuyo quiero ser!."
         ]
       }
     ],
@@ -8055,8 +7899,8 @@
   },
   {
     "id": "song-great-i",
-    "title": "Great I",
-    "artist": "",
+    "title": "Great I Am",
+    "artist": "New Life Worship",
     "originalKey": "D",
     "bpm": "",
     "notes": "",
@@ -8066,100 +7910,20 @@
         "label": "Verse 1",
         "notes": "",
         "linesEn": [
-          "Kathy",
           "I want to be close, close to Your side",
           "So Heaven is real and death is a lie",
           "I want to hear voices, of angels above",
           "Singing as one"
         ],
         "linesEs": [
-          "Before the power and the presence of the Great I AM",
-          "The Great I AM, the Great I AM",
-          "The Great I AM, the Great I AM",
-          "The Great I AM"
+          "Me quiero acercar",
+          "A tu lado estar",
+          "Que el cielo sea real",
+          "Y la muerte negar",
+          "Quiero oír las voces",
+          "De ángeles hoy",
+          "Cantando unidos"
         ]
-      },
-      {
-        "type": "chorus",
-        "label": "Chorus",
-        "notes": "",
-        "linesEn": [
-          "Hallelujah, holy holy",
-          "God Almighty, Great I AM",
-          "Who is worthy? None beside Thee",
-          "God Almighty, Great I AM, Great I AM"
-        ],
-        "linesEs": [
-          "Aleluya",
-          "Santo, Santo",
-          "Poderoso",
-          "El Gran Yo Soy",
-          "Al que es dignono hay otro",
-          "Poderoso",
-          "El Gran Yo Soy"
-        ]
-      },
-      {
-        "type": "bridge",
-        "label": "Verse 2",
-        "notes": "armonías mujeres",
-        "linesEn": [
-          "EVERYONE",
-          "I want to be near, near to Your heart",
-          "Loving the world, hating the dark",
-          "I want to see dry bones living again",
-          "Singing as one"
-        ],
-        "linesEs": [
-          "La tierra tiembla ante eltinieblas huyen ya",
-          "Al mencionar tu nombre",
-          "Rey de majestad",
-          "Ninguna potestadnada resistirá",
-          "ante el poder y la presencia del ..Gran Yo Soy",
-          "Gran Yo Soy",
-          "Gran Yo Soy",
-          "Gran Yo Soy",
-          "Aleluya!Santo, Santo",
-          "Poderoso, Gran Yo Soy",
-          "Al que es dignono hay otro",
-          "Poderoso",
-          "El Gran Yo Soy",
-          "",
-          "El Gran Yo Soy",
-          "El Gran Yo Soy",
-          "El Gran Yo Soy"
-        ]
-      },
-      {
-        "type": "chorus",
-        "label": "Chorus",
-        "notes": "",
-        "linesEn": [
-          "Hallelujah, holy holy",
-          "God Almighty, the Great I AM",
-          "Who is worthy? None beside Thee",
-          "God Almighty, the Great I AM",
-          "Great I AM, the Great I AM, the Great I AM"
-        ],
-        "linesEs": []
-      },
-      {
-        "type": "bridge",
-        "label": "Bridge",
-        "notes": "",
-        "linesEn": [
-          "The mountains shake before Him",
-          "The demons run and flee",
-          "At the mention of the name, King of Majesty",
-          "There is no power in hell",
-          "Or any who can stand",
-          "(Voces Mujeres)",
-          "Before the power and the presence of the Great I AM",
-          "The Great I AM, the Great I AM",
-          "The Great I AM, the Great I AM",
-          "The Great I AM"
-        ],
-        "linesEs": []
       },
       {
         "type": "chorus",
@@ -8171,7 +7935,35 @@
           "Who is worthy? None beside Thee",
           "God Almighty, the Great I AM"
         ],
-        "linesEs": []
+        "linesEs": [
+          "Aleluya",
+          "Santo, Santo",
+          "Poderoso, El Gran Yo Soy",
+          "Al que es digno",
+          "Incomparable",
+          "Poderoso",
+          "El Gran Yo Soy"
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [
+          "I want to be near, near to Your heart",
+          "Loving the world, hating the dark",
+          "I want to see dry bones living again",
+          "Singing as one"
+        ],
+        "linesEs": [
+          "Me quiero acercar",
+          "A tu lado estar",
+          "Al mundo amar",
+          "Y lo oscuro odiar",
+          "El valle de huesos",
+          "De revivir",
+          "Cantando unidos"
+        ]
       },
       {
         "type": "bridge",
@@ -8183,19 +7975,17 @@
           "At the mention of the name, King of Majesty",
           "There is no power in hell",
           "Or any who can stand",
-          "(Voces mujers)"
+          "Before the power and the presence of the Great I AM"
         ],
-        "linesEs": []
-      },
-      {
-        "type": "verse",
-        "label": "",
-        "notes": "",
-        "linesEn": [
-          "There is no power in hell",
-          "Or any who can stand"
-        ],
-        "linesEs": []
+        "linesEs": [
+          "Tiembla ante ti la tierra",
+          "Demonios huyen ya",
+          "Al mencionar tu nombre",
+          "Rey de Majestad",
+          "No hay poder infernal",
+          "Que pueda resistir",
+          "Ante el poder y la presencia del Gran Yo Soy"
+        ]
       }
     ],
     "aliases": [],
@@ -8245,7 +8035,7 @@
   },
   {
     "id": "song-he-decidido",
-    "title": "He decidido",
+    "title": "He decidido / I Have Decided to Follow Jesus",
     "artist": "",
     "originalKey": "A",
     "bpm": "",
@@ -8253,15 +8043,20 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 1",
         "notes": "",
         "linesEn": [
-          "have decided to follow Jesus;",
+          "I have decided to follow Jesus;",
           "I have decided to follow Jesus;",
           "I have decided to follow Jesus;",
           "No turning back, no turning back."
         ],
-        "linesEs": []
+        "linesEs": [
+          "He decidido seguir a Cristo,",
+          "he decidido seguir a Cristo,",
+          "he decidido seguir a Cristo.",
+          "No vuelvo atrás, no vuelvo atrás."
+        ]
       }
     ],
     "aliases": [],
@@ -8269,7 +8064,7 @@
   },
   {
     "id": "song-he-decidido-seguir-cristo",
-    "title": "He decidido seguir a Cristo",
+    "title": "He decidido seguir a Cristo / I Have Decided to Follow Jesus",
     "artist": "",
     "originalKey": "A",
     "bpm": "",
@@ -8277,38 +8072,54 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 1",
         "notes": "",
         "linesEn": [
-          "He decidido seguir a Cristo(la/a)",
-          "I have decided to follow Jesus",
-          "He decidido seguir a Cristo",
-          "",
-          "I have decided to follow Jesus",
-          "He decidido seguir a Cristo",
-          "",
-          "Not turning back",
-          "No vuelvo atrás",
-          "",
-          "Not turning back",
-          "No vuelvo a atrás",
-          "",
-          "The cross in front and the world behind",
-          "Cristo adelante y el mundo atrás de mi.",
-          "",
-          "The cross in front and the world behind",
-          "Cristo adelante y el mundo atrás de mi.",
-          "",
-          "I'm not going back",
-          "No vuelvo atrás",
-          "",
-          "If others return I follow Christ",
-          "Si otros lo dejan yo sigo a cristo",
-          "",
-          "If others return I follow Christ",
-          "Si otros lo dejan yo sigo a cristo"
+          "I have decided to follow Jesus;",
+          "I have decided to follow Jesus;",
+          "I have decided to follow Jesus;",
+          "No turning back, no turning back."
         ],
-        "linesEs": []
+        "linesEs": [
+          "He decidido seguir a Cristo,",
+          "he decidido seguir a Cristo,",
+          "he decidido seguir a Cristo.",
+          "No vuelvo atrás, no vuelvo atrás."
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [
+          "If no one joins me, still I will follow;",
+          "If no one joins me, still I will follow;",
+          "If no one joins me, still I will follow;",
+          "No turning back, no turning back."
+        ],
+        "linesEs": [
+          "Si otros vuelven, yo sigo a Cristo,",
+          "si otros vuelven, yo sigo a Cristo,",
+          "si otros vuelven, yo sigo a Cristo.",
+          "No vuelvo atrás, no vuelvo atrás."
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 3",
+        "notes": "",
+        "linesEn": [
+          "The cross before me, the world behind me;",
+          "The cross before me, the world behind me;",
+          "The cross before me, the world behind me;",
+          "No turning back, no turning back."
+        ],
+        "linesEs": [
+          "La cruz delante y el mundo atrás,",
+          "la cruz delante y el mundo atrás,",
+          "la cruz delante y el mundo atrás.",
+          "No vuelvo atrás, no vuelvo atrás."
+        ]
       }
     ],
     "aliases": [],
@@ -8316,7 +8127,7 @@
   },
   {
     "id": "song-he-s-great-i",
-    "title": "He's the Great I",
+    "title": "He's the Great I Am",
     "artist": "",
     "originalKey": "Am",
     "bpm": "",
@@ -9559,7 +9370,7 @@
   },
   {
     "id": "song-i-just-wanna-speak-name-jesus",
-    "title": "I just wanna speak the name of Jesus",
+    "title": "I Speak Jesus",
     "artist": "",
     "originalKey": "F",
     "bpm": "",
@@ -9567,34 +9378,96 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 1",
         "notes": "",
         "linesEn": [
-          "I just wanna speak the name of Jesus Over every heart and every mind",
+          "I just wanna speak the name of Jesus",
+          "Over every heart and every mind",
           "'Cause I know there is peace within Your presence",
-          "I speak Jesus",
-          "",
+          "I speak Jesus"
+        ],
+        "linesEs": [
+          "Declaro el nombre de Jesús ahora",
+          "Sobre cada mente y corazón",
+          "Pues sé que encuentro paz en su presencia",
+          "Lo declaro"
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [
           "I just wanna speak the name of Jesus",
           "'Til every dark addiction starts to break",
           "Declaring there is hope and there is freedom",
-          "I speak Jesus",
-          "",
+          "I speak Jesus"
+        ],
+        "linesEs": [
+          "Declaro el nombre de Jesús ahora",
+          "Hasta que se rompa la adicción",
+          "Porque hay libertad y esperanza",
+          "Lo declaro"
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
           "'Cause Your name is power",
           "Your name is healing",
           "Your name is life",
           "Break every stronghold",
           "Shine through the shadows",
-          "Burn like a fire",
-          "",
+          "Burn like a fire"
+        ],
+        "linesEs": [
+          "Jesús tu nombre",
+          "Es poderoso",
+          "Vida nos da",
+          "Rompe cadenas",
+          "Vence tinieblas",
+          "Trae sanidad"
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 3",
+        "notes": "",
+        "linesEn": [
           "I just wanna speak the name of Jesus",
           "Over fear and all anxiety",
           "To every soul held captive by depression",
-          "I speak Jesus",
-          "",
-          "'Cause Your name is power",
-          "Your name is healing"
+          "I speak Jesus"
         ],
-        "linesEs": []
+        "linesEs": [
+          "Declaro el nombre de Jesús ahora",
+          "Sobre el miedo y toda ansiedad",
+          "Que toda alma en depresión sea libre",
+          "En tu nombre"
+        ]
+      },
+      {
+        "type": "bridge",
+        "label": "Bridge",
+        "notes": "",
+        "linesEn": [
+          "Shout Jesus from the mountains",
+          "Jesus in the streets",
+          "Jesus in the darkness, over every enemy",
+          "Jesus for my family",
+          "I speak the holy name",
+          "Jesus"
+        ],
+        "linesEs": [
+          "Declaro en las montañas",
+          "También en la ciudad",
+          "Jesús a la maldad y al enemigo vencerá",
+          "Jesús por mi familia",
+          "Proclamo el nombre",
+          "de Jesús"
+        ]
       }
     ],
     "aliases": [],
@@ -11517,71 +11390,28 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse",
         "notes": "",
         "linesEn": [
-          "Lord I give You my heart",
-          "",
           "This is my desire, to honour You",
           "Lord with all my heart I worship You",
           "All I have within me",
           "I give You praise",
-          "All that I adore is in You",
-          "",
+          "All that I adore is in You"
+        ],
+        "linesEs": []
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
           "Lord I give You my heart",
           "I give You my soul",
           "I live for You alone",
           "Every breath that I take",
           "Every moment I'm awake",
-          "Lord have Your way in me",
-          "",
-          "When the roll is called",
-          "",
-          "When the trumpet of the Lord shall sound and time shall be no more",
-          "And the morning breaks eternal bright and fair",
-          "When the saved diverse shall gather over on the other shore",
-          "And the roll is called up yonder, I'll be there",
-          "",
-          "When the roll is called up yonder",
-          "When the roll is called up yonder",
-          "When the roll is called up yonder",
-          "When the roll is called up yonder, I'll be there",
-          "",
-          "Let us lay before the master and his word",
-          "Let us talk of all his wondrous love and care",
-          "Then when all of life is over and our work on Earth is done",
-          "And the roll is called up yonder, I'll be there",
-          "",
-          "I will work, I will pray,",
-          "",
-          "I want to be a worker for the Lord,",
-          "I want to love and trust His holy Word,",
-          "I want to sing and pray,",
-          "Be busy every day",
-          "In the vineyard of the Lord.",
-          "",
-          "I will work, I will pray,",
-          "In the vineyard, in the vineyard of the Lord.",
-          "I will work, I will pray.",
-          "I will labour every day, in the vineyard of the Lord",
-          "",
-          "I want to be a worker every day,",
-          "I want to lead the erring in the way",
-          "That leads to Heav’n above,",
-          "Where all is peace and love,",
-          "In the vineyard of the Lord.",
-          "",
-          "I want to be a worker strong and brave,",
-          "I want to trust in Jesus’ pow’r to save;",
-          "All who will truly come",
-          "Shall find a happy home",
-          "In the vineyard of the Lord.",
-          "",
-          "I want to be a worker; help me, Lord,",
-          "To lead the lost and erring to Thy Word,",
-          "That points to joys on high",
-          "Where pleasures never die,",
-          "In the vineyard of the Lord"
+          "Lord have Your way in me"
         ],
         "linesEs": []
       }
@@ -11599,104 +11429,13 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse",
         "notes": "",
         "linesEn": [
-          "Lord I lift Your name on high",
           "Lord I lift Your name on high",
           "Lord I love to sing Your praises",
           "I'm so glad You're in my life",
-          "I'm so glad You came to save us",
-          "",
-          "You came from heaven to earth",
-          "To show the way",
-          "From the earth to the cross",
-          "My debt to pay",
-          "From the cross to the grave",
-          "From the grave to the sky",
-          "Lord I lift Your name on high",
-          "",
-          "Rooftops",
-          "Here I am before You",
-          "Falling in love and seeking Your truth",
-          "Knowing that Your perfect grace",
-          "Has brought me to this place",
-          "",
-          "Because of You I freely live",
-          "My life to You, oh God, I give",
-          "So I stand before You, God",
-          "I lift my voice cause You set me free",
-          "",
-          "So I shout out Your name",
-          "From the rooftops I proclaim",
-          "That I am Yours, I am Yours",
-          "",
-          "All that I am, I place into Your loving hands",
-          "And I am Yours, I am Yours",
-          "",
-          "Here I am, I stand",
-          "With arms wide open",
-          "To the One, our Lord",
-          "The everlasting God",
-          "The everlasting God",
-          "",
-          "Let Revival come",
-          "Heavenly Father, I come",
-          "Don't have much to offer, Holy One",
-          "I'm humbled by all that You've done, oh-oh-oh-oh"
-        ],
-        "linesEs": []
-      },
-      {
-        "type": "prechorus",
-        "label": "Pre-Chorus",
-        "notes": "",
-        "linesEn": [
-          "And even though I walk through the valley",
-          "I don't have to fear",
-          "'Cause You have called me from my sorrow to gladness",
-          "And I have You, what more could I want?"
-        ],
-        "linesEs": []
-      },
-      {
-        "type": "chorus",
-        "label": "Chorus 1",
-        "notes": "",
-        "linesEn": [
-          "So raise my faith a little higher",
-          "Set my spirit on fire",
-          "Lord, we're asking You to move",
-          "'Cause You're the God of restoration",
-          "The One who gives salvation",
-          "Lord, let revival come",
-          "Let revival come",
-          "Let revival come (Let revival come)"
-        ],
-        "linesEs": []
-      },
-      {
-        "type": "verse",
-        "label": "Verse 2",
-        "notes": "",
-        "linesEn": [
-          "You are the God who calms the sea",
-          "The same God who healeth me",
-          "You are the One who makes me strong",
-          "",
-          "Jesus, the most beautiful name"
-        ],
-        "linesEs": []
-      },
-      {
-        "type": "prechorus",
-        "label": "Pre-Chorus",
-        "notes": "",
-        "linesEn": [
-          "When I speak Your name",
-          "Mountains move, chains are loosed",
-          "When I speak Your name",
-          "Darkness flees; it has no hold on me"
+          "I'm so glad You came to save us"
         ],
         "linesEs": []
       },
@@ -11705,28 +11444,13 @@
         "label": "Chorus",
         "notes": "",
         "linesEn": [
-          "Jesus, most beautiful name that I know",
-          "You're the exalted One",
-          "Jesus, You have the power alone",
-          "You lift the lowly one",
-          "Jesus, most beautiful name that I know",
-          "You're the exalted One",
-          "Jesus, You have the power alone",
-          "You lift the lowly one, Jesus"
-        ],
-        "linesEs": []
-      },
-      {
-        "type": "bridge",
-        "label": "Bridge",
-        "notes": "",
-        "linesEn": [
-          "Be exalted, be exalted",
-          "Be exalted higher and higher",
-          "Be exalted, be exalted",
-          "Be exalted higher and higher",
-          "Be exalted, be exalted",
-          "Be exalted higher and higher"
+          "You came from heaven to earth",
+          "To show the way",
+          "From the earth to the cross",
+          "My debt to pay",
+          "From the cross to the grave",
+          "From the grave to the sky",
+          "Lord I lift Your name on high"
         ],
         "linesEs": []
       }
@@ -15867,28 +15591,68 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 1",
         "notes": "",
         "linesEn": [
           "The weapon may be formed, but it won't prosper",
           "When the darkness falls, it won't prevail",
           "Cause the God I serve knows only how to triumph",
           "My God will never fail",
-          "Oh my God will never fail",
-          "",
+          "Oh my God will never fail"
+        ],
+        "linesEs": [
+          "No prosperará el arma forjada",
+          "La oscuridad no prevalecerá",
+          "Porque el Dios que sirvo siempre triunfará",
+          "Mi Dios no fallará",
+          "Mi Dios no fallará"
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
           "I'm gonna see a victory",
           "I'm gonna see a victory",
           "For the battle belongs to you Lord",
           "I'm gonna see a victory",
           "I'm gonna see a victory",
-          "For the battle belongs to you Lord",
-          "",
+          "For the battle belongs to you Lord"
+        ],
+        "linesEs": [
+          "Voy a ver la victoria",
+          "Voy a ver la victoria",
+          "La batalla es tuya Señor",
+          "Voy a ver la victoria",
+          "Voy a ver la victoria",
+          "La batalla es tuya Señor"
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [
           "There's power in the mighty name of Jesus",
           "Every war He wages He will win",
           "I'm not backing down from any giant",
           "'Cause I know how this story ends",
-          "Yes I know how this story ends",
-          "",
+          "Yes I know how this story ends"
+        ],
+        "linesEs": [
+          "Hay poder en el nombre de Cristo",
+          "Cada guerra que Él pelea ganará",
+          "Nunca huiré de los gigantes",
+          "Sé como terminará",
+          "Sé como terminará"
+        ]
+      },
+      {
+        "type": "bridge",
+        "label": "Bridge",
+        "notes": "",
+        "linesEn": [
           "You take what the enemy meant for evil",
           "And you turn it for good",
           "You turn it for good",
@@ -15896,7 +15660,11 @@
           "And you turn it for good",
           "You turn it for good"
         ],
-        "linesEs": []
+        "linesEs": [
+          "Todo lo que viene del enemigo",
+          "Lo transformas para bien",
+          "Lo transformas para bien"
+        ]
       }
     ],
     "aliases": [],
@@ -17168,7 +16936,7 @@
   },
   {
     "id": "song-blessing",
-    "title": "The blessing",
+    "title": "The Blessing / La Bendición",
     "artist": "",
     "originalKey": "F",
     "bpm": "",
@@ -17176,120 +16944,97 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
-        "notes": "Unísono",
-        "linesEn": [],
+        "label": "Verse 1",
+        "notes": "",
+        "linesEn": [
+          "The Lord bless you",
+          "And keep you",
+          "Make His face shine upon you",
+          "And be gracious to you",
+          "The Lord turn His face towards you",
+          "And give you peace"
+        ],
         "linesEs": [
           "Dios te guarde",
           "Y bendiga",
           "Que extienda Su amor",
           "Y te muestre favor",
           "Dios te mire con agrado",
-          "Y te dé paz",
-          "",
-          "Dios te guarde",
-          "Y bendiga",
-          "Que extienda Su amor",
-          "Y te muestre favor",
-          "Dios te mire con agrado",
-          "Y te dé paz.",
-          "",
-          "Amén, Amén, Amén",
-          "Amén, Amén, Amén",
-          "",
-          "Dios te guarde",
-          "Y bendiga",
-          "Que extienda Su amor",
-          "Y te muestre favor",
-          "Dios te mire con agrado",
-          "Y te dé paz.",
-          "",
-          "Todos (Armonías)",
-          "Amén, Amén, Amén",
-          "Amén, Amén, Amén",
-          "",
-          "The Lord bless you",
-          "and keep you",
-          "Make His face shine upon you",
-          "and be gracious to you",
-          "The Lord turn His face toward you and give you peace",
-          "",
-          "Amen, amen, amen",
-          "Amen, amen, amen",
-          "",
-          "Preludio",
-          "",
-          "Que te cubra con su gracia",
+          "Y te dé paz"
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
+          "Amen"
+        ],
+        "linesEs": [
+          "Amén"
+        ]
+      },
+      {
+        "type": "bridge",
+        "label": "Bridge 1",
+        "notes": "",
+        "linesEn": [
+          "May His favor be upon you",
+          "And a thousand generations",
+          "And your family",
+          "And your children",
+          "And their children",
+          "And their children"
+        ],
+        "linesEs": [
+          "Que te cubra con Su gracia",
           "Hasta mil generaciones",
           "Tu familia",
           "Y tus hijos",
           "Y los hijos",
-          "De tus hijos",
-          "",
-          "Que te cubra con su gracia",
-          "Hasta mil generaciones",
-          "Tu familia",
-          "Y tus hijos",
-          "Y los hijos",
-          "De tus hijos",
-          "",
+          "De tus hijos"
+        ]
+      },
+      {
+        "type": "bridge",
+        "label": "Bridge 2",
+        "notes": "",
+        "linesEn": [
+          "May His presence go before you",
+          "And behind you, and beside you",
+          "All around you",
+          "And within you",
+          "He is with you",
+          "He is with you"
+        ],
+        "linesEs": [
           "Su presencia te acompañe",
-          "Donde quiera que tú vayas",
+          "Dondequiera que tú vayas",
           "Que te llene",
           "Te rodee",
           "Va contigo",
-          "Va contigo",
-          "",
+          "Va contigo"
+        ]
+      },
+      {
+        "type": "bridge",
+        "label": "Bridge 3",
+        "notes": "",
+        "linesEn": [
+          "In the morning, in the evening",
+          "In your coming, and your going",
+          "In your weeping",
+          "And rejoicing",
+          "He is for you",
+          "He is for you"
+        ],
+        "linesEs": [
           "De mañana, y de noche",
           "En tu entrada y salida",
           "En tu llanto",
           "Y alegría",
-          "",
-          "Él te ama, Él te ama, Él te ama,",
-          "Él te ama, Él te ama, Él te ama",
-          "Él te ama, El te ama....aaaaa",
-          "",
-          "Amén, Amén, Amén",
-          "Amén, Amén, Amén",
-          "",
-          "Y aquí estoy yo",
-          "",
-          "Ha pasado el atardecer",
-          "Ha llegado el anochecer",
-          "Siento miedo al mirar la penumbra llegar",
-          "Porque en ella se oculta el mal",
-          "Ya las sombras cubren la ciudad",
-          "Ronda el miedo en cada lugar",
-          "Se oye un carro pasar y disparos sonar",
-          "Un quejido en la oscuridad.",
-          "",
-          "Y aquí estoy yo confiando en Dios",
-          "Yo se que Él me guardará",
-          "A mi familia cuidará",
-          "Bajo sus alas de bondad",
-          "Y el malo nunca llegará",
-          "Porque el Señor lo detendrá",
-          "Y tengo fe que en mi país",
-          "Pronto la paz renacerá",
-          "",
-          "Hoy los niños se escuchan llorar",
-          "Y las viudas también sollozar",
-          "Oh Señor ten piedad, de esta linda nación",
-          "Que ha perdido la tranquilidad",
-          "Ya la vida no tiene valor",
-          "Y se mata por satisfacción",
-          "¿Que se hizo el amor?",
-          "Ya no hay compasión",
-          "Es que el mundo se olvido de Dios",
-          "",
-          "Y aquí estoy yo confiando en Dios",
-          "Yo se que El me guardará",
-          "A mi familia cuidará",
-          "Bajo sus alas de bondad",
-          "Y el malo nunca llegará",
-          "Porque el Señor lo detendrá",
-          "Y tengo fe que en mi país",
-          "Pronto la paz renacerá."
+          "Él te ama",
+          "Él te ama"
         ]
       }
     ],
@@ -17377,7 +17122,7 @@
   },
   {
     "id": "song-god-who-made-heavens-ear",
-    "title": "The God who made the heavens and the ear",
+    "title": "The God We Worship / El Dios que adoramos",
     "artist": "",
     "originalKey": "",
     "bpm": "",
@@ -17385,60 +17130,94 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 1",
         "notes": "",
         "linesEn": [
           "The God who made the heavens and the earth",
-          "By the power of His Word",
-          "And reigns with all authority no",
-          "The God who makes the wind and waves obey Him",
-          "One word's enough, it is sufficient",
-          "To make the dead come back to life",
-          "",
-          "There is none like You"
+          "With the power of His word",
+          "And reigns with authority",
+          "The God whom even the winds obey",
+          "One word is enough",
+          "To raise the dead"
         ],
         "linesEs": [
-          "Hoy nos hemos reunido",
-          "Hoy nos hemos reunido en tu Nombre Jesús",
-          "Para darte adoración, de todo corazón",
-          "Solo Tú eres Digno de la aclamación",
-          "Eres Santo mi Señor, honra y gloria te doy.",
-          "sta sscca",
-          "SLos redimidos te alabaremos con amor",
-          "Entonaremos una canción, unidos en adoración",
-          "Elevaremos nuestra voz a ti mi Cristo,",
-          "Toda la gloria tuya es, tuyo el imperio y el poder",
-          "Mi vida entera rendiré, sólo a ti.",
-          "Tu eres el Dios que adoramos",
           "El Dios que hizo los cielos y la tierra",
-          "Con el poder de su palabra",
+          "Con el poder de Su palabra",
           "Reina con autoridad",
           "El Dios que aún los vientos le obedecen",
           "Una palabra es suficiente",
-          "Para los muertos levantar",
-          "",
+          "Para los muertos levantar"
+        ]
+      },
+      {
+        "type": "prechorus",
+        "label": "Pre-Chorus",
+        "notes": "",
+        "linesEn": [
+          "No one is like Him",
+          "Oh, great I Am"
+        ],
+        "linesEs": [
           "Nadie es como Él",
-          "Oh gran Yo Soy",
-          "",
+          "Oh gran Yo Soy"
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
+          "You are the God we worship",
+          "Almighty and sovereign",
+          "Great in mercy",
+          "And power to save",
+          "You are the God we worship",
+          "Who defeated death and sin",
+          "Glorious redeemer and king",
+          "We worship You",
+          "We worship You, oh Lord"
+        ],
+        "linesEs": [
           "Tú eres el Dios que adoramos",
           "Todopoderoso y soberano",
           "Grande en misericordia y poder para salvar",
           "Tú eres el Dios que adoramos",
           "Quien derrotó la muerte y el pecado",
-          "Glorioso Redentor y Rey, Te adoramos",
-          "",
-          "El Dios que descendió desde su trono",
+          "Glorioso Redentor y Rey, Te adoramos"
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [
+          "The God who came down from His throne",
+          "To carry on His shoulders",
+          "Our guilt and transgression",
+          "Jesus, exalted above all",
+          "Name above all names",
+          "Only in Him is salvation"
+        ],
+        "linesEs": [
+          "El Dios que descendió desde Su trono",
           "Para llevar sobre Sus hombros",
           "Nuestra culpa y transgresión",
           "Jesús, exaltado sobre todo",
           "Nombre sobre todo nombre",
-          "Solo en Él hay salvación",
-          "",
-          "Nadie es como Él",
-          "Oh gran Yo Soy",
-          "",
+          "Solo en Él hay salvación"
+        ]
+      },
+      {
+        "type": "bridge",
+        "label": "Bridge",
+        "notes": "",
+        "linesEn": [
+          "To Him be the glory and power",
+          "Everything is from Him and for Him"
+        ],
+        "linesEs": [
           "A Él sea la gloria y el poder",
-          "Todo es de el y para el"
+          "Todo es de Él y para Él"
         ]
       }
     ],
@@ -17710,7 +17489,7 @@
   },
   {
     "id": "song-tho-none-go-with-me-i-still-will-follow",
-    "title": "Tho' none go with me, I still will follow",
+    "title": "Though none go with me, I still will follow",
     "artist": "",
     "originalKey": "",
     "bpm": "",
@@ -17718,14 +17497,20 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse",
         "notes": "",
         "linesEn": [
-          "Tho' none go with me I still will follow,",
-          "Tho' none go with me, I still will follow;",
-          "No turning back, no turning back"
+          "Though none go with me, still I will follow;",
+          "Though none go with me, still I will follow;",
+          "Though none go with me, still I will follow;",
+          "No turning back, no turning back."
         ],
-        "linesEs": []
+        "linesEs": [
+          "Si otros vuelven, yo sigo a Cristo,",
+          "si otros vuelven, yo sigo a Cristo,",
+          "si otros vuelven, yo sigo a Cristo.",
+          "No vuelvo atrás, no vuelvo atrás."
+        ]
       }
     ],
     "aliases": [],
@@ -19035,176 +18820,51 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 1",
         "notes": "",
-        "linesEn": [
+        "linesEn": [],
+        "linesEs": [
           "Tu pueblo dice gracias",
           "Oh cuan amor inagotable",
           "Fidelidad incomparable",
           "Grandes cosas ha hecho Dios",
-          "Por su pueblo.",
-          "",
+          "Por su pueblo."
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [],
+        "linesEs": [
           "Ha sido lluvia a las naciones",
           "Cambiaste el lloro por canciones",
           "Grandes cosas ha hecho Dios",
-          "Por su pueblo.",
-          "",
+          "Por su pueblo."
+        ]
+      },
+      {
+        "type": "prechorus",
+        "label": "Pre-Chorus",
+        "notes": "",
+        "linesEn": [],
+        "linesEs": [
           "Toda la creación se levanta",
           "Y delante de su trono proclama",
-          "Que grande y bueno es Dios.",
-          "",
-          "//Tu pueblo dice gracias",
+          "Que grande y bueno es Dios."
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [],
+        "linesEs": [
+          "Tu pueblo dice gracias",
           "Tu pueblo dice gracias",
           "Porque grandes cosas ha hecho Dios",
-          "Por su pueblo//",
-          "",
-          "I am a friend of God",
-          "Who am I that You are mindful of me",
-          "That You hear me, when I call",
-          "Is it true that you are thinking of me",
-          "How You love me",
-          "It's amazing",
-          "",
-          "I am a friend of God",
-          "I am a friend of God",
-          "I am a friend of God",
-          "He calls me friend",
-          "",
-          "God almighty Lord of Glory",
-          "You have called me friend",
-          "¿Quien soy yo para que en mí tú pienses",
-          "Y que escuches mi clamor?",
-          "Y es verdad lo que tú hoy me dices",
-          "Que me amas, me asombras",
-          "",
-          "Eres mi amigo fiel",
-          "Eres mi amigo fiel",
-          "Eres mi amigo fiel",
-          "Tu amigo soy",
-          "",
-          "Majestuoso",
-          "Poderoso",
-          "Tu amigo soy",
-          "",
-          "Majestuoso, poderoso",
-          "Tu amigo soy",
-          "",
-          "Thank you, Lord, for saving me",
-          "Oh, hallelujah",
-          "Thank you, Jesus",
-          "Oh, hallelujah",
-          "Our God saves",
-          "",
-          "Oh, hallelujah",
-          "Highest praises",
-          "Oh, hallelujah",
-          "We give thanks",
-          "Say, I'm grateful for who You are",
-          "And all you've done",
-          "",
-          "Thank you, Lord, for saving me",
-          "Thank you, Lord, for saving me",
-          "Oh, my soul cries hallelujah",
-          "Thank you, Lord, for saving me",
-          "",
-          "You've been so good, You've been so good",
-          "I thank you, Lord, I thank you",
-          "My heart is full, my heart is full",
-          "I love you, Lord, I love you",
-          "",
-          "Glorious day",
-          "Mi vergüenza me sepultó",
-          "Yo buscaba un salvador",
-          "Más tu perdón, me libero",
-          "",
-          "Muerto estaba en mi interior",
-          "Me escondía de Ti Señor",
-          "Más tu perdón, me libero",
-          "",
-          "//Tu voz me habló",
-          "Y a la muerte venció",
-          "Glorioso día, tu sangre me rescató//",
-          "",
-          "Ahora libre soy en tu amor",
-          "Es tu gracia la que me sano",
-          "Más tu perdon, a mí me libero",
-          "",
-          "De mi pecado me rescataste",
-          "En tu gloria cadenas se rompen",
-          "Vivía solo y sin consuelo",
-          "Ahora soy ciudadano del cielo",
-          "",
-          "Tu me sanaste estando herido",
-          "Jesús por tu amor yo respiro",
-          "Tengo futuro, ahora veo",
-          "Porque tú voz me habló",
-          "Y a la muerte venció",
-          "",
-          "ENGLISH",
-          "I was buried beneath my shame",
-          "Who could carry that kind of weight",
-          "It was my tomb",
-          "Till I met You",
-          "",
-          "I was breathing, but not alive",
-          "All my failures I tried to hide",
-          "It was my tomb",
-          "Till I met You",
-          "",
-          "//You called my name",
-          "And I ran out of that grave",
-          "Out of the darkness",
-          "Into Your glorious day//",
-          "",
-          "Now Your mercy has saved my soul",
-          "Now Your freedom is all I know",
-          "The old made new",
-          "Jesus, when I met You",
-          "",
-          "I needed rescue",
-          "My sin was heavy",
-          "But chains break at the weight of Your glory",
-          "I needed shelter",
-          "",
-          "I was an orphan",
-          "But You call me a citizen of heaven",
-          "When I was broken",
-          "You were my healing",
-          "Your love is the air that I'm breathing",
-          "I have a future",
-          "My eyes are open",
-          "",
-          "De gloria en gloria",
-          "Yo quiero ver",
-          "Tu luz brillando en mí",
-          "A través de mí",
-          "",
-          "Ser un altar",
-          "Que todos puedan ver",
-          "Que todos oigan que",
-          "",
-          "Tú eres vida",
-          "La esperanza",
-          "Perfecta gracia que",
-          "Me ha rescatado",
-          "",
-          "Tú eres vida",
-          "La esperanza",
-          "Perfecta gracia que",
-          "Me ha rescatado",
-          "",
-          "Ya no vivo yo, Cristo vive en mí",
-          "Barro quiero ser en tus manos",
-          "Ya no vivo yo, Cristo vive en mí",
-          "Barro quiero ser en tus manos",
-          "",
-          "De gloria en gloria",
-          "Te veo Dios",
-          "De gloria en gloria",
-          "Transformado soy",
-          "Por tu espíritu"
-        ],
-        "linesEs": []
+          "Por su pueblo"
+        ]
       }
     ],
     "aliases": [],
@@ -20581,7 +20241,7 @@
   },
   {
     "id": "song-what-beautiful-name-you-were-word",
-    "title": "What a beautiful Name You were the Word",
+    "title": "What a Beautiful Name",
     "artist": "",
     "originalKey": "",
     "bpm": "",
@@ -20589,125 +20249,139 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 1",
         "notes": "",
         "linesEn": [
-          "What a beautiful Name You were the Word at the beginning",
+          "You were the Word at the beginning",
           "One with God the Lord Most High",
           "Your hidden glory in creation",
-          "Now revealed in You our Christ",
-          "",
+          "Now revealed in You our Christ"
+        ],
+        "linesEs": [
+          "Tú fuiste el verbo en el principio",
+          "Unigénito de Dios",
+          "El misterio de tu gloria",
+          "Revelado en tu amor"
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus 1",
+        "notes": "",
+        "linesEn": [
           "What a beautiful Name it is",
           "What a beautiful Name it is",
           "The Name of Jesus Christ my King",
           "What a beautiful Name it is",
           "Nothing compares to this",
           "What a beautiful Name it is",
-          "The Name of Jesus",
-          "",
+          "The Name of Jesus"
+        ],
+        "linesEs": [
+          "Cuán hermoso su nombre es",
+          "Cuán hermoso su nombre es",
+          "El nombre de Jesús mi Rey",
+          "Cuán hermoso su nombre es",
+          "Nada se iguala a Él",
+          "Cuán hermoso su nombre es",
+          "No hay otro nombre"
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [
           "You didn't want heaven without us",
           "So Jesus, You brought heaven down",
           "My sin was great, Your love was greater",
-          "What could separate us now?",
-          "",
+          "What could separate us now?"
+        ],
+        "linesEs": [
+          "Dejaste el cielo por salvarme",
+          "Me viniste a rescatar",
+          "Mi transgresión tú perdonaste",
+          "Nada nos separará"
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus 2",
+        "notes": "",
+        "linesEn": [
           "What a wonderful Name it is",
           "What a wonderful Name it is",
           "The Name of Jesus Christ my King",
-          "",
           "What a wonderful Name it is",
           "Nothing compares to this",
           "What a wonderful Name it is",
-          "The Name of Jesus",
-          "What a wonderful Name it is",
-          "The Name of Jesus",
-          "",
+          "The Name of Jesus"
+        ],
+        "linesEs": [
+          "Majestuoso su nombre es",
+          "Majestuoso su nombre es",
+          "El nombre de Jesús mi Rey",
+          "Majestuoso su nombre es",
+          "Nada se iguala a Él",
+          "Majestuoso su nombre es",
+          "No hay otro nombre"
+        ]
+      },
+      {
+        "type": "bridge",
+        "label": "Bridge",
+        "notes": "",
+        "linesEn": [
           "Death could not hold You",
           "The veil tore before You",
           "You silenced the boast of sin and grave",
-          "The Heavens are roaring",
+          "The heavens are roaring",
           "The praise of Your glory",
           "For You are raised to life again",
-          "",
           "You have no rival",
           "You have no equal",
-          "Now and forever, God You reign",
-          "Yours is the kingdom",
+          "Now and forever, God, You reign",
+          "Yours is the Kingdom",
           "Yours is the glory",
-          "Yours is the Name above all names",
-          "",
-          "Mighty to save",
-          "Everyone needs compassion",
-          "A love that's never failing",
-          "Let mercy fall on me",
-          "",
-          "Everyone needs forgiveness",
-          "The kindness of a Saviour",
-          "The hope of nations",
-          "",
-          "Saviour, he can move the mountains",
-          "My God is mighty to save",
-          "He is mighty to save",
-          "Forever Author of Salvation",
-          "He rose and conquered the grave",
-          "Jesus conquered the grave",
-          "",
-          "So take me as you find me",
-          "All my fears and failures",
-          "Fill my life again",
-          "",
-          "I give my life to follow",
-          "Everything that I believe in",
-          "Now I surrender",
-          "",
-          "God of this city",
-          "For greater things have yet to come",
-          "And greater things are still to be done in this city",
-          "Greater things have yet to come",
-          "And greater things are still to be done in here",
-          "",
-          "You're the God of this city",
-          "You're the king of these people",
-          "You're the lord of this nation",
-          "You are",
-          "",
-          "You're the light in this darkness",
-          "You're the hope to the hopeless",
-          "You're the peace to the restless",
-          "You are",
-          "",
-          "There is no one like our God",
-          "There is no one like our God",
-          "",
-          "For greater things have yet to come",
-          "And greater things are still to be done in this city",
-          "Greater things have yet to come",
-          "And greater things are still to be done in here",
-          "",
-          "Rooftops",
-          "So I shout out Your name",
-          "From the rooftops I proclaim",
-          "That I am Yours, I am Yours",
-          "",
-          "All that I am, I place into Your loving hands",
-          "And I am Yours, I am Yours",
-          "",
-          "Here I am, I stand",
-          "With arms wide open",
-          "To the One, our Lord",
-          "The everlasting God",
-          "The everlasting God",
-          "",
-          "Here I am before You",
-          "Falling in love and seeking Your truth",
-          "Knowing that Your perfect grace",
-          "Has brought me to this place",
-          "",
-          "Because of You I freely live",
-          "My life to You, oh God, I give",
-          "So I stand before You, God",
-          "I lift my voice cause You set me free"
+          "Yours is the Name above all names"
         ],
-        "linesEs": []
+        "linesEs": [
+          "La muerte venciste",
+          "El velo partiste",
+          "La tumba vacía ahora está",
+          "Los cielos declaran",
+          "Tu gloria proclaman",
+          "Resucitaste en majestad",
+          "Inigualable",
+          "Incomparable",
+          "Hoy y por siempre reinarás",
+          "Tuyo es el reino",
+          "Tuya es la gloria",
+          "Tuyo el poder y autoridad"
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus 3",
+        "notes": "",
+        "linesEn": [
+          "What a powerful Name it is",
+          "What a powerful Name it is",
+          "The Name of Jesus Christ my King",
+          "What a powerful Name it is",
+          "Nothing can stand against",
+          "What a powerful Name it is",
+          "The Name of Jesus"
+        ],
+        "linesEs": [
+          "Poderoso su nombre es",
+          "Poderoso su nombre es",
+          "El nombre de Jesús mi Rey",
+          "Poderoso su nombre es",
+          "Incomparable es Él",
+          "Poderoso su nombre es",
+          "No hay otro nombre"
+        ]
       }
     ],
     "aliases": [],
@@ -20760,7 +20434,7 @@
   },
   {
     "id": "song-when-roll-is-called",
-    "title": "When the roll is called",
+    "title": "When the Roll Is Called Up Yonder / Cuando allá se pase lista",
     "artist": "",
     "originalKey": "",
     "bpm": "",
@@ -20768,55 +20442,111 @@
     "sections": [
       {
         "type": "verse",
-        "label": "",
+        "label": "Verse 1",
         "notes": "",
         "linesEn": [
-          "When the trumpet of the Lord shall sound and time shall be no more",
-          "And the morning breaks eternal bright and fair",
-          "When the saved diverse shall gather over on the other shore",
-          "And the roll is called up yonder, I'll be there",
-          "",
-          "When the roll is called up yonder",
-          "When the roll is called up yonder",
-          "When the roll is called up yonder",
-          "When the roll is called up yonder, I'll be there",
-          "",
-          "Let us lay before the master and his word",
-          "Let us talk of all his wondrous love and care",
-          "Then when all of life is over and our work on Earth is done",
-          "And the roll is called up yonder, I'll be there",
-          "",
-          "I will work, I will pray,",
-          "I want to be a worker for the Lord,",
-          "I want to love and trust His holy Word,",
-          "I want to sing and pray,",
-          "Be busy every day",
-          "In the vineyard of the Lord.",
-          "",
-          "I will work, I will pray,",
-          "In the vineyard, in the vineyard of the Lord.",
-          "I will work, I will pray.",
-          "I will labour every day, in the vineyard of the Lord",
-          "",
-          "I want to be a worker every day,",
-          "I want to lead the erring in the way",
-          "That leads to Heav’n above,",
-          "Where all is peace and love,",
-          "In the vineyard of the Lord.",
-          "",
-          "I want to be a worker strong and brave,",
-          "I want to trust in Jesus’ pow’r to save;",
-          "All who will truly come",
-          "Shall find a happy home",
-          "In the vineyard of the Lord.",
-          "",
-          "I want to be a worker; help me, Lord,",
-          "To lead the lost and erring to Thy Word,",
-          "That points to joys on high",
-          "Where pleasures never die,",
-          "In the vineyard of the Lord"
+          "When the trumpet of the Lord shall sound, and time shall be no more,",
+          "And the morning breaks, eternal, bright, and fair;",
+          "When the saved of earth shall gather over on the other shore,",
+          "And the roll is called up yonder, I'll be there."
         ],
-        "linesEs": []
+        "linesEs": [
+          "Cuando la trompeta suene",
+          "En aquel día final,",
+          "Y que el alba eterna rompa en claridad;",
+          "Cuando las naciones salvas",
+          "A su patria lleguen ya,",
+          "Y que sea pasada lista, allí he de estar."
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder, I'll be there."
+        ],
+        "linesEs": [
+          "Cuando allá se pase lista,",
+          "Cuando allá se pase lista,",
+          "Cuando allá se pase lista;",
+          "A mi nombre yo feliz responderé."
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [
+          "On that bright and cloudless morning when the dead in Christ shall rise,",
+          "And the glory of His resurrection share;",
+          "When His chosen ones shall gather to their home beyond the skies,",
+          "And the roll is called up yonder, I'll be there."
+        ],
+        "linesEs": [
+          "En aquel día sin tinieblas,",
+          "En que muerte ya no habrá,",
+          "Y su gloria el Salvador impartirá;",
+          "Cuando los llamados entren",
+          "A su celestial hogar,",
+          "Y que sea pasada lista, allí he de estar."
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder, I'll be there."
+        ],
+        "linesEs": [
+          "Cuando allá se pase lista,",
+          "Cuando allá se pase lista,",
+          "Cuando allá se pase lista;",
+          "A mi nombre yo feliz responderé."
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 3",
+        "notes": "",
+        "linesEn": [
+          "Let us labor for the Master from the dawn till setting sun,",
+          "Let us talk of all His wondrous love and care;",
+          "Then when all of life is over, and our work on earth is done,",
+          "And the roll is called up yonder, I'll be there."
+        ],
+        "linesEs": [
+          "Trabajemos por el Maestro,",
+          "Desde el alba al vislumbrar;",
+          "Siempre hablemos de su amor y fiel bondad;",
+          "Cuando todo aquí fenezca",
+          "Y nuestra obra cese ya,",
+          "Y que sea pasada lista, allí he de estar."
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder,",
+          "When the roll is called up yonder, I'll be there."
+        ],
+        "linesEs": [
+          "Cuando allá se pase lista,",
+          "Cuando allá se pase lista,",
+          "Cuando allá se pase lista;",
+          "A mi nombre yo feliz responderé."
+        ]
       }
     ],
     "aliases": [],
@@ -21250,6 +20980,269 @@
       }
     ],
     "aliases": [],
+    "seeded": true
+  },
+  {
+    "id": "song-glorious-day-glorioso-dia",
+    "title": "Glorious Day / Glorioso día",
+    "artist": "",
+    "originalKey": "",
+    "bpm": "",
+    "notes": "",
+    "sections": [
+      {
+        "type": "verse",
+        "label": "Verse 1",
+        "notes": "",
+        "linesEn": [
+          "I was buried beneath my shame",
+          "Who could carry that kind of weight",
+          "It was my tomb",
+          "Till I met You"
+        ],
+        "linesEs": [
+          "Mi vergüenza me sepultó",
+          "Yo buscaba un salvador",
+          "Más tu perdón, me libero"
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [
+          "I was breathing, but not alive",
+          "All my failures I tried to hide",
+          "It was my tomb",
+          "Till I met You"
+        ],
+        "linesEs": [
+          "Muerto estaba en mi interior",
+          "Me escondía de Ti Señor",
+          "Más tu perdón, me libero"
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
+          "You called my name",
+          "And I ran out of that grave",
+          "Out of the darkness",
+          "Into Your glorious day"
+        ],
+        "linesEs": [
+          "Tu voz me habló",
+          "Y a la muerte venció",
+          "Glorioso día, tu sangre me rescató"
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 3",
+        "notes": "",
+        "linesEn": [
+          "Now Your mercy has saved my soul",
+          "Now Your freedom is all I know",
+          "The old made new",
+          "Jesus, when I met You"
+        ],
+        "linesEs": [
+          "Ahora libre soy en tu amor",
+          "Es tu gracia la que me sano",
+          "Más tu perdon, a mí me libero"
+        ]
+      },
+      {
+        "type": "bridge",
+        "label": "Bridge",
+        "notes": "",
+        "linesEn": [
+          "I needed rescue",
+          "My sin was heavy",
+          "But chains break at the weight of Your glory",
+          "I needed shelter",
+          "I was an orphan",
+          "But You call me a citizen of heaven",
+          "When I was broken",
+          "You were my healing",
+          "Your love is the air that I'm breathing",
+          "I have a future",
+          "My eyes are open"
+        ],
+        "linesEs": [
+          "De mi pecado me rescataste",
+          "En tu gloria cadenas se rompen",
+          "Vivía solo y sin consuelo",
+          "Ahora soy ciudadano del cielo",
+          "Tu me sanaste estando herido",
+          "Jesús por tu amor yo respiro",
+          "Tengo futuro, ahora veo",
+          "Porque tú voz me habló",
+          "Y a la muerte venció"
+        ]
+      }
+    ],
+    "aliases": [
+      "Glorioso día",
+      "Glorious Day"
+    ],
+    "seeded": true
+  },
+  {
+    "id": "song-cuan-grande-es-el-how-great-thou-art",
+    "title": "Cuán grande es Él / How Great Thou Art",
+    "artist": "",
+    "originalKey": "",
+    "bpm": "",
+    "notes": "",
+    "sections": [
+      {
+        "type": "verse",
+        "label": "Verse 1",
+        "notes": "",
+        "linesEn": [
+          "O Lord my God, When I in awesome wonder,",
+          "Consider all the worlds Thy Hands have made;",
+          "I see the stars, I hear the rolling thunder,",
+          "Thy power throughout the universe displayed."
+        ],
+        "linesEs": [
+          "Señor, mi Dios, al contemplar los cielos,",
+          "El firmamento y las estrellas mil;",
+          "Al oír tu voz en los potentes truenos",
+          "Y ver brillar el sol en su cenit..."
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [
+          "Then sings my soul, My Saviour God, to Thee,",
+          "How great Thou art, How great Thou art.",
+          "Then sings my soul, My Saviour God, to Thee,",
+          "How great Thou art, How great Thou art!"
+        ],
+        "linesEs": [
+          "Mi corazón entona esta canción:",
+          "¡Cuán grande es El, cuán grande es El!",
+          "Mi corazón entona esta canción:",
+          "¡Cuán grande es El, cuán grande es El!"
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [],
+        "linesEs": [
+          "Al recorrer los montes y los valles,",
+          "Y ver las bellas flores al pasar;",
+          "Al escuchar el canto de las aves,",
+          "Y el murmurar del claro manantial..."
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 3",
+        "notes": "",
+        "linesEn": [],
+        "linesEs": [
+          "Cuando recuerdo del amor divino",
+          "Que desde el cielo al Salvador envió;",
+          "Aquel Jesús que por salvarme vino",
+          "Y en una cruz sufrió por mí y murió..."
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 4",
+        "notes": "",
+        "linesEn": [
+          "When Christ shall come, with shout of acclamation,",
+          "And take me home, what joy shall fill my heart.",
+          "Then I shall bow, in humble adoration,",
+          "And then proclaim: \"My God, how great Thou art!\""
+        ],
+        "linesEs": [
+          "Cuando el Señor me llame a su presencia,",
+          "Al dulce hogar, al cielo de esplendor,",
+          "Le adoraré, cantando la grandeza",
+          "De su poder y su infinito amor"
+        ]
+      }
+    ],
+    "aliases": [
+      "How Great Thou Art",
+      "Cuán grande es Él",
+      "Cuan grande es El"
+    ],
+    "seeded": true
+  },
+  {
+    "id": "song-aqui-estoy-yo-confiando-en-dios",
+    "title": "Y aquí estoy yo confiando en Dios",
+    "artist": "",
+    "originalKey": "",
+    "bpm": "",
+    "notes": "",
+    "sections": [
+      {
+        "type": "verse",
+        "label": "Verse 1",
+        "notes": "",
+        "linesEn": [],
+        "linesEs": [
+          "Ha pasado el atardecer",
+          "Ha llegado el anochecer",
+          "Siento miedo al mirar la penumbra llegar",
+          "Porque en ella se oculta el mal",
+          "Ya las sombras cubren la ciudad",
+          "Ronda el miedo en cada lugar",
+          "Se oye un carro pasar y disparos sonar",
+          "Un quejido en la oscuridad."
+        ]
+      },
+      {
+        "type": "chorus",
+        "label": "Chorus",
+        "notes": "",
+        "linesEn": [],
+        "linesEs": [
+          "Y aquí estoy yo confiando en Dios",
+          "Yo se que Él me guardará",
+          "A mi familia cuidará",
+          "Bajo sus alas de bondad",
+          "Y el malo nunca llegará",
+          "Porque el Señor lo detendrá",
+          "Y tengo fe que en mi país",
+          "Pronto la paz renacerá."
+        ]
+      },
+      {
+        "type": "verse",
+        "label": "Verse 2",
+        "notes": "",
+        "linesEn": [],
+        "linesEs": [
+          "Hoy los niños se escuchan llorar",
+          "Y las viudas también sollozar",
+          "Oh Señor ten piedad, de esta linda nación",
+          "Que ha perdido la tranquilidad",
+          "Ya la vida no tiene valor",
+          "Y se mata por satisfacción",
+          "¿Que se hizo el amor?",
+          "Ya no hay compasión",
+          "Es que el mundo se olvido de Dios"
+        ]
+      }
+    ],
+    "aliases": [
+      "Aquí estoy yo confiando en Dios",
+      "Pronto la paz renacerá"
+    ],
     "seeded": true
   }
 ]

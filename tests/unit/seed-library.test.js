@@ -30,7 +30,7 @@ describe('library seed', () => {
     }
     assert.equal(ids.length, new Set(ids).size)
     assert.ok(seed.songs.length >= 200, 'expected 200+ songs, got ' + seed.songs.length)
-    assert.equal(SONG_LIBRARY_VERSION, 2)
+    assert.equal(SONG_LIBRARY_VERSION, 3)
     const atFeet = seed.songs.find((s) => s.id === 'song-at-your-feet')
     assert.equal(atFeet.originalKey, 'G#')
     assert.ok(atFeet.sections.some((s) => (s.linesEn || []).some(Boolean)))

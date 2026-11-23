@@ -5,7 +5,7 @@ import { registerRoute } from 'workbox-routing'
 import { NetworkFirst } from 'workbox-strategies'
 import { CacheableResponsePlugin } from 'workbox-cacheable-response'
 
-setCacheNameDetails({ prefix: 'cupc-worship-v10' })
+setCacheNameDetails({ prefix: 'cupc-worship-v11' })
 self.skipWaiting()
 clientsClaim()
 

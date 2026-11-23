@@ -1,0 +1,346 @@
+{
+  "updates": [
+    {
+      "id": "song-amor-sin-condicion-reckless-love",
+      "title": "Amor sin condición / Reckless Love",
+      "keep_existing_en": true,
+      "drop_en_headers": [
+        "- Verso 1"
+      ],
+      "sections_es_only_template": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "linesEs": [
+            "Antes de hablar, cantaste sobre mí",
+            "Has sido tan bueno para mí",
+            "Antes de respirar, soplaste vida en mí",
+            "Has sido tan bueno para mí"
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "linesEs": [
+            "Oh, tu amor me envuelve, me sostiene",
+            "Amor sin condición",
+            "Me persigue y deja las noventa y nueve",
+            "Y va por mí",
+            "",
+            "No puedo ganarlo ni merecerlo",
+            "Tu amor se entregó por mí",
+            "Oh, tu amor me envuelve, me sostiene",
+            "Amor sin condición"
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "linesEs": [
+            "Aun lejos de ti, tu amor luchó por mí",
+            "Has sido tan bueno para mí",
+            "Cuando no vi mi valor, te entregaste por mí",
+            "Has sido tan bueno para mí"
+          ]
+        },
+        {
+          "type": "bridge",
+          "label": "Bridge",
+          "linesEs": [
+            "No hay sombra que no alumbres",
+            "Monte que no escales",
+            "Para encontrarme a mí",
+            "",
+            "No hay pared que no derrumbas",
+            "Mentira que no rompas",
+            "Para encontrarme a mí"
+          ]
+        }
+      ],
+      "en_stanza_slices": [
+        [
+          0,
+          4
+        ],
+        [
+          4,
+          8
+        ],
+        [
+          8,
+          12
+        ],
+        [
+          12,
+          null
+        ]
+      ],
+      "filled": "Spanish side (official Bethel Spanish version); dropped leftover “- Verso 1”; title accent",
+      "url": "https://www.letras.com.br/bethel-music/reckless-love-spanish-version",
+      "notes": "Cross-checked https://www.boomusica.com/letra/bethel-music/amor-sin-condicion/ ; line 2 typo “tan buen” corrected to “tan bueno”. Existing English body kept."
+    },
+    {
+      "id": "song-dios-que-adoramos-oh-great-i",
+      "title": "El Dios que adoramos / The God We Worship",
+      "originalKey": "Am",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "The God who made the heavens and the earth",
+            "With the power of His word",
+            "And reigns with authority",
+            "The God whom even the winds obey",
+            "One word is enough",
+            "To raise the dead"
+          ],
+          "linesEs": [
+            "El Dios que hizo los cielos y la tierra",
+            "Con el poder de Su palabra",
+            "Reina con autoridad",
+            "El Dios que aún los vientos le obedecen",
+            "Una palabra es suficiente",
+            "Para los muertos levantar"
+          ]
+        },
+        {
+          "type": "prechorus",
+          "label": "Pre-Chorus",
+          "notes": "",
+          "linesEn": [
+            "No one is like Him",
+            "Oh, great I Am"
+          ],
+          "linesEs": [
+            "Nadie es como Él",
+            "Oh gran Yo Soy"
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "You are the God we worship",
+            "Almighty and sovereign",
+            "Great in mercy",
+            "And power to save",
+            "You are the God we worship",
+            "Who defeated death and sin",
+            "Glorious redeemer and king",
+            "We worship You",
+            "We worship You, oh Lord"
+          ],
+          "linesEs": [
+            "Tú eres el Dios que adoramos",
+            "Todopoderoso y soberano",
+            "Grande en misericordia y poder para salvar",
+            "Tú eres el Dios que adoramos",
+            "Quien derrotó la muerte y el pecado",
+            "Glorioso Redentor y Rey, Te adoramos"
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [
+            "The God who came down from His throne",
+            "To carry on His shoulders",
+            "Our guilt and transgression",
+            "Jesus, exalted above all",
+            "Name above all names",
+            "Only in Him is salvation"
+          ],
+          "linesEs": [
+            "El Dios que descendió desde Su trono",
+            "Para llevar sobre Sus hombros",
+            "Nuestra culpa y transgresión",
+            "Jesús, exaltado sobre todo",
+            "Nombre sobre todo nombre",
+            "Solo en Él hay salvación"
+          ]
+        },
+        {
+          "type": "bridge",
+          "label": "Bridge",
+          "notes": "",
+          "linesEn": [
+            "To Him be the glory and power",
+            "Everything is from Him and for Him"
+          ],
+          "linesEs": [
+            "A Él sea la gloria y el poder",
+            "Todo es de Él y para Él"
+          ]
+        }
+      ],
+      "filled": "Completed truncated title (“Oh, Great I”); rebuilt paired official English and Spanish",
+      "url": "https://sovereigngracemusic.com/music/songs/el-dios-que-adoramos/",
+      "notes": "English from the official bilingual Adoración La IBI / Sovereign Grace recording: https://www.letras.com/la-ibi/el-dios-que-adoramos-part-sovereign-grace-music/english.html"
+    },
+    {
+      "id": "song-god-who-made-heavens-ear",
+      "title": "The God We Worship / El Dios que adoramos",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "The God who made the heavens and the earth",
+            "With the power of His word",
+            "And reigns with authority",
+            "The God whom even the winds obey",
+            "One word is enough",
+            "To raise the dead"
+          ],
+          "linesEs": [
+            "El Dios que hizo los cielos y la tierra",
+            "Con el poder de Su palabra",
+            "Reina con autoridad",
+            "El Dios que aún los vientos le obedecen",
+            "Una palabra es suficiente",
+            "Para los muertos levantar"
+          ]
+        },
+        {
+          "type": "prechorus",
+          "label": "Pre-Chorus",
+          "notes": "",
+          "linesEn": [
+            "No one is like Him",
+            "Oh, great I Am"
+          ],
+          "linesEs": [
+            "Nadie es como Él",
+            "Oh gran Yo Soy"
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "You are the God we worship",
+            "Almighty and sovereign",
+            "Great in mercy",
+            "And power to save",
+            "You are the God we worship",
+            "Who defeated death and sin",
+            "Glorious redeemer and king",
+            "We worship You",
+            "We worship You, oh Lord"
+          ],
+          "linesEs": [
+            "Tú eres el Dios que adoramos",
+            "Todopoderoso y soberano",
+            "Grande en misericordia y poder para salvar",
+            "Tú eres el Dios que adoramos",
+            "Quien derrotó la muerte y el pecado",
+            "Glorioso Redentor y Rey, Te adoramos"
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [
+            "The God who came down from His throne",
+            "To carry on His shoulders",
+            "Our guilt and transgression",
+            "Jesus, exalted above all",
+            "Name above all names",
+            "Only in Him is salvation"
+          ],
+          "linesEs": [
+            "El Dios que descendió desde Su trono",
+            "Para llevar sobre Sus hombros",
+            "Nuestra culpa y transgresión",
+            "Jesús, exaltado sobre todo",
+            "Nombre sobre todo nombre",
+            "Solo en Él hay salvación"
+          ]
+        },
+        {
+          "type": "bridge",
+          "label": "Bridge",
+          "notes": "",
+          "linesEn": [
+            "To Him be the glory and power",
+            "Everything is from Him and for Him"
+          ],
+          "linesEs": [
+            "A Él sea la gloria y el poder",
+            "Todo es de Él y para Él"
+          ]
+        }
+      ],
+      "filled": "Completed truncated title (“the ear”); removed appended “Hoy nos hemos reunido”; filled official bilingual lyrics",
+      "url": "https://sovereigngracemusic.com/music/songs/el-dios-que-adoramos/",
+      "notes": "English: https://www.letras.com/la-ibi/el-dios-que-adoramos-part-sovereign-grace-music/english.html",
+      "splits": [
+        {
+          "removed": "Hoy nos hemos reunido / Unidos en adoración (opening lines)",
+          "moved_to": "already present as song-hoy-nos-hemos-reunido (not duplicated)"
+        }
+      ]
+    },
+    {
+      "id": "song-see-victory",
+      "title": "See a Victory",
+      "keep_existing_en": true,
+      "sections_es_only_template": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "linesEs": [
+            "No prosperará el arma forjada",
+            "La oscuridad no prevalecerá",
+            "Porque el Dios que sirvo siempre triunfará",
+            "Mi Dios no fallará",
+            "Mi Dios no fallará"
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "linesEs": [
+            "Voy a ver la victoria",
+            "Voy a ver la victoria",
+            "La batalla es tuya Señor",
+            "Voy a ver la victoria",
+            "Voy a ver la victoria",
+            "La batalla es tuya Señor"
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "linesEs": [
+            "Hay poder en el nombre de Cristo",
+            "Cada guerra que Él pelea ganará",
+            "Nunca huiré de los gigantes",
+            "Sé como terminará",
+            "Sé como terminará"
+          ]
+        },
+        {
+          "type": "bridge",
+          "label": "Bridge",
+          "linesEs": [
+            "Todo lo que viene del enemigo",
+            "Lo transformas para bien",
+            "Lo transformas para bien"
+          ]
+        }
+      ],
+      "split_existing_en_on_blanks": true,
+      "filled": "Filled official Elevation Spanish “Ver la victoria”; sectioned the existing English",
+      "url": "https://www.datocms-assets.com/60663/1644417935-ew_spanish_sav_lyrics.pdf",
+      "notes": "Official Elevation Worship Spanish sheet, translated by Evan Craft, Dave Giraldo, Raúl Chávez, and Edgar Aguilar."
+    }
+  ]
+}

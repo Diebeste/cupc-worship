@@ -1,0 +1,366 @@
+{
+  "updates": [
+    {
+      "id": "song-blessing",
+      "title": "The Blessing / La Bendición",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "The Lord bless you",
+            "And keep you",
+            "Make His face shine upon you",
+            "And be gracious to you",
+            "The Lord turn His face towards you",
+            "And give you peace"
+          ],
+          "linesEs": [
+            "Dios te guarde",
+            "Y bendiga",
+            "Que extienda Su amor",
+            "Y te muestre favor",
+            "Dios te mire con agrado",
+            "Y te dé paz"
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "Amen"
+          ],
+          "linesEs": [
+            "Amén"
+          ]
+        },
+        {
+          "type": "bridge",
+          "label": "Bridge 1",
+          "notes": "",
+          "linesEn": [
+            "May His favor be upon you",
+            "And a thousand generations",
+            "And your family",
+            "And your children",
+            "And their children",
+            "And their children"
+          ],
+          "linesEs": [
+            "Que te cubra con Su gracia",
+            "Hasta mil generaciones",
+            "Tu familia",
+            "Y tus hijos",
+            "Y los hijos",
+            "De tus hijos"
+          ]
+        },
+        {
+          "type": "bridge",
+          "label": "Bridge 2",
+          "notes": "",
+          "linesEn": [
+            "May His presence go before you",
+            "And behind you, and beside you",
+            "All around you",
+            "And within you",
+            "He is with you",
+            "He is with you"
+          ],
+          "linesEs": [
+            "Su presencia te acompañe",
+            "Dondequiera que tú vayas",
+            "Que te llene",
+            "Te rodee",
+            "Va contigo",
+            "Va contigo"
+          ]
+        },
+        {
+          "type": "bridge",
+          "label": "Bridge 3",
+          "notes": "",
+          "linesEn": [
+            "In the morning, in the evening",
+            "In your coming, and your going",
+            "In your weeping",
+            "And rejoicing",
+            "He is for you",
+            "He is for you"
+          ],
+          "linesEs": [
+            "De mañana, y de noche",
+            "En tu entrada y salida",
+            "En tu llanto",
+            "Y alegría",
+            "Él te ama",
+            "Él te ama"
+          ]
+        }
+      ],
+      "filled": "Moved English out of the Spanish box; filled official English and official Spanish; split the appended “Y aquí estoy yo confiando en Dios”",
+      "url": "https://www.datocms-assets.com/60663/1643900633-ew_giga_tbless_lyrics.pdf",
+      "notes": "Official Spanish: https://essentialmusicpublishing.com/songs/blessing-0/"
+    },
+    {
+      "id": "song-great-i",
+      "title": "Great I Am",
+      "artist": "New Life Worship",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "I want to be close, close to Your side",
+            "So Heaven is real and death is a lie",
+            "I want to hear voices, of angels above",
+            "Singing as one"
+          ],
+          "linesEs": [
+            "Me quiero acercar",
+            "A tu lado estar",
+            "Que el cielo sea real",
+            "Y la muerte negar",
+            "Quiero oír las voces",
+            "De ángeles hoy",
+            "Cantando unidos"
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus",
+          "notes": "",
+          "linesEn": [
+            "Hallelujah, holy holy",
+            "God Almighty, the Great I AM",
+            "Who is worthy? None beside Thee",
+            "God Almighty, the Great I AM"
+          ],
+          "linesEs": [
+            "Aleluya",
+            "Santo, Santo",
+            "Poderoso, El Gran Yo Soy",
+            "Al que es digno",
+            "Incomparable",
+            "Poderoso",
+            "El Gran Yo Soy"
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [
+            "I want to be near, near to Your heart",
+            "Loving the world, hating the dark",
+            "I want to see dry bones living again",
+            "Singing as one"
+          ],
+          "linesEs": [
+            "Me quiero acercar",
+            "A tu lado estar",
+            "Al mundo amar",
+            "Y lo oscuro odiar",
+            "El valle de huesos",
+            "De revivir",
+            "Cantando unidos"
+          ]
+        },
+        {
+          "type": "bridge",
+          "label": "Bridge",
+          "notes": "",
+          "linesEn": [
+            "The mountains shake before Him",
+            "The demons run and flee",
+            "At the mention of the name, King of Majesty",
+            "There is no power in hell",
+            "Or any who can stand",
+            "Before the power and the presence of the Great I AM"
+          ],
+          "linesEs": [
+            "Tiembla ante ti la tierra",
+            "Demonios huyen ya",
+            "Al mencionar tu nombre",
+            "Rey de Majestad",
+            "No hay poder infernal",
+            "Que pueda resistir",
+            "Ante el poder y la presencia del Gran Yo Soy"
+          ]
+        }
+      ],
+      "filled": "Completed truncated title; cleaned singer cues from English; replaced messy/truncated Spanish with official En Espíritu y En Verdad / Integrity Spanish",
+      "url": "https://www.1christian.net/rwtc/song?tabid=38766",
+      "notes": "CCLI 5881491, Jared Anderson. Existing English body retained (cues removed)."
+    },
+    {
+      "id": "song-what-beautiful-name-you-were-word",
+      "title": "What a Beautiful Name",
+      "sections": [
+        {
+          "type": "verse",
+          "label": "Verse 1",
+          "notes": "",
+          "linesEn": [
+            "You were the Word at the beginning",
+            "One with God the Lord Most High",
+            "Your hidden glory in creation",
+            "Now revealed in You our Christ"
+          ],
+          "linesEs": [
+            "Tú fuiste el verbo en el principio",
+            "Unigénito de Dios",
+            "El misterio de tu gloria",
+            "Revelado en tu amor"
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus 1",
+          "notes": "",
+          "linesEn": [
+            "What a beautiful Name it is",
+            "What a beautiful Name it is",
+            "The Name of Jesus Christ my King",
+            "What a beautiful Name it is",
+            "Nothing compares to this",
+            "What a beautiful Name it is",
+            "The Name of Jesus"
+          ],
+          "linesEs": [
+            "Cuán hermoso su nombre es",
+            "Cuán hermoso su nombre es",
+            "El nombre de Jesús mi Rey",
+            "Cuán hermoso su nombre es",
+            "Nada se iguala a Él",
+            "Cuán hermoso su nombre es",
+            "No hay otro nombre"
+          ]
+        },
+        {
+          "type": "verse",
+          "label": "Verse 2",
+          "notes": "",
+          "linesEn": [
+            "You didn't want heaven without us",
+            "So Jesus, You brought heaven down",
+            "My sin was great, Your love was greater",
+            "What could separate us now?"
+          ],
+          "linesEs": [
+            "Dejaste el cielo por salvarme",
+            "Me viniste a rescatar",
+            "Mi transgresión tú perdonaste",
+            "Nada nos separará"
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus 2",
+          "notes": "",
+          "linesEn": [
+            "What a wonderful Name it is",
+            "What a wonderful Name it is",
+            "The Name of Jesus Christ my King",
+            "What a wonderful Name it is",
+            "Nothing compares to this",
+            "What a wonderful Name it is",
+            "The Name of Jesus"
+          ],
+          "linesEs": [
+            "Majestuoso su nombre es",
+            "Majestuoso su nombre es",
+            "El nombre de Jesús mi Rey",
+            "Majestuoso su nombre es",
+            "Nada se iguala a Él",
+            "Majestuoso su nombre es",
+            "No hay otro nombre"
+          ]
+        },
+        {
+          "type": "bridge",
+          "label": "Bridge",
+          "notes": "",
+          "linesEn": [
+            "Death could not hold You",
+            "The veil tore before You",
+            "You silenced the boast of sin and grave",
+            "The heavens are roaring",
+            "The praise of Your glory",
+            "For You are raised to life again",
+            "You have no rival",
+            "You have no equal",
+            "Now and forever, God, You reign",
+            "Yours is the Kingdom",
+            "Yours is the glory",
+            "Yours is the Name above all names"
+          ],
+          "linesEs": [
+            "La muerte venciste",
+            "El velo partiste",
+            "La tumba vacía ahora está",
+            "Los cielos declaran",
+            "Tu gloria proclaman",
+            "Resucitaste en majestad",
+            "Inigualable",
+            "Incomparable",
+            "Hoy y por siempre reinarás",
+            "Tuyo es el reino",
+            "Tuya es la gloria",
+            "Tuyo el poder y autoridad"
+          ]
+        },
+        {
+          "type": "chorus",
+          "label": "Chorus 3",
+          "notes": "",
+          "linesEn": [
+            "What a powerful Name it is",
+            "What a powerful Name it is",
+            "The Name of Jesus Christ my King",
+            "What a powerful Name it is",
+            "Nothing can stand against",
+            "What a powerful Name it is",
+            "The Name of Jesus"
+          ],
+          "linesEs": [
+            "Poderoso su nombre es",
+            "Poderoso su nombre es",
+            "El nombre de Jesús mi Rey",
+            "Poderoso su nombre es",
+            "Incomparable es Él",
+            "Poderoso su nombre es",
+            "No hay otro nombre"
+          ]
+        }
+      ],
+      "filled": "Trimmed appended Rooftops lines; structured official English; filled official Hillsong en Español “Hermoso Nombre”",
+      "url": "https://hillsong.com/zh-CN/music/hillsong-en-espanol/hay-mas/hermoso-nombre/letras-es",
+      "notes": "English is the official Hillsong text already largely present in this record.",
+      "splits": [
+        {
+          "removed": "Rooftops fragment ending “I lift my voice cause You set me free”",
+          "moved_to": "already present as song-rooftops (not duplicated)"
+        }
+      ]
+    },
+    {
+      "id": "song-he-s-great-i",
+      "title": "He's the Great I Am",
+      "kind": "structural",
+      "filled": "Completed truncated title from the lyric already in the record. Third stanza still starts mid-phrase (“he Great Eternal Wonder”) and was left unfilled pending a confirmed published source",
+      "url": "(title taken from the existing lyric; no new lyric source)",
+      "notes": "Not a lyric fill."
+    },
+    {
+      "id": "song-am-friend-god",
+      "title": "I am a friend of God",
+      "kind": "structural",
+      "filled": "Restored missing leading “I” in the title from the lyric already in the record",
+      "url": "(title typo only; Spanish not filled — no confirmed official Integrity Spanish text this pass)"
+    }
+  ]
+}
