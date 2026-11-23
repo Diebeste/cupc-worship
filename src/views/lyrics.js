@@ -8,9 +8,32 @@ export function planFor(song, targetKey) {
   return transposePlan(song?.originalKey || '', targetKey || song?.originalKey || '')
 }
 
+function displayLines(lines) {
+  const out = []
+  let pendingBreak = false
+  for (const raw of lines || []) {
+    let line = String(raw || '').trim()
+    if (!line || /^-+$/.test(line)) {
+      if (out.length) pendingBreak = true
+      continue
+    }
+    line = line.replace(/^\/\/\s*/, '').replace(/\/\/$/, '').trim()
+    if (!line) {
+      if (out.length) pendingBreak = true
+      continue
+    }
+    if (pendingBreak) {
+      out.push({ break: true })
+      pendingBreak = false
+    }
+    out.push(line)
+  }
+  return out
+}
+
 export function renderLyrics(song, opts = {}) {
   const lang = opts.lang || 'both'
-  const layout = opts.layout || 'stack'
+  const layout = opts.layout || (lang === 'both' ? 'side' : 'stack')
   const showChords = opts.showChords !== false
   const steps = opts.steps || 0
   const useFlats = !!opts.useFlats
@@ -33,11 +56,11 @@ function renderSection(section, opts) {
       )
     )
   }
-  const es = section.linesEs || []
-  const en = section.linesEn || []
-  const showEs = (opts.lang === 'es' || opts.lang === 'both') && es.some(Boolean)
-  const showEn = (opts.lang === 'en' || opts.lang === 'both') && en.some(Boolean)
-  if (opts.lang === 'both' && showEs && showEn && opts.layout === 'side') {
+  const es = displayLines(section.linesEs || [])
+  const en = displayLines(section.linesEn || [])
+  const showEs = (opts.lang === 'es' || opts.lang === 'both') && es.some((l) => l && !l.break)
+  const showEn = (opts.lang === 'en' || opts.lang === 'both') && en.some((l) => l && !l.break)
+  if (opts.lang === 'both' && showEs && showEn && opts.layout !== 'stack') {
     el.append(
       h('div', { class: 'side-by-side' },
         block('ES', es, opts),
@@ -59,7 +82,10 @@ function renderSection(section, opts) {
 function block(tag, lines, opts) {
   const b = h('div', { class: 'lyric-block' })
   if (tag) b.append(h('div', { class: 'lang-tag' }, tag))
-  for (const line of lines) b.append(renderLine(line, opts))
+  for (const line of lines) {
+    if (line && line.break) b.append(h('div', { class: 'stanza-break' }))
+    else b.append(renderLine(line, opts))
+  }
   return b
 }
 

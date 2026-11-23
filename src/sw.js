@@ -5,7 +5,7 @@ import { registerRoute } from 'workbox-routing'
 import { NetworkFirst } from 'workbox-strategies'
 import { CacheableResponsePlugin } from 'workbox-cacheable-response'
 
-setCacheNameDetails({ prefix: 'cupc-worship-v8' })
+setCacheNameDetails({ prefix: 'cupc-worship-v9' })
 self.skipWaiting()
 clientsClaim()
 
@@ -19,7 +19,7 @@ const fallbackHtml = async () =>
   || Response.error()
 
 const htmlStrategy = new NetworkFirst({
-  cacheName: 'cupc-html-v8',
+  cacheName: 'cupc-html-v9',
   networkTimeoutSeconds: 3,
   plugins: [
     new CacheableResponsePlugin({ statuses: [0, 200] }),

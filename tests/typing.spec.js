@@ -65,7 +65,7 @@ async function typeAllMajorFields(page) {
 test('types a multi-word string into each major field without losing focus', async ({ page }) => {
   await waitReady(page)
   await page.goto('./#/settings')
-  await expect(page.locator('.build-stamp')).toContainText('cupc-worship-v8')
+  await expect(page.locator('.build-stamp')).toContainText('cupc-worship-v9')
   await typeAllMajorFields(page)
 })
 

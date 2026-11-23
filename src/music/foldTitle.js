@@ -26,6 +26,18 @@ export function foldTitle(s) {
   return t
 }
 
+/** Accent-insensitive search fold. Keeps articles and whole words, unlike foldTitle. */
+export function foldSearch(s) {
+  return String(s || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .replace(/['’]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 export function slugTitle(s) {
   const f = foldTitle(s) || 'untitled'
   return f.replace(/\s+/g, '-').slice(0, 80)

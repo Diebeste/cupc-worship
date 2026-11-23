@@ -1,3 +1,4 @@
+import { foldSearch } from './foldTitle.js'
 /** Parse pasted or imported lyric documents into songs with sections and EN/ES lyrics. */
 
 import { parseKey } from './transpose.js'
@@ -481,6 +482,12 @@ export function searchHaystack(song) {
     parts.push(s.label, s.notes, ...(s.linesEn || []), ...(s.linesEs || []))
   }
   return parts.filter(Boolean).join('\n').toLowerCase()
+}
+
+export function songMatchesQuery(song, q) {
+  const needle = foldSearch(q)
+  if (!needle) return true
+  return foldSearch(searchHaystack(song)).includes(needle)
 }
 
 export { cleanLine, parseTitleKey, detectLang }

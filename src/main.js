@@ -9,7 +9,7 @@ import { APP_VERSION } from './data/build-info.js'
 import { DATA_VERSION, SERVICE_TYPES, normalizeService, migrateLocalData, rememberMany, membersFromService, currentMonth, shiftMonth, monthLabel, servicesForMonth, servicesOnDate, formatDayHeading } from './data/roles.js'
 import { mountRolesFields, renderRolesView } from './views/rolesForm.js'
 import { renderScheduleCard, buildPoster, renderMonthCalendar } from './views/schedule.js'
-import { parseSongsFromText, parseSongChunk, searchHaystack, songToPlainText } from './music/parseLyrics.js'
+import { parseSongsFromText, parseSongChunk, searchHaystack, songMatchesQuery, songToPlainText } from './music/parseLyrics.js'
 import { COMMON_KEYS, ALL_SONG_KEYS, displayKey, stepsBetween, preferFlatsFor, capoSuggestion, transposeSections } from './music/transpose.js'
 import { importFilesToSongs } from './music/importFile.js'
 import { parseImportedSongs } from './music/videopsalm.js'
@@ -222,9 +222,27 @@ function keyBadge(key, lg) {
 }
 
 function songSearch(q) {
-  const s = (q || '').trim().toLowerCase()
-  if (!s) return state.songs.slice().sort((a, b) => a.title.localeCompare(b.title))
-  return state.songs.filter((song) => searchHaystack(song).includes(s)).sort((a, b) => a.title.localeCompare(b.title))
+  const list = state.songs.slice().sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: 'base' }))
+  return list.filter((song) => songMatchesQuery(song, q))
+}
+
+function displayArtist(song) {
+  const a = String(song?.artist || '').trim()
+  if (!a) return ''
+  const lyrics = (song.sections || []).flatMap((s) => [...(s.linesEn || []), ...(s.linesEs || [])]).join('\n')
+  if (lyrics && lyrics.toLowerCase().includes(a.toLowerCase())) return ''
+  if (/^(the|his|her|your|our|el|la|los|las)\s/i.test(a) && a.split(/\s+/).length >= 4) return ''
+  return a
+}
+
+function songMetaLine(song) {
+  const bits = []
+  const artist = displayArtist(song)
+  if (artist) bits.push(artist)
+  if (song.bpm) bits.push(`${song.bpm} BPM`)
+  if (song.originalKey) bits.push(`${t('key')} ${displayKey(song.originalKey)}`)
+  else bits.push(t('unsetKey'))
+  return bits.join(' · ')
 }
 
 /* ---------- Pages ---------- */
@@ -501,7 +519,7 @@ function songCard(song) {
       keyBadge(song.originalKey),
       h('div', { class: 'grow' },
         h('h3', { class: 'list-title' }, song.title),
-        h('div', { class: 'meta' }, [song.artist, song.bpm && `${song.bpm} BPM`].filter(Boolean).join(' · ') || t('key') + ' ' + (song.originalKey || t('unsetKey')))
+        h('div', { class: 'meta' }, songMetaLine(song))
       )
     )
   )
@@ -510,90 +528,154 @@ function songCard(song) {
 function pageSongs() {
   const initialQ = parseHash().query.q || ''
   const listHost = h('div', { class: 'search-results' })
+  const countEl = h('div', { class: 'list-count meta' })
   const search = h('input', {
     class: 'search',
+    type: 'search',
+    enterkeyhint: 'search',
     'data-field': 'search-songs',
     placeholder: t('searchSongs'),
-    value: initialQ
+    value: initialQ,
+    'aria-label': t('searchSongs')
   })
   const drawList = (query) => {
     const list = songSearch(query)
     clear(listHost)
-    if (!list.length) listHost.append(h('div', { class: 'empty' }, query ? t('noResults') : t('emptySongs')))
-    else list.forEach((song) => listHost.append(songCard(song)))
+    const q = (query || '').trim()
+    countEl.textContent = q
+      ? (list.length ? t('nMatches', { n: list.length }) : t('noResults'))
+      : t('nSongs', { n: list.length })
+    if (!list.length) {
+      listHost.append(h('div', { class: 'empty' }, q ? t('noResultsHint', { q }) : t('emptySongs')))
+    } else {
+      list.forEach((song) => listHost.append(songCard(song)))
+    }
   }
   search.addEventListener('input', () => {
     const query = search.value
     drawList(query)
     replaceHashSilent(query ? `/songs?q=${encodeURIComponent(query)}` : '/songs')
   })
+  search.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') e.preventDefault()
+  })
   drawList(initialQ)
-  const page = h('div', { class: 'page' },
-    h('div', { class: 'page-head' }, h('h2', {}, t('songs'))),
-    h('div', { class: 'fab-row' },
-      canEdit() ? h('button', { class: 'btn peach', type: 'button', onclick: () => go('/songs/new') }, '+ ' + t('newSong')) : null,
-      canEdit() ? h('button', { class: 'btn secondary', type: 'button', onclick: () => go('/import') }, t('import')) : null
+  const page = h('div', { class: 'page songs-page' },
+    h('div', { class: 'page-head songs-head' }, h('h2', {}, t('songs'))),
+    h('div', { class: 'songs-toolbar' },
+      search,
+      h('div', { class: 'songs-toolbar-row' },
+        h('div', { class: 'fab-row' },
+          canEdit() ? h('button', { class: 'btn peach', type: 'button', onclick: () => go('/songs/new') }, '+ ' + t('newSong')) : null,
+          canEdit() ? h('button', { class: 'btn secondary', type: 'button', onclick: () => go('/import') }, t('import')) : null
+        ),
+        countEl
+      )
     ),
-    search,
     listHost
   )
   return shell(page, { title: t('songs') })
 }
 
+function songViewHash(id, { key, svc } = {}) {
+  const q = new URLSearchParams()
+  if (svc) q.set('svc', svc)
+  if (key) q.set('key', key)
+  const s = q.toString()
+  return '/songs/' + id + (s ? '?' + s : '')
+}
+
 function pageSongDetail(id) {
   const song = byId(state.songs, id)
-  if (!song) return shell(h('div', { class: 'page' }, 'Not found'))
+  if (!song) {
+    return shell(
+      h('div', { class: 'page songs-page' },
+        h('div', { class: 'empty song-not-found' },
+          h('h2', {}, t('songNotFound')),
+          h('p', { class: 'meta' }, t('songNotFoundHint')),
+          h('button', { class: 'btn secondary', type: 'button', onclick: () => go('/songs') }, t('backToSongs'))
+        )
+      ),
+      { title: t('songNotFound') }
+    )
+  }
   const q = parseHash().query
-  let target = q.key || song.originalKey || 'C'
+  let target = q.key || song.originalKey || ''
   const svc = q.svc ? byId(state.services, q.svc) : null
   const langWrap = { lang: state.settings.lyricLang || 'both' }
 
-  const lyricsHost = h('div')
+  const lyricsHost = h('div', { class: 'lyrics-host' })
   const capoEl = h('div', { class: 'help' })
-  const keyLabel = h('div', { class: 'row', style: { gap: '12px', margin: '12px 0' } }, keyBadge(target, true), h('div', {}, h('div', { class: 'meta' }, t('targetKey')), h('div', { class: 'list-title', id: 'cur-key' }, displayKey(target))))
+  const noKeyHint = h('p', { class: 'help no-key-hint' })
+  const curKey = h('div', { class: 'list-title', id: 'cur-key' }, target ? displayKey(target) : t('unsetKey'))
+  const keyCaption = h('div', { class: 'meta' }, song.originalKey ? t('targetKey') : t('unsetKey'))
+  const keyLabel = h('div', { class: 'row song-key-row' }, keyBadge(target, true), h('div', {}, keyCaption, curKey))
+
+  const syncKeyUi = () => {
+    curKey.textContent = target ? displayKey(target) : t('unsetKey')
+    keyCaption.textContent = song.originalKey ? t('targetKey') : t('unsetKey')
+    keyLabel.replaceChild(keyBadge(target, true), keyLabel.firstChild)
+    noKeyHint.textContent = song.originalKey ? '' : t('noKeyHint')
+    noKeyHint.hidden = !!song.originalKey
+    const on = keys.querySelector('.key-chip.on')
+    if (on && typeof on.scrollIntoView === 'function') {
+      on.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
+    }
+    replaceHashSilent(songViewHash(song.id, { key: target || '', svc: q.svc || '' }))
+  }
 
   const drawLyrics = () => {
-    const from = song.originalKey || target
-    const steps = stepsBetween(from, target)
-    const useFlats = preferFlatsFor(target)
-    const capo = song.originalKey ? capoSuggestion(song.originalKey, target) : { text: '' }
+    const from = song.originalKey || ''
+    const steps = from && target ? stepsBetween(from, target) : 0
+    const useFlats = preferFlatsFor(target || from || 'C')
+    const capo = song.originalKey && target ? capoSuggestion(song.originalKey, target) : { text: '' }
     capoEl.textContent = capo.text ? `${t('capo')}: ${capo.text}` : ''
-    keyLabel.querySelector('#cur-key').textContent = displayKey(target)
-    keyLabel.replaceChild(keyBadge(target, true), keyLabel.firstChild)
+    syncKeyUi()
     clear(lyricsHost)
     lyricsHost.append(renderLyrics(song, {
       lang: langWrap.lang,
-      layout: state.settings.layout || 'stack',
+      layout: langWrap.lang === 'both' ? 'side' : (state.settings.layout || 'stack'),
       showChords: state.settings.showChords !== false,
       steps,
       useFlats
     }))
   }
 
-  const keys = h('div', { class: 'keys' },
+  const keys = h('div', { class: 'keys', 'aria-label': t('key') },
     ...COMMON_KEYS.map((k) => {
-      const b = h('button', { class: 'key-chip' + (k === displayKey(target) ? ' on' : ''), type: 'button', onclick: () => { target = k; [...keys.children].forEach((c) => c.classList.toggle('on', c.textContent === k)); drawLyrics() } }, k)
+      const b = h('button', {
+        class: 'key-chip' + (k === displayKey(target) ? ' on' : ''),
+        type: 'button',
+        onclick: () => setTarget(k)
+      }, k)
       return b
     })
   )
 
-  const page = h('div', { class: 'page' },
+  const setTarget = (next) => {
+    target = next || ''
+    ;[...keys.children].forEach((c) => c.classList.toggle('on', !!target && c.textContent === displayKey(target)))
+    drawLyrics()
+  }
+
+  const page = h('div', { class: 'page song-view' },
     h('div', { class: 'page-head' },
-      h('div', {},
-        song.artist ? h('div', { class: 'meta' }, song.artist) : null,
+      h('div', { class: 'grow' },
+        displayArtist(song) ? h('div', { class: 'meta' }, displayArtist(song)) : null,
         h('h2', {}, song.title)
       )
     ),
     svc ? h('div', { class: 'meta' }, svc.name) : null,
     keyLabel,
+    noKeyHint,
     h('div', { class: 'transpose-bar' },
-      h('button', { class: 'step-btn', type: 'button', onclick: () => shiftKey(-1) }, '−'),
-      h('button', { class: 'step-btn', type: 'button', onclick: () => shiftKey(1) }, '+'),
+      h('button', { class: 'step-btn', type: 'button', 'aria-label': '−', onclick: () => shiftKey(-1) }, '−'),
+      h('button', { class: 'step-btn', type: 'button', 'aria-label': '+', onclick: () => shiftKey(1) }, '+'),
       keys,
-      h('button', { class: 'btn ghost', type: 'button', onclick: () => { target = song.originalKey || target; [...keys.children].forEach((c) => c.classList.toggle('on', c.textContent === displayKey(target))); drawLyrics() } }, t('resetKey'))
+      h('button', { class: 'btn ghost', type: 'button', onclick: () => setTarget(song.originalKey || '') }, t('resetKey'))
     ),
     capoEl,
-    h('div', { class: 'row spread', style: { marginTop: '10px' } },
+    h('div', { class: 'row spread lang-row' },
       h('div', { class: 'seg' },
         ...['es', 'en', 'both'].map((v) => h('button', {
           class: (state.settings.lyricLang || 'both') === v ? 'on' : '',
@@ -607,7 +689,7 @@ function pageSongDetail(id) {
           }
         }, v === 'both' ? t('langBoth') : v === 'en' ? t('langEn') : t('langEs')))
       ),
-      h('label', { class: 'meta' },
+      h('label', { class: 'meta show-chords' },
         h('input', { type: 'checkbox', checked: state.settings.showChords !== false, onchange: async (e) => { state.settings.showChords = e.target.checked; await persistSettings(); drawLyrics() } }),
         ' ', t('showChords')
       )
@@ -630,11 +712,10 @@ function pageSongDetail(id) {
   )
 
   function shiftKey(delta) {
-    const i = COMMON_KEYS.indexOf(displayKey(target))
+    const cur = displayKey(target)
+    const i = COMMON_KEYS.indexOf(cur)
     const idx = i < 0 ? 0 : (i + delta + COMMON_KEYS.length) % COMMON_KEYS.length
-    target = COMMON_KEYS[idx]
-    ;[...keys.children].forEach((c) => c.classList.toggle('on', c.textContent === target))
-    drawLyrics()
+    setTarget(COMMON_KEYS[idx])
   }
   drawLyrics()
   return shell(page, { title: song.title })
@@ -1460,7 +1541,7 @@ function render() {
   const saved = (path === lastRenderPath) ? captureFocusedField(root) : null
   let view
   if (!state.ready) {
-    view = h('div', { class: 'page' }, h('p', { class: 'muted' }, '…'))
+    view = h('div', { class: 'page' }, h('p', { class: 'muted empty' }, t('loading')))
   } else if (parts[0] === 's' && parts[1]) {
     ingestShare(parts[1])
     view = h('div', { class: 'page' }, '…')
