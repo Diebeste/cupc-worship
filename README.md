@@ -9,7 +9,7 @@ Add it to the home screen on iPhone or Android — no app store. It works offlin
 ## What’s included
 
 - Song library with search in either language, section labels, optional ChordPro chords
-- Paste or import lyrics from PDF, Word (.docx) or text; bulk import is supported
+- Paste or import lyrics from PDF, Word (.docx) or text; a Format preview standardizes them to the library style; bulk import is supported
 - Transpose by step or target key, with a capo suggestion; a service can override the key without changing the song
 - Services / setlists, including duplicate-a-past-service and a quick ad-hoc create flow
 - Stage view: large type, swipe, EN/ES toggle, optional wake lock
@@ -43,7 +43,7 @@ GitHub Pages serves the `dist` output from the `gh-pages` branch (or the Pages w
 
 ## Current status
 
-The live app is **v12** (`cupc-worship-v12`). See [STATUS.md](STATUS.md) for the wrap-up notes and remaining open items:
+The live app is **v13** (`cupc-worship-v13`). See [STATUS.md](STATUS.md) for the wrap-up notes and remaining open items:
 
 - Supabase anonymous sign-ins are still off, so email-free team join does not work yet
 - The CCLI / licensing question is still undecided

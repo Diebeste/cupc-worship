@@ -1,5 +1,5 @@
-import { parseSongsFromText } from './parseLyrics.js'
-import { looksLikeVideoPsalm, parseImportedSongs } from './videopsalm.js'
+import { looksLikeVideoPsalm } from './videopsalm.js'
+import { formatSongsFromText } from './formatLyrics.js'
 
 let pdfjsReady = null
 
@@ -121,16 +121,12 @@ export async function importFilesToSongs(fileList) {
       let songs
       let usedKind = kind
       try {
-        const vp = parseImportedSongs(text)
-        if (vp && vp.length) {
-          songs = vp
-          usedKind = 'videopsalm'
-        } else {
-          songs = parseSongsFromText(text)
-        }
+        const result = formatSongsFromText(text, { allowVideoPsalm: true })
+        songs = result.songs
+        if (looksLikeVideoPsalm(text) || (file.name || '').toLowerCase().endsWith('.json')) usedKind = 'videopsalm'
       } catch (err) {
         if (looksLikeVideoPsalm(text) || (file.name || '').toLowerCase().endsWith('.json')) throw err
-        songs = parseSongsFromText(text)
+        songs = formatSongsFromText(text, { allowVideoPsalm: false }).songs
       }
       songs = songs.map((s) => ({
         ...s,

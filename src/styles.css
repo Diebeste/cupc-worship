@@ -633,3 +633,35 @@ hr.sep { border: 0; border-top: 1px solid var(--line); margin: 16px 0; }
   .songs-page .list-title { font-size: 18px; }
   .song-view { padding-top: 20px; }
 }
+
+.format-preview {
+  margin: 8px 0 16px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+}
+.format-preview[hidden] { display: none !important; }
+.format-preview-head { font-weight: 700; margin: 0 0 4px; }
+.format-pre {
+  max-height: 240px;
+  overflow: auto;
+  white-space: pre-wrap;
+  font-size: 13px;
+  line-height: 1.45;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 8px 0 0;
+}
+.format-toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 8px; }
+.format-banner {
+  background: var(--blue-soft);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+}

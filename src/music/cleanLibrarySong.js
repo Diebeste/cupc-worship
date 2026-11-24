@@ -621,10 +621,11 @@ function splitFieldToLangs(lines, flags, fieldName) {
   }
   const lang = langOfLines(compact)
   const secs = extractFromLines(compact, flags, fieldName)
+  const side = String(fieldName || '').toLowerCase()
   if (lang === 'es') return { en: [], es: secs, mixed: false }
   if (lang === 'en') return { en: secs, es: [], mixed: false }
-  // unknown: keep on the original side
-  if (fieldName === 'es') return { en: [], es: secs, mixed: false }
+  // unknown / empty: keep on the original side ('EN' or 'ES')
+  if (side === 'es') return { en: [], es: secs, mixed: false }
   return { en: secs, es: [], mixed: false }
 }
 

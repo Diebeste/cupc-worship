@@ -28,7 +28,7 @@ export default defineConfig({
     },
     {
       name: 'desktop',
-      testMatch: /(?:typing|songs-page|library-languages)\.spec.js/,
+      testMatch: /(?:typing|songs-page|library-languages|format-lyrics)\.spec.js/,
       use: {
         viewport: { width: 1280, height: 800 },
         isMobile: false,

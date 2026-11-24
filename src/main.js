@@ -9,11 +9,11 @@ import { APP_VERSION } from './data/build-info.js'
 import { DATA_VERSION, SERVICE_TYPES, normalizeService, migrateLocalData, currentMonth, shiftMonth, monthLabel, servicesForMonth, servicesOnDate, formatDayHeading } from './data/roles.js'
 import { mountRolesFields, renderRolesView } from './views/rolesForm.js'
 import { renderScheduleCard, buildPoster, renderMonthCalendar } from './views/schedule.js'
-import { parseSongsFromText, parseSongChunk, songMatchesQuery } from './music/parseLyrics.js'
+import { songMatchesQuery } from './music/parseLyrics.js'
+import { formatSongsFromText, formatEditorLyrics, formatImportedSongs, formatSummary, previewPlain, stripFormatMeta } from './music/formatLyrics.js'
 import { foldSearch } from './music/foldTitle.js'
 import { COMMON_KEYS, ALL_SONG_KEYS, displayKey, stepsBetween, preferFlatsFor, capoSuggestion, transposeSections } from './music/transpose.js'
 import { importFilesToSongs } from './music/importFile.js'
-import { parseImportedSongs } from './music/videopsalm.js'
 import { serviceWhatsAppText, encodeSharePayload, decodeSharePayload, formatDate, renderSongPlain } from './music/export.js'
 import { renderLyrics, sectionsToPaste } from './views/lyrics.js'
 
@@ -824,6 +824,110 @@ function pageSongEdit(id) {
   const pasteAll = h('textarea', { 'data-field': 'song-paste', placeholder: t('pasteHint'), style: { minHeight: '120px' } })
   const es = h('textarea', { 'data-field': 'song-lyrics-es', value: sectionsToPaste(song.sections, 'es'), placeholder: t('lyricsEs') })
   const en = h('textarea', { 'data-field': 'song-lyrics-en', value: sectionsToPaste(song.sections, 'en'), placeholder: t('lyricsEn') })
+  const formatHost = h('div', { class: 'format-preview', hidden: true, 'data-field': 'format-preview' })
+  let formatSnapshot = null
+
+  const showFormatPreview = (songs) => {
+    formatSnapshot = {
+      paste: pasteAll.value,
+      es: es.value,
+      en: en.value,
+      title: title.value,
+      key: key.value,
+      artist: artist.value,
+      notes: notes.value,
+      songs
+    }
+    clear(formatHost)
+    formatHost.hidden = false
+    formatHost.append(
+      h('div', { class: 'format-preview-head' }, t('formatPreviewTitle')),
+      h('p', { class: 'help' }, t('formatPreviewHint')),
+      ...songs.map((s) => h('div', { class: 'card format-song-card' },
+        h('div', { class: 'list-title' }, s.title || t('untitled'), s.originalKey ? ` (${s.originalKey})` : ''),
+        h('pre', { class: 'format-pre' }, previewPlain(s))
+      )),
+      h('div', { class: 'actions' },
+        h('button', { class: 'btn', type: 'button', 'data-field': 'format-accept', onclick: acceptFormat }, t('formatAccept')),
+        h('button', { class: 'btn secondary', type: 'button', 'data-field': 'format-undo', onclick: undoFormat }, t('formatUndo'))
+      )
+    )
+  }
+
+  const acceptFormat = () => {
+    const songs = formatSnapshot?.songs || []
+    const s = songs[0]
+    if (!s) { formatHost.hidden = true; return }
+    if (!title.value.trim() && s.title) title.value = s.title
+    if (!key.value && s.originalKey) {
+      key.value = s.originalKey
+      try { key.dispatchEvent(new Event('change')) } catch { /* ignore */ }
+    }
+    if (!artist.value.trim() && s.artist) artist.value = s.artist
+    if (s.notes && !notes.value.includes(s.notes)) notes.value = [notes.value, s.notes].filter(Boolean).join('\n')
+    es.value = sectionsToPaste(s.sections, 'es')
+    en.value = sectionsToPaste(s.sections, 'en')
+    formatHost.hidden = true
+  }
+
+  const undoFormat = () => {
+    if (formatSnapshot) {
+      pasteAll.value = formatSnapshot.paste
+      es.value = formatSnapshot.es
+      en.value = formatSnapshot.en
+      title.value = formatSnapshot.title
+      key.value = formatSnapshot.key
+      artist.value = formatSnapshot.artist
+      notes.value = formatSnapshot.notes
+    }
+    formatHost.hidden = true
+    formatSnapshot = null
+  }
+
+  const runFormat = (fromPaste) => {
+    const rawPaste = pasteAll.value.trim() && !es.value.trim() && !en.value.trim()
+    let songs
+    if (rawPaste) {
+      songs = formatSongsFromText(pasteAll.value, {
+        title: title.value.trim(),
+        originalKey: key.value,
+        artist: artist.value.trim(),
+        notes: notes.value,
+        library: state.songs
+      }).songs
+    } else if (es.value.trim() || en.value.trim() || (fromPaste && pasteAll.value.trim())) {
+      const sourceEs = es.value.trim() ? es.value : (fromPaste && !en.value.trim() ? pasteAll.value : '')
+      const sourceEn = en.value.trim() ? en.value : ''
+      const raw = (!es.value.trim() && !en.value.trim() && pasteAll.value.trim()) ? pasteAll.value : null
+      if (raw) {
+        songs = formatSongsFromText(raw, {
+          title: title.value.trim(),
+          originalKey: key.value,
+          artist: artist.value.trim(),
+          notes: notes.value,
+          library: state.songs
+        }).songs
+      } else {
+        songs = [formatEditorLyrics({
+          esText: sourceEs,
+          enText: sourceEn,
+          title: title.value,
+          originalKey: key.value,
+          artist: artist.value,
+          notes: notes.value,
+          library: state.songs
+        }).song]
+      }
+    }
+    if (!songs?.length) return
+    showFormatPreview(songs)
+  }
+
+  for (const box of [pasteAll, es, en]) {
+    box.addEventListener('paste', () => {
+      setTimeout(() => runFormat(true), 0)
+    })
+  }
 
   const page = h('div', { class: 'page' },
     h('div', { class: 'page-head' }, h('h2', {}, isNew ? t('newSong') : t('edit'))),
@@ -840,23 +944,33 @@ function pageSongEdit(id) {
     isNew ? h('div', { class: 'field' }, h('label', {}, t('pasteLyrics')), pasteAll, h('div', { class: 'help' }, t('pasteHint'))) : null,
     h('div', { class: 'field' }, h('label', {}, t('lyricsEs')), es),
     h('div', { class: 'field' }, h('label', {}, t('lyricsEn')), en),
+    h('div', { class: 'format-toolbar' },
+      h('button', { class: 'btn secondary', type: 'button', 'data-field': 'format-lyrics', onclick: () => runFormat(false) }, t('formatLyrics'))
+    ),
+    formatHost,
     h('div', { class: 'field' }, h('label', {}, t('notes')), notes),
     h('div', { class: 'actions' },
-      h('button', { class: 'btn', onclick: async () => onSave() }, t('save')),
-      h('button', { class: 'btn secondary', onclick: () => go(isNew ? '/songs' : '/songs/' + song.id) }, t('cancel'))
+      h('button', { class: 'btn', type: 'button', onclick: async () => onSave() }, t('save')),
+      h('button', { class: 'btn secondary', type: 'button', onclick: () => go(isNew ? '/songs' : '/songs/' + song.id) }, t('cancel'))
     )
   )
 
   async function onSave() {
     if (isNew && pasteAll.value.trim() && !es.value.trim() && !en.value.trim()) {
-      const parsed = parseSongsFromText(pasteAll.value)
+      const parsed = formatSongsFromText(pasteAll.value, {
+        title: title.value.trim(),
+        originalKey: key.value,
+        artist: artist.value.trim(),
+        notes: notes.value,
+        library: state.songs
+      }).songs.map(stripFormatMeta)
       if (parsed[0]) {
         Object.assign(song, {
           title: title.value.trim() || parsed[0].title,
           originalKey: key.value || parsed[0].originalKey,
-          artist: artist.value.trim(),
-          bpm: bpm.value.trim(),
-          notes: notes.value,
+          artist: artist.value.trim() || parsed[0].artist || '',
+          bpm: bpm.value.trim() || parsed[0].bpm || '',
+          notes: notes.value || parsed[0].notes || '',
           sections: parsed[0].sections
         })
         // If multiple songs were pasted, import them all
@@ -865,10 +979,10 @@ function pageSongEdit(id) {
             const rec = {
               id: p === parsed[0] ? song.id : db.uid('song'),
               title: p.title,
-              artist: '',
+              artist: p.artist || '',
               originalKey: p.originalKey,
-              bpm: '',
-              notes: notes.value,
+              bpm: p.bpm || '',
+              notes: p.notes || notes.value,
               sections: p.sections,
               createdAt: db.nowIso(),
               updatedAt: db.nowIso()
@@ -903,14 +1017,25 @@ function pageSongEdit(id) {
       const fromKey = existing?.originalKey || ''
       if (!isNew && key.value && fromKey && mode === 'transpose' && displayKey(fromKey) !== displayKey(key.value)) {
         const steps = stepsBetween(fromKey, key.value)
-        const parsed = mergeEditorSections(es.value, en.value)
-        song.sections = transposeSections(parsed, steps, preferFlatsFor(key.value))
+        const parsed = formatEditorLyrics({
+          esText: es.value, enText: en.value, title: title.value, originalKey: key.value,
+          artist: artist.value, notes: notes.value, library: state.songs
+        }).song
+        song.sections = transposeSections(parsed.sections, steps, preferFlatsFor(key.value))
+        if (!song.artist) song.artist = parsed.artist || ''
+        if (parsed.notes && !notes.value) song.notes = parsed.notes
       } else {
-        song.sections = mergeEditorSections(es.value, en.value)
+        const formatted = formatEditorLyrics({
+          esText: es.value, enText: en.value, title: title.value, originalKey: key.value,
+          artist: artist.value, notes: notes.value, library: state.songs
+        }).song
+        song.sections = formatted.sections
+        if (!artist.value.trim() && formatted.artist) song.artist = formatted.artist
+        if (!notes.value.trim() && formatted.notes) song.notes = formatted.notes
       }
       song.originalKey = key.value
-      song.bpm = bpm.value.trim()
-      song.notes = notes.value
+      song.bpm = bpm.value.trim() || song.bpm || ''
+      if (!song.notes) song.notes = notes.value
     }
     if (!song.title) song.title = t('untitled')
     await saveSong(song)
@@ -931,25 +1056,6 @@ function pageSongEdit(id) {
   }
 
   return shell(page, { title: isNew ? t('newSong') : t('edit') })
-}
-
-function mergeEditorSections(esText, enText) {
-  const esSecs = parseSongChunk({ title: 'x', key: '', body: String(esText || '').split('\n') }).sections
-  const enSecs = parseSongChunk({ title: 'x', key: '', body: String(enText || '').split('\n') }).sections
-  const n = Math.max(esSecs.length, enSecs.length, 1)
-  const out = []
-  for (let i = 0; i < n; i++) {
-    const es = esSecs[i]
-    const en = enSecs[i]
-    out.push({
-      type: (es && es.type !== 'verse' ? es.type : null) || (en && en.type !== 'verse' ? en.type : null) || 'verse',
-      label: es?.label || en?.label || '',
-      notes: [es?.notes, en?.notes].filter(Boolean).join(' · '),
-      linesEs: es ? (es.linesEs?.some(Boolean) ? es.linesEs : es.linesEn) : [],
-      linesEn: en ? (en.linesEn?.some(Boolean) ? en.linesEn : en.linesEs) : []
-    })
-  }
-  return out.filter((s) => s.linesEn?.some(Boolean) || s.linesEs?.some(Boolean) || s.notes)
 }
 
 function foldTitle(s) {
@@ -973,14 +1079,25 @@ function pageImport() {
   const fileInput = h('input', { type: 'file', accept: '.pdf,.docx,.txt,.md,.json,text/plain,application/pdf,application/json', multiple: true, style: { display: 'none' } })
 
   const showPreview = (songs, sourceLabel) => {
-    state.importPreview = songs
+    const formatted = (songs || []).some((s) => s && s._formatAction)
+      ? songs
+      : formatImportedSongs(songs || [], { library: state.songs })
+    const summary = formatSummary(formatted)
+    state.importPreview = formatted
     clear(preview)
     preview.append(h('h3', {}, t('preview') + (sourceLabel ? ' — ' + sourceLabel : '')))
-    if (!songs.length) {
+    if (formatted.length) {
+      preview.append(h('div', { class: 'format-banner', 'data-field': 'import-format-summary' },
+        summary.formatted
+          ? t('formatSummary', { n: summary.formatted })
+          : t('formatUnchanged')
+      ))
+    }
+    if (!formatted.length) {
       preview.append(h('p', { class: 'muted' }, t('noResults')))
       return
     }
-    const items = songs.map((s) => {
+    const items = formatted.map((s) => {
       const existing = findSongByTitle(s.title)
       return { song: s, existing, selected: !existing, check: null }
     })
@@ -1011,7 +1128,8 @@ function pageImport() {
             h('div', { class: 'grow' },
               h('div', { class: 'row' },
                 h('strong', {}, it.song.title),
-                it.existing ? h('span', { class: 'chip dup-badge' }, t('alreadyInLibrary')) : null
+                it.existing ? h('span', { class: 'chip dup-badge' }, t('alreadyInLibrary')) : null,
+                it.song._formatted ? h('span', { class: 'chip' }, t('formattedChip')) : null
               ),
               h('div', { class: 'meta' }, extra || meta)
             )
@@ -1051,8 +1169,8 @@ function pageImport() {
     ),
     h('button', { class: 'btn secondary', onclick: () => {
       try {
-        const vp = parseImportedSongs(ta.value)
-        showPreview((vp && vp.length) ? vp : parseSongsFromText(ta.value), t('pasteLyrics'))
+        const result = formatSongsFromText(ta.value, { allowVideoPsalm: true, library: state.songs })
+        showPreview(result.songs, t('pasteLyrics'))
       } catch (err) {
         showPreview([], t('pasteLyrics'))
         preview.prepend(h('p', { class: 'help' }, err.message || String(err)))
@@ -1084,7 +1202,7 @@ async function commitImport(songs, { merge = false } = {}) {
       n++
       continue
     }
-    const rec = {
+    const rec = stripFormatMeta({
       id: db.uid('song'),
       title: p.title,
       artist: p.artist || '',
@@ -1094,7 +1212,7 @@ async function commitImport(songs, { merge = false } = {}) {
       sections: p.sections,
       createdAt: db.nowIso(),
       updatedAt: db.nowIso()
-    }
+    })
     await saveSong(rec, { silent: true })
     n++
   }
