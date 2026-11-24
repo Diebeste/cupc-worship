@@ -6,15 +6,16 @@ import * as sync from './db/sync.js'
 import { stampedSeed, SONG_LIBRARY_VERSION, mergeSeedSongs } from './data/seed.js'
 import { BUILTIN_SUPABASE } from './data/supabase-config.js'
 import { APP_VERSION } from './data/build-info.js'
-import { DATA_VERSION, SERVICE_TYPES, normalizeService, migrateLocalData, rememberMany, membersFromService, currentMonth, shiftMonth, monthLabel, servicesForMonth, servicesOnDate, formatDayHeading } from './data/roles.js'
+import { DATA_VERSION, SERVICE_TYPES, normalizeService, migrateLocalData, currentMonth, shiftMonth, monthLabel, servicesForMonth, servicesOnDate, formatDayHeading } from './data/roles.js'
 import { mountRolesFields, renderRolesView } from './views/rolesForm.js'
 import { renderScheduleCard, buildPoster, renderMonthCalendar } from './views/schedule.js'
-import { parseSongsFromText, parseSongChunk, searchHaystack, songMatchesQuery, songToPlainText } from './music/parseLyrics.js'
+import { parseSongsFromText, parseSongChunk, songMatchesQuery } from './music/parseLyrics.js'
+import { foldSearch } from './music/foldTitle.js'
 import { COMMON_KEYS, ALL_SONG_KEYS, displayKey, stepsBetween, preferFlatsFor, capoSuggestion, transposeSections } from './music/transpose.js'
 import { importFilesToSongs } from './music/importFile.js'
 import { parseImportedSongs } from './music/videopsalm.js'
 import { serviceWhatsAppText, encodeSharePayload, decodeSharePayload, formatDate, renderSongPlain } from './music/export.js'
-import { renderLyrics, planFor, sectionsToPaste } from './views/lyrics.js'
+import { renderLyrics, sectionsToPaste } from './views/lyrics.js'
 
 const BASE = import.meta.env.BASE_URL || '/'
 
@@ -135,7 +136,12 @@ async function removeSong(id) {
   for (const svc of state.services) {
     const before = svc.items?.length || 0
     svc.items = (svc.items || []).filter((it) => it.songId !== id)
-    if (svc.items.length !== before) await db.putOne('services', svc)
+    if (svc.items.length !== before) {
+      await db.putOne('services', svc)
+      if (sync.isConfigured(state.settings) && canEdit()) {
+        try { await sync.pushService(state.settings, svc) } catch (e) { console.warn(e) }
+      }
+    }
   }
   await db.deleteOne('songs', id)
   if (sync.isConfigured(state.settings)) {
@@ -165,19 +171,52 @@ function applyTheme() {
   }
 }
 
+function applyDocumentChrome(title) {
+  applyTheme()
+  const lang = state.settings.uiLang === 'es' ? 'es' : 'en'
+  document.documentElement.lang = lang
+  document.title = title ? `${title} · ${t('appName')}` : 'CUPC Mississauga Worship'
+}
+
+function notFoundPage() {
+  return shell(h('div', { class: 'page' }, h('div', { class: 'empty' }, t('notFound'))), { title: t('notFound') })
+}
+
+function cardLink(href, ...children) {
+  const hash = '#' + (href.startsWith('/') ? href : '/' + href)
+  return h('a', { class: 'card clickable', href: hash }, ...children)
+}
+
+function attachPickerDismiss(overlay) {
+  const onKey = (e) => {
+    if (e.key !== 'Escape') return
+    e.preventDefault()
+    overlay.remove()
+  }
+  const orig = overlay.remove.bind(overlay)
+  overlay.remove = () => {
+    document.removeEventListener('keydown', onKey)
+    orig()
+  }
+  document.addEventListener('keydown', onKey)
+  return overlay
+}
+
 function navItem(href, ico, label, on) {
-  return h('a', { href: '#' + href, class: on ? 'on' : '' },
-    h('span', { class: 'ico' }, ico),
+  return h('a', { href: '#' + href, class: on ? 'on' : '', 'aria-current': on ? 'page' : undefined },
+    h('span', { class: 'ico', 'aria-hidden': 'true' }, ico),
     label
   )
 }
 
 function shell(content, { stage = false, print = false, title } = {}) {
+  applyDocumentChrome(title)
   const { parts } = parseHash()
   const tab = parts[0] || 'services'
   const app = h('div', { class: 'app-shell' + (stage ? ' is-stage' : '') + (print ? ' is-print' : '') })
   if (!stage && !print) {
     app.append(
+      h('a', { class: 'skip-link', href: '#main' }, t('skipToContent')),
       h('header', { class: 'topbar' },
         h('img', { class: 'logo', src: `${BASE}icons/icon-192.png`, alt: 'CUPC' }),
         h('img', { class: 'wordmark', src: `${BASE}logo-wordmark.png`, alt: '' }),
@@ -185,12 +224,15 @@ function shell(content, { stage = false, print = false, title } = {}) {
           h('span', { class: 'church' }, t('church')),
           h('h1', {}, title || t('appName'))
         ),
-        h('div', { class: 'lang-toggle' },
-          h('button', { class: state.settings.uiLang === 'en' ? 'on' : '', type: 'button', onclick: async () => { state.settings.uiLang = 'en'; await persistSettings(); render() } }, 'EN'),
-          h('button', { class: state.settings.uiLang === 'es' ? 'on' : '', type: 'button', onclick: async () => { state.settings.uiLang = 'es'; await persistSettings(); render() } }, 'ES')
+        h('div', { class: 'lang-toggle', role: 'group', 'aria-label': t('uiLanguage') },
+          h('button', { class: state.settings.uiLang === 'en' ? 'on' : '', type: 'button', 'aria-pressed': state.settings.uiLang === 'en', onclick: async () => { state.settings.uiLang = 'en'; await persistSettings(); render() } }, 'EN'),
+          h('button', { class: state.settings.uiLang === 'es' ? 'on' : '', type: 'button', 'aria-pressed': state.settings.uiLang === 'es', onclick: async () => { state.settings.uiLang = 'es'; await persistSettings(); render() } }, 'ES')
         )
       )
     )
+    if (!state.online) {
+      app.append(h('div', { class: 'offline-banner', role: 'status' }, t('offline')))
+    }
     if (!sync.isConfigured(state.settings)) {
       app.append(
         h('div', { class: 'banner' },
@@ -200,10 +242,12 @@ function shell(content, { stage = false, print = false, title } = {}) {
       )
     }
   }
-  app.append(content)
+  const main = stage || print ? content : h('main', { id: 'main' }, content)
+  if (stage || print) content.id = content.id || 'main'
+  app.append(main)
   if (!stage && !print) {
     app.append(
-      h('nav', { class: 'bottom-nav' },
+      h('nav', { class: 'bottom-nav', 'aria-label': t('appName') },
         navItem('/schedule', '📅', t('schedule'), tab === 'schedule'),
         navItem('/services', '🗓️', t('services'), tab === 'services' || !tab),
         navItem('/songs', '🎵', t('songs'), tab === 'songs'),
@@ -247,15 +291,15 @@ function songMetaLine(song) {
 
 /* ---------- Pages ---------- */
 function filterServices(q) {
-  const needle = (q || '').trim().toLowerCase()
+  const needle = foldSearch(q)
   return state.services
-    .filter((s) => !needle || `${s.name} ${s.leader} ${s.notes}`.toLowerCase().includes(needle))
+    .filter((s) => !needle || foldSearch(`${s.name} ${s.leader} ${s.notes} ${s.subtitle || ''}`).includes(needle))
     .slice()
     .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')))
 }
 
 function serviceCard(svc) {
-  return h('div', { class: 'card clickable', onclick: () => go('/services/' + svc.id) },
+  return cardLink('/services/' + svc.id,
     h('div', { class: 'row spread' },
       h('div', { class: 'grow' },
         h('h3', { class: 'list-title' }, svc.name),
@@ -277,9 +321,12 @@ function pageServices() {
   const listHost = h('div', { class: 'search-results' })
   const search = h('input', {
     class: 'search',
+    type: 'search',
+    enterkeyhint: 'search',
     'data-field': 'search-services',
     placeholder: t('searchServices'),
-    value: initialQ
+    value: initialQ,
+    'aria-label': t('searchServices')
   })
   const drawList = (query) => {
     const list = filterServices(query)
@@ -310,7 +357,7 @@ function typeLabel(type) {
 
 function pageServiceDetail(id) {
   const svc = byId(state.services, id)
-  if (!svc) return shell(h('div', { class: 'page' }, 'Not found'))
+  if (!svc) return notFoundPage()
   const page = h('div', { class: 'page' },
     h('div', { class: 'page-head' },
       h('div', {},
@@ -334,17 +381,20 @@ function pageServiceDetail(id) {
   if (!svc.items?.length) page.append(h('div', { class: 'empty' }, t('emptySetlist')))
   ;(svc.items || []).forEach((item, idx) => {
     const song = byId(state.songs, item.songId)
-    page.append(
-      h('div', { class: 'card clickable', onclick: () => song && go('/songs/' + song.id + '?svc=' + svc.id + '&key=' + encodeURIComponent(item.key || '')) },
-        h('div', { class: 'row' },
-          h('div', { class: 'meta', style: { width: '1.2em' } }, String(idx + 1)),
-          keyBadge(item.key || song?.originalKey),
-          h('div', { class: 'grow' },
-            h('div', { class: 'list-title' }, song?.title || '—'),
-            h('div', { class: 'meta' }, [item.lead, item.notes, song?.originalKey && item.key && item.key !== song.originalKey ? `${t('originalKey')} ${song.originalKey}` : ''].filter(Boolean).join(' · '))
-          )
+    const body = [
+      h('div', { class: 'row' },
+        h('div', { class: 'meta', style: { width: '1.2em' } }, String(idx + 1)),
+        keyBadge(item.key || song?.originalKey),
+        h('div', { class: 'grow' },
+          h('div', { class: 'list-title' }, song?.title || '—'),
+          h('div', { class: 'meta' }, [item.lead, item.notes, song?.originalKey && item.key && item.key !== song.originalKey ? `${t('originalKey')} ${song.originalKey}` : ''].filter(Boolean).join(' · '))
         )
       )
+    ]
+    page.append(
+      song
+        ? cardLink('/songs/' + song.id + '?svc=' + svc.id + '&key=' + encodeURIComponent(item.key || ''), ...body)
+        : h('div', { class: 'card' }, ...body)
     )
   })
   if (canEdit()) {
@@ -387,7 +437,7 @@ function openAddSong(svc) {
       h('button', { class: 'btn ghost block', onclick: () => overlay.remove() }, t('close'))
     )
   )
-  document.getElementById('app').append(overlay)
+  document.getElementById('app').append(attachPickerDismiss(overlay))
 }
 
 async function duplicateService(svc) {
@@ -427,7 +477,7 @@ function pageServiceEdit(id) {
   const svc = isNew
     ? normalizeService({ id: db.uid('service'), name: '', date: presetDate || new Date().toISOString().slice(0, 10), type: 'service', leader: '', notes: '', items: [], createdAt: db.nowIso() })
     : normalizeService(structuredClone(byId(state.services, id) || null))
-  if (!svc || !svc.id) return shell(h('div', { class: 'page' }, 'Not found'))
+  if (!svc || !svc.id) return notFoundPage()
   const name = h('input', { 'data-field': 'service-name', value: svc.name, placeholder: t('untitledService') })
   const date = h('input', { type: 'date', 'data-field': 'service-date', value: svc.date || '' })
   const type = h('select', {},
@@ -471,7 +521,7 @@ function pageServiceEdit(id) {
         } }, song.title))
       }
       picker.append(h('div', { class: 'sheet' }, h('h3', {}, t('addSong')), box, h('button', { class: 'btn ghost block', onclick: () => picker.remove() }, t('close'))))
-      overlayParent.append(picker)
+      overlayParent.append(attachPickerDismiss(picker))
     } }, '+ ' + t('addSong')))
   }
   redrawItems()
@@ -514,7 +564,7 @@ function keySelect(current) {
 }
 
 function songCard(song) {
-  return h('div', { class: 'card clickable', onclick: () => go('/songs/' + song.id) },
+  return cardLink('/songs/' + song.id,
     h('div', { class: 'row' },
       keyBadge(song.originalKey),
       h('div', { class: 'grow' },
@@ -676,15 +726,20 @@ function pageSongDetail(id) {
     ),
     capoEl,
     h('div', { class: 'row spread lang-row' },
-      h('div', { class: 'seg' },
+      h('div', { class: 'seg', role: 'group', 'aria-label': t('language') },
         ...['es', 'en', 'both'].map((v) => h('button', {
           class: (state.settings.lyricLang || 'both') === v ? 'on' : '',
           type: 'button',
+          'aria-pressed': (state.settings.lyricLang || 'both') === v,
           onclick: async () => {
             state.settings.lyricLang = v
             langWrap.lang = v
             await persistSettings()
-            page.querySelectorAll('.seg button').forEach((b, i) => b.classList.toggle('on', ['es', 'en', 'both'][i] === v))
+            page.querySelectorAll('.seg button').forEach((b, i) => {
+              const on = ['es', 'en', 'both'][i] === v
+              b.classList.toggle('on', on)
+              b.setAttribute('aria-pressed', String(on))
+            })
             drawLyrics()
           }
         }, v === 'both' ? t('langBoth') : v === 'en' ? t('langEn') : t('langEs')))
@@ -698,12 +753,12 @@ function pageSongDetail(id) {
     canEdit() ? setOriginalKeyCard(song) : null,
     h('div', { class: 'actions' },
       canEdit() ? h('button', { class: 'btn secondary', onclick: () => go('/songs/' + song.id + '/edit') }, t('edit')) : null,
-      h('button', { class: 'btn secondary', onclick: async () => {
-        const steps = stepsBetween(song.originalKey || target, target)
-        await copyText(songToPlainText({ ...song, originalKey: target }, { lang: langWrap.lang, chords: state.settings.showChords !== false }).replace(/\[([^\]]+)\]/g, (m, c) => {
-          // already in source key in songToPlainText; use renderSongPlain instead
-          return m
-        }) && (renderSongPlain(song, { lang: langWrap.lang, steps, useFlats: preferFlatsFor(target) }) + '\n'))
+      h('button', { class: 'btn secondary', type: 'button', onclick: async () => {
+        const from = song.originalKey || ''
+        const steps = from && target ? stepsBetween(from, target) : 0
+        let text = renderSongPlain(song, { lang: langWrap.lang, steps, useFlats: preferFlatsFor(target || from || 'C') })
+        if (state.settings.showChords === false) text = text.replace(/\[(?!ES\]|EN\])[^\]]+\]/g, '')
+        await copyText(text ? text + '\n' : '')
         toast(t('copied'))
       } }, t('copyText')),
       canEdit() ? h('button', { class: 'btn danger', onclick: () => removeSong(song.id) }, t('delete')) : null
@@ -757,7 +812,7 @@ function pageSongEdit(id) {
 
   const isNew = id === 'new'
   const existing = isNew ? null : byId(state.songs, id)
-  if (!isNew && !existing) return shell(h('div', { class: 'page' }, 'Not found'))
+  if (!isNew && !existing) return notFoundPage()
   const song = existing ? structuredClone(existing) : {
     id: db.uid('song'), title: '', artist: '', originalKey: '', bpm: '', notes: '', sections: [], createdAt: db.nowIso()
   }
@@ -1049,7 +1104,7 @@ async function commitImport(songs, { merge = false } = {}) {
 
 function pageStage(id) {
   const svc = byId(state.services, id)
-  if (!svc) return shell(h('div', { class: 'page' }, 'Not found'))
+  if (!svc) return notFoundPage()
   const items = svc.items || []
   let idx = Number(parseHash().query.i || 0)
   if (idx < 0) idx = 0
@@ -1076,7 +1131,7 @@ function pageStage(id) {
 
   const root = h('div', { class: 'stage', style: { '--stage-size': state.stageSize + 'px' } },
     h('div', { class: 'stage-top' },
-      h('button', { class: 'icon-btn', onclick: () => { releaseWake(); go('/services/' + svc.id) } }, '✕'),
+      h('button', { class: 'icon-btn', type: 'button', 'aria-label': t('closeStage'), onclick: () => { releaseWake(); go('/services/' + svc.id) } }, '✕'),
       h('div', { class: 'grow' },
         h('div', { class: 'meta' }, `${idx + 1} / ${items.length} · ${svc.name}`),
         h('h2', {}, song?.title || '—')
@@ -1085,11 +1140,24 @@ function pageStage(id) {
     ),
     h('div', { class: 'row spread' },
       h('div', { class: 'seg' },
-        ...['es', 'en', 'both'].map((v) => h('button', { class: lang === v ? 'on' : '', type: 'button', onclick: function () { lang = v; this.parentElement.querySelectorAll('button').forEach((b) => b.classList.remove('on')); this.classList.add('on'); draw() } }, v === 'both' ? t('langBoth') : v.toUpperCase()))
+        ...['es', 'en', 'both'].map((v) => h('button', {
+          class: lang === v ? 'on' : '',
+          type: 'button',
+          'aria-pressed': lang === v,
+          onclick: function () {
+            lang = v
+            this.parentElement.querySelectorAll('button').forEach((b) => {
+              const on = b === this
+              b.classList.toggle('on', on)
+              b.setAttribute('aria-pressed', String(on))
+            })
+            draw()
+          }
+        }, v === 'both' ? t('langBoth') : v.toUpperCase()))
       ),
       h('div', {},
-        h('button', { class: 'icon-btn', onclick: () => { state.stageSize = Math.max(18, state.stageSize - 2); root.style.setProperty('--stage-size', state.stageSize + 'px') } }, 'A−'),
-        h('button', { class: 'icon-btn', onclick: () => { state.stageSize = Math.min(48, state.stageSize + 2); root.style.setProperty('--stage-size', state.stageSize + 'px') } }, 'A+')
+        h('button', { class: 'icon-btn', type: 'button', 'aria-label': t('smallerText'), onclick: () => { state.stageSize = Math.max(18, state.stageSize - 2); root.style.setProperty('--stage-size', state.stageSize + 'px') } }, 'A−'),
+        h('button', { class: 'icon-btn', type: 'button', 'aria-label': t('largerText'), onclick: () => { state.stageSize = Math.min(48, state.stageSize + 2); root.style.setProperty('--stage-size', state.stageSize + 'px') } }, 'A+')
       )
     ),
     lyricsHost,
@@ -1127,7 +1195,7 @@ async function releaseWake() {
 
 function pagePrint(id) {
   const svc = byId(state.services, id)
-  if (!svc) return shell(h('div', { class: 'page' }, 'Not found'))
+  if (!svc) return notFoundPage()
   const map = songsById()
   const root = h('div', { class: 'print-root' },
     h('div', { class: 'no-print actions' },
@@ -1190,10 +1258,7 @@ function openDaySheet(iso) {
   const list = servicesOnDate(state.services, iso)
   const picker = h('div', { class: 'picker', onclick: (e) => { if (e.target === picker) picker.remove() } })
   const items = list.length
-    ? list.map((svc) => h('div', {
-      class: 'card clickable',
-      onclick: () => go('/services/' + svc.id)
-    },
+    ? list.map((svc) => cardLink('/services/' + svc.id,
       h('div', { class: 'list-title' }, svc.name || svc.subtitle || iso),
       svc.subtitle ? h('div', { class: 'meta' }, svc.subtitle) : null,
       svc.leader ? h('div', { class: 'meta' }, t('leader') + ': ' + svc.leader) : null
@@ -1205,7 +1270,7 @@ function openDaySheet(iso) {
     canEdit() ? h('button', { class: 'btn block', type: 'button', style: { marginTop: '8px' }, onclick: () => go('/services/new?date=' + iso) }, '+ ' + t('newServiceOnDate')) : null,
     h('button', { class: 'btn ghost block', type: 'button', onclick: () => picker.remove() }, t('close'))
   ))
-  document.getElementById('app').append(picker)
+  document.getElementById('app').append(attachPickerDismiss(picker))
 }
 
 function pageSchedule() {
@@ -1409,20 +1474,20 @@ function pageSettings() {
     h('div', { class: 'field' },
       h('label', {}, t('uiLanguage')),
       h('div', { class: 'seg' },
-        h('button', { class: s.uiLang === 'en' ? 'on' : '', onclick: async () => { s.uiLang = 'en'; await persistSettings(); render() } }, 'English'),
-        h('button', { class: s.uiLang === 'es' ? 'on' : '', onclick: async () => { s.uiLang = 'es'; await persistSettings(); render() } }, 'Español')
+        h('button', { type: 'button', class: s.uiLang === 'en' ? 'on' : '', 'aria-pressed': s.uiLang === 'en', onclick: async () => { s.uiLang = 'en'; await persistSettings(); render() } }, 'English'),
+        h('button', { type: 'button', class: s.uiLang === 'es' ? 'on' : '', 'aria-pressed': s.uiLang === 'es', onclick: async () => { s.uiLang = 'es'; await persistSettings(); render() } }, 'Español')
       )
     ),
     h('div', { class: 'field' },
       h('label', {}, t('darkMode')),
       h('div', { class: 'seg' },
-        ...['system', 'light', 'dark'].map((v) => h('button', { class: (s.theme || 'system') === v ? 'on' : '', onclick: async () => { s.theme = v; await persistSettings(); applyTheme(); render() } }, t(v === 'system' ? 'system' : v === 'light' ? 'light' : 'dark')))
+        ...['system', 'light', 'dark'].map((v) => h('button', { type: 'button', class: (s.theme || 'system') === v ? 'on' : '', 'aria-pressed': (s.theme || 'system') === v, onclick: async () => { s.theme = v; await persistSettings(); applyTheme(); render() } }, t(v === 'system' ? 'system' : v === 'light' ? 'light' : 'dark')))
       )
     ),
     h('div', { class: 'field' },
       h('label', {}, t('language')),
       h('div', { class: 'seg' },
-        ...['es', 'en', 'both'].map((v) => h('button', { class: (s.lyricLang || 'both') === v ? 'on' : '', onclick: async () => { s.lyricLang = v; await persistSettings(); render() } }, v === 'both' ? t('langBoth') : v.toUpperCase()))
+        ...['es', 'en', 'both'].map((v) => h('button', { type: 'button', class: (s.lyricLang || 'both') === v ? 'on' : '', 'aria-pressed': (s.lyricLang || 'both') === v, onclick: async () => { s.lyricLang = v; await persistSettings(); render() } }, v === 'both' ? t('langBoth') : v.toUpperCase()))
       )
     ),
     h('hr', { class: 'sep' }),
@@ -1439,7 +1504,7 @@ function pageSettings() {
     h('div', { class: 'field' }, h('label', {}, t('editorCode')), editor),
     h('p', { class: 'help' }, t('editorCodeHint')),
     s.teamId ? h('p', { class: 'help team-membership' }, membershipLabel(s)) : null,
-    h('button', { class: 'btn peach', disabled: !!state.syncBusy, onclick: () => submitJoin() }, state.syncBusy ? t('joining') : t('join')),
+    h('button', { class: 'btn peach', type: 'button', disabled: !!state.syncBusy, onclick: () => submitJoin() }, state.syncBusy ? t('joining') : t('join')),
     h('hr', { class: 'sep' }),
     h('h3', {}, t('backupLogin')),
     h('p', { class: 'help' }, t('backupLoginHint')),
@@ -1454,7 +1519,18 @@ function pageSettings() {
       } catch (e) { syncToast(e) }
     } }, t('sendLink')),
     s.userEmail ? h('p', { class: 'help' }, t('signedInAs') + ' ' + (s.userEmail || '')) : null,
-    s.userId ? h('button', { class: 'btn ghost', onclick: async () => { await sync.signOut(s); s.teamId = s.teamId; toast(t('signOut')); render() } }, t('signOut')) : null,
+    s.userId ? h('button', { class: 'btn ghost', type: 'button', onclick: async () => {
+      await sync.signOut(s)
+      s.userId = ''
+      s.userEmail = ''
+      s.teamId = ''
+      s.role = 'admin'
+      s.canEdit = true
+      s.lastSync = null
+      await persistSettings()
+      toast(t('signOut'))
+      render()
+    } }, t('signOut')) : null,
     s.role === 'admin' && s.teamId && s.userId ? adminPanel() : null,
     h('details', { class: 'advanced-sync', style: { marginTop: '20px' } },
       h('summary', {}, t('advancedSync')),
@@ -1502,7 +1578,7 @@ function importBackup() {
     if (!file) return
     try {
       const data = JSON.parse(await file.text())
-      if (!data.songs || !data.services) throw new Error('Invalid backup')
+      if (!data.songs || !data.services) throw new Error(t('invalidBackup'))
       state.songs = data.songs
       const migrated = migrateLocalData({
         services: data.services,
@@ -1566,7 +1642,7 @@ function render() {
 
 async function ingestShare(token) {
   const payload = decodeSharePayload(token)
-  if (!payload?.service) { toast('Invalid link'); go('/services'); return }
+  if (!payload?.service) { toast(t('invalidLink')); go('/services'); return }
   const idMap = {}
   for (const song of payload.songs || []) {
     const existing = state.songs.find((s) => s.id === song.id) || state.songs.find((s) => s.title === song.title && s.originalKey === song.originalKey)
@@ -1719,8 +1795,11 @@ async function boot() {
 }
 
 window.addEventListener('hashchange', () => { if (!location.hash.includes('/stage')) releaseWake(); render() })
-window.addEventListener('online', () => { state.online = true })
-window.addEventListener('offline', () => { state.online = false })
+window.addEventListener('online', () => { state.online = true; if (isEditingInApp()) syncChrome(); else render() })
+window.addEventListener('offline', () => { state.online = false; if (isEditingInApp()) syncChrome(); else render() })
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && location.hash.includes('/stage')) requestWake()
+})
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme)
 
 try {

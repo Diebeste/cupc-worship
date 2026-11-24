@@ -459,7 +459,7 @@ export function songToPlainText(song, { lang = 'both', chords = true } = {}) {
     lines.push('')
   }
   let out = lines.join('\n')
-  if (!chords) out = out.replace(/\[([^\]]+)\]/g, '')
+  if (!chords) out = out.replace(/\[(?!ES\]|EN\])[^\]]+\]/g, '')
   return out.trim() + '\n'
 }
 

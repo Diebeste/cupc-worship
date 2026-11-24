@@ -1,12 +1,8 @@
 import { h } from '../dom.js'
-import { transposeText, transposePlan } from '../music/transpose.js'
+import { transposeText } from '../music/transpose.js'
 import { labelForType } from '../music/parseLyrics.js'
 
 const CHORD_SPLIT = /(\[[^\]]+\])/g
-
-export function planFor(song, targetKey) {
-  return transposePlan(song?.originalKey || '', targetKey || song?.originalKey || '')
-}
 
 function displayLines(lines) {
   const out = []
@@ -109,7 +105,6 @@ export function renderLine(line, opts) {
   }
   while (chords.length < lyrics.length) chords.push('')
   while (lyrics.length < chords.length) lyrics.push('')
-  const cols = parts.length || 1
   const template = chords.map((_, i) => {
     const w = Math.max(chords[i].length, (lyrics[i] || '').length, 1)
     return `${Math.max(w, 1)}ch`
@@ -134,8 +129,3 @@ export function sectionsToPaste(sections, lang) {
   return lines.join('\n').trim()
 }
 
-export function buildSectionsFromPaste(esText, enText) {
-  // Keep edit simple: one block per language, plus detect section headers when possible
-  const { parseSongsFromText } = arguments.callee // placeholder, imported in editor
-  return { esText, enText }
-}

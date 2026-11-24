@@ -8,6 +8,7 @@ export function h(tag, attrs = {}, ...children) {
     else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2).toLowerCase(), v)
     else if (k === 'html') el.innerHTML = v
     else if (k === 'checked' || k === 'selected' || k === 'disabled' || k === 'value') el[k] = v
+    else if (k.startsWith('aria-') && typeof v === 'boolean') el.setAttribute(k, String(v))
     else el.setAttribute(k, v === true ? '' : v)
   }
   for (const c of children.flat()) {

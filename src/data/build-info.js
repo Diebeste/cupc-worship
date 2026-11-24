@@ -1,1 +1,1 @@
-export const APP_VERSION = 'cupc-worship-v11'
+export const APP_VERSION = 'cupc-worship-v12'

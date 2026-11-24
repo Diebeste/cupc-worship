@@ -24,3 +24,6 @@ backups/screenshots-fill-after/
 scripts/__pycache__/
 
 scripts/fill-data/__pycache__/
+
+# Local pre-change data backup from the v12 cleanup pass
+backups/pre-v12-cleanup/

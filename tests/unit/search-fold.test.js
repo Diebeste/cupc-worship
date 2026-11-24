@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 import { foldSearch } from '../../src/music/foldTitle.js'
-import { songMatchesQuery, searchHaystack } from '../../src/music/parseLyrics.js'
+import { songMatchesQuery, searchHaystack, songToPlainText } from '../../src/music/parseLyrics.js'
 
 const senorSong = {
   title: 'ERES SENOR',
@@ -43,5 +43,27 @@ describe('songMatchesQuery', () => {
   it('searches titles, lyrics, and keys in the haystack', () => {
     assert.match(searchHaystack(accentSong), /señor está/i)
     assert.equal(songMatchesQuery(accentSong, 'dm'), true)
+  })
+})
+
+describe('songToPlainText', () => {
+  it('keeps [ES]/[EN] tags when stripping chords', () => {
+    const song = {
+      title: 'Example',
+      originalKey: 'G',
+      sections: [{
+        type: 'verse',
+        label: 'Verse',
+        linesEs: ['[G]Santo, [C]santo'],
+        linesEn: ['[G]Holy, [C]holy']
+      }]
+    }
+    const text = songToPlainText(song, { lang: 'both', chords: false })
+    assert.match(text, /\[ES\]/)
+    assert.match(text, /\[EN\]/)
+    assert.equal(text.includes('[G]'), false)
+    assert.equal(text.includes('[C]'), false)
+    assert.match(text, /Santo, santo/)
+    assert.match(text, /Holy, holy/)
   })
 })

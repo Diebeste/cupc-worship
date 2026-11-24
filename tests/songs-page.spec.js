@@ -122,3 +122,40 @@ test('long lyric lines wrap inside the song view', async ({ page }) => {
   expect(overflow.missing, 'lyrics should be on the page').toBeFalsy()
   expect(overflow.overflowVisible).toBeFalsy()
 })
+
+test('document language follows the UI toggle and skip link is present', async ({ page }) => {
+  await waitSongs(page)
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+  await expect(page.locator('.skip-link')).toHaveAttribute('href', '#main')
+  await expect(page.locator('main#main')).toBeVisible()
+  await page.getByRole('button', { name: 'ES', exact: true }).first().click()
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es')
+  await expect(page.getByRole('heading', { name: 'Canciones', level: 2 })).toBeVisible()
+  await page.getByRole('button', { name: 'EN', exact: true }).first().click()
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+})
+
+test('song cards are links and can be opened from the keyboard', async ({ page }) => {
+  await waitSongs(page)
+  const first = page.locator('.search-results a.card.clickable').first()
+  await expect(first).toBeVisible({ timeout: 15_000 })
+  const href = await first.getAttribute('href')
+  expect(href).toMatch(/#\/songs\//)
+  await first.focus()
+  await page.keyboard.press('Enter')
+  await expect(page.locator('.song-view h2, .page-head h2').first()).toBeVisible()
+  expect(page.url()).toContain('#/songs/')
+})
+
+test('language boxes are visually distinct in Both view', async ({ page }) => {
+  await waitSongs(page)
+  await page.goto('./#/songs/song-al-que-esta-sentado-en-trono-i-want-to-know-you')
+  await expect(page.locator('.side-by-side .lyric-block').first()).toBeVisible({ timeout: 15_000 })
+  const styles = await page.locator('.side-by-side .lyric-block').first().evaluate((el) => {
+    const s = getComputedStyle(el)
+    return { border: s.borderTopWidth, radius: s.borderRadius, padding: s.paddingTop }
+  })
+  expect(Number.parseFloat(styles.border)).toBeGreaterThan(0)
+  expect(Number.parseFloat(styles.radius)).toBeGreaterThan(0)
+  expect(Number.parseFloat(styles.padding)).toBeGreaterThan(0)
+})

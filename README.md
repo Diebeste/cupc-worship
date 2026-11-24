@@ -15,9 +15,9 @@ Add it to the home screen on iPhone or Android — no app store. It works offlin
 - Stage view: large type, swipe, EN/ES toggle, optional wake lock
 - Share a service link, print/PDF in a setlist-and-lyrics layout close to the team’s current docs, or copy WhatsApp text
 - Bilingual UI (English / Spanish)
-- Local demo mode by default (IndexedDB + JSON backup). Optional [Supabase](https://supabase.com) team sync — see [SETUP.md](SETUP.md)
+- Local first (IndexedDB + JSON backup), with optional [Supabase](https://supabase.com) team sync — see [SETUP.md](SETUP.md)
 
-The library is seeded from two real team documents: a typical service (**15/11**) and the special event **Semana de alabanza — Jueves Acústico**. Extra songs that appeared in the event packet (Believe for it, Hermoso momento) are in the library but not on that Thursday setlist.
+The library is a bilingual EN/ES songbook (library version 3) plus two seeded services from real team documents: a typical service (**15/11**) and the special event **Semana de alabanza — Jueves Acústico**.
 
 Branding (navy `#182848`, blue `#4B6AB7`, logo) comes from the official [CUPC-EPUC website](https://cupc-epuc.org/). Fonts are Roboto, Roboto Slab and Quicksand, as used on that site.
 
@@ -33,9 +33,18 @@ The dev server is at `http://localhost:5173/cupc-worship/`.
 ```bash
 npm run build
 npm run preview
-npm test          # Playwright, phone viewport
+npm test          # unit tests + Playwright (phone and desktop)
 ```
 
 ## Deploy
 
 GitHub Pages serves the `dist` output from the `gh-pages` branch (or the Pages workflow). Base path is `/cupc-worship/`.
+
+
+## Current status
+
+The live app is **v12** (`cupc-worship-v12`). See [STATUS.md](STATUS.md) for the wrap-up notes and remaining open items:
+
+- Supabase anonymous sign-ins are still off, so email-free team join does not work yet
+- The CCLI / licensing question is still undecided
+- 92 library songs are still unfilled (no confirmed published source)

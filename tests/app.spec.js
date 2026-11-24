@@ -67,7 +67,7 @@ test('seeded services and songs, EN/ES UI, screenshots', async ({ page }) => {
   await expect(page.getByText('Cristo yo te amo')).toBeVisible()
   await expect(page.getByText('Al estar ante ti')).toBeVisible()
   await expect(page.getByText('Believe for it')).toBeVisible()
-  await page.screenshot({ path: path.join(shots, '02-songs.png'), fullPage: true })
+  await page.screenshot({ path: path.join(shots, '02-songs.png') })
 
   await page.getByPlaceholder(/Search titles or lyrics|Buscar título/).fill('imparable')
   await expect(page.getByText('Dios imparable')).toBeVisible()
